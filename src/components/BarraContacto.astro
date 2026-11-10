@@ -1,0 +1,14 @@
+---
+// Barra fija abajo en el móvil: llamar o escribir en un toque
+import { telHref, mailHref } from '../data/negocio';
+---
+<div class="fixed inset-x-0 bottom-0 z-40 grid grid-cols-2 border-t border-pizarra-2 bg-pizarra text-white md:hidden">
+  <a href={telHref} class="flex h-16 items-center justify-center gap-2 font-bold">
+    <svg aria-hidden="true" viewBox="0 0 24 24" class="size-5 fill-none stroke-amarillo stroke-2"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2" /></svg>
+    Llamar
+  </a>
+  <a href={mailHref} class="flex h-16 items-center justify-center gap-2 border-l border-pizarra-2 font-bold">
+    <svg aria-hidden="true" viewBox="0 0 24 24" class="size-5 fill-none stroke-amarillo stroke-2"><rect x="3" y="5" width="18" height="14" rx="2" /><path d="m3 7 9 6 9-6" /></svg>
+    Escribir
+  </a>
+</div>

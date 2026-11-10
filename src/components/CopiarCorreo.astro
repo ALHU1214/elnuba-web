@@ -1,0 +1,37 @@
+---
+// Dirección de correo con botón de copiar (9-nov-2026, CRO).
+// Quien usa Gmail u Outlook en el navegador no tiene programa de correo en el ordenador: al pulsar
+// "Pedir presupuesto por correo" no se le abre nada y se pierde el contacto. Con esto copia la dirección y sigue.
+import { negocio } from '../data/negocio';
+
+interface Props { class?: string; antes?: string; direccion?: boolean; }
+const { class: clase = '', antes = 'o escribe a', direccion = true } = Astro.props;
+---
+<p class={`text-sm text-tinta/75 ${clase}`}>
+  {antes}{direccion && <> <span class="font-semibold break-all text-tinta select-all">{negocio.email}</span></>}
+  <button type="button" data-copiar={negocio.email}
+          class="ml-1 rounded-full px-2.5 py-1 text-xs font-bold text-tinta ring-1 ring-tinta/25 transition hover:ring-tinta">
+    {direccion ? 'Copiar' : 'Copiar la dirección'}
+  </button>
+  <span class="sr-only" aria-live="polite"></span>
+</p>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>('[data-copiar]').forEach((boton) => {
+    boton.addEventListener('click', async () => {
+      const texto = boton.dataset.copiar || '';
+      const aviso = boton.nextElementSibling as HTMLElement | null;
+      try {
+        await navigator.clipboard.writeText(texto);
+      } catch {
+        // Navegadores antiguos: se copia seleccionando un campo temporal
+        const campo = Object.assign(document.createElement('textarea'), { value: texto });
+        document.body.append(campo); campo.select(); document.execCommand('copy'); campo.remove();
+      }
+      const antes = boton.textContent;
+      boton.textContent = '¡Copiado!';
+      if (aviso) aviso.textContent = 'Dirección de correo copiada';
+      setTimeout(() => { boton.textContent = antes; if (aviso) aviso.textContent = ''; }, 2000);
+    });
+  });
+</script>

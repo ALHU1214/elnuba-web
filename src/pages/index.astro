@@ -1,0 +1,155 @@
+---
+import Base from '../layouts/Base.astro';
+import Pendiente from '../components/Pendiente.astro';
+import Preguntas from '../components/Preguntas.astro';
+import LlamadaFinal from '../components/LlamadaFinal.astro';
+import Servicios from '../components/Servicios.astro';
+import Familias from '../components/Familias.astro';
+import Marcas from '../components/Marcas.astro';
+import CopiarCorreo from '../components/CopiarCorreo.astro';
+import { negocio, telHref, correos, condiciones } from '../data/negocio';
+
+const preguntas = [
+  { p: '¿Venden solo al por mayor?', r: 'No. También vendemos al público en nuestra tienda de Los Majuelos (La Laguna) y en la Librería Mararía de Candelaria.' },
+  { p: '¿Reparten fuera de Tenerife?', r: 'Sí, repartimos a todas las islas Canarias.' },
+  { p: '¿Cómo pido un presupuesto?', r: `Llámanos al ${negocio.telefono} o escríbenos a ${negocio.email} con la lista de lo que necesitas.` },
+  { p: '¿Dónde están?', r: `En ${negocio.direccion.calle}, ${negocio.direccion.zona}, ${negocio.direccion.cp} ${negocio.direccion.localidad} (Tenerife).` },
+  // Dudas que frenan a un comprador: salen solas cuando Gonzalo conteste (condiciones, en negocio.ts)
+  ...(condiciones.entrega ? [{ p: '¿Cuánto tardan en entregar?', r: condiciones.entrega }] : []),
+  ...(condiciones.pedidoMinimo ? [{ p: '¿Hay pedido mínimo?', r: condiciones.pedidoMinimo }] : []),
+  ...(condiciones.pago ? [{ p: '¿Cómo se paga?', r: condiciones.pago }] : []),
+];
+
+// Frase de confianza bajo los botones (solo con datos confirmados por Gonzalo)
+const garantias = [condiciones.sinCompromiso && 'Presupuesto sin compromiso', condiciones.plazoPresupuesto && `Te lo enviamos ${condiciones.plazoPresupuesto}`].filter(Boolean);
+
+const clientes = [
+  { img: '/img/ceras.webp', alt: 'Ceras de colores vistas de cerca', titulo: 'Colegios y centros educativos', texto: 'Material escolar, libros de texto y bellas artes.', href: '/colegios/', enlace: 'Material para colegios' },
+  { img: '/img/rotuladores.webp', alt: 'Rotuladores azules, naranjas y negros', titulo: 'Empresas y despachos', texto: 'Papel, archivo, ofimática y mobiliario.', href: '/empresas-y-organismos/', enlace: 'Material para empresas' },
+  { img: '/img/archivadores.webp', alt: 'Dos archivadores rojos', titulo: 'Organismos públicos', texto: 'Material de oficina para la administración.', href: '/empresas-y-organismos/#organismos', enlace: 'Material para organismos' },
+];
+
+const pasos = [
+  { t: 'Mándanos tu lista', d: 'Por correo o por teléfono.' },
+  { t: 'Te preparamos el presupuesto', d: 'Artículo por artículo.' },
+  { t: 'Te lo llevamos', d: 'A cualquier isla, o lo recoges en tienda.' },
+];
+---
+<Base
+  titulo="ELNUBA · Distribuidor de papelería y material de oficina en Tenerife"
+  descripcion="Mayorista de papelería, material escolar y de oficina en Los Majuelos (La Laguna). Colegios, empresas y organismos públicos. Repartimos a todas las islas Canarias.">
+
+  <!-- 9-nov-2026, estilo "Escaparate" (Álvaro: "dame algo totalmente distinto"). Copia de antes en el scratchpad de la sesión. -->
+  <!-- PORTADA: mosaico con el mensaje, una foto grande, los años y el reparto -->
+  <section class="mx-auto max-w-7xl px-3 pt-3 sm:px-4 md:px-6 md:pt-5">
+    <div class="grid grid-cols-2 gap-3 md:gap-4 lg:grid-cols-12">
+      <div class="zona-oscura relative col-span-2 flex flex-col justify-center overflow-hidden rounded-[2rem] p-7 sm:p-10 lg:col-span-7 lg:row-span-2 lg:p-12 xl:p-14">
+        <div class="entra">
+          <p class="antetitulo text-xs font-bold tracking-[.2em] uppercase">Mayorista de papelería en Tenerife</p>
+          <!-- El título dice lo que gana el cliente; la palabra clave va en la etiqueta de arriba y en el título de la pestaña -->
+          <h1 class="mt-6 text-[2.5rem] leading-[1.02] sm:text-6xl lg:text-[3.9rem]">
+            Todo el material de tu colegio u oficina, <em class="marcador">en un solo pedido</em>
+          </h1>
+          <p class="mt-6 max-w-xl text-lg leading-relaxed text-tinta/75">
+            Para colegios, empresas y organismos públicos de Canarias. Mándanos tu lista y te preparamos el presupuesto.
+          </p>
+          <div class="mt-9 flex flex-col gap-3 sm:flex-row">
+            <a href={correos.general} class="btn-primario">
+              <svg aria-hidden="true" viewBox="0 0 24 24" class="size-5 fill-none stroke-2"><rect x="3" y="5" width="18" height="14" rx="2" /><path d="m3 7 9 6 9-6" /></svg>
+              Pedir presupuesto por correo
+            </a>
+            <a href={telHref} class="btn-secundario">
+              <svg aria-hidden="true" viewBox="0 0 24 24" class="size-5 fill-none stroke-2"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2" /></svg>
+              Llamar al {negocio.telefono}
+            </a>
+          </div>
+          <CopiarCorreo class="mt-4" />
+          {garantias.length > 0 && <p class="mt-3 text-sm font-semibold">✓ {garantias.join(' · ')}</p>}
+        </div>
+      </div>
+
+      <figure class="entra-tarde relative col-span-2 aspect-[16/10] overflow-hidden rounded-[2rem] lg:col-span-5 lg:aspect-auto lg:min-h-[16rem]">
+        <img src="/img/lapices-abanico.webp" alt="Lápices de colores colocados en círculo sobre fondo blanco" width="960" height="720" loading="eager" decoding="async" class="absolute inset-0 size-full object-cover" />
+      </figure>
+
+      <!-- Los años: lo que más quiere destacar Gonzalo -->
+      <div class="entra-tarde-2 col-span-2 flex flex-col justify-between gap-6 rounded-[2rem] bg-naranja p-6 text-[#13203a] sm:col-span-1 md:p-7 lg:col-span-2">
+        <span class="text-xs font-bold tracking-[.2em] uppercase">Experiencia</span>
+        <p>
+          <span class="block text-7xl leading-none font-extrabold tracking-[-.05em] lg:text-[5.2rem]">{negocio.anios ? <><span class="sr-only">{negocio.anios}</span><span aria-hidden="true" data-contar={negocio.anios} class="tabular-nums">{negocio.anios}</span></> : <Pendiente texto="XX" />}</span>
+          <span class="mt-2 block leading-tight font-bold">años en el sector</span>
+        </p>
+      </div>
+
+      <div class="entra-tarde-2 bloque col-span-2 flex flex-col justify-between gap-6 p-6 sm:col-span-1 md:p-7 lg:col-span-3">
+        <span class="grid size-12 place-items-center rounded-full bg-[#ffe3cf] text-[#b93d0a]">
+          <svg aria-hidden="true" viewBox="0 0 24 24" class="size-6 fill-none stroke-current stroke-[1.6] [stroke-linecap:round] [stroke-linejoin:round]"><path d="M3 7h11v9H3z M14 10h4l3 3v3h-7 M7 19a2 2 0 1 0 0-.01 M17 19a2 2 0 1 0 0-.01" /></svg>
+        </span>
+        <p>
+          <span class="block text-xl leading-tight font-bold">Reparto a todas las islas Canarias</span>
+          <span class="mt-1.5 block text-sm text-gris">Desde Los Majuelos (La Laguna)</span>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <Marcas />
+
+  <Servicios />
+
+  <!-- PARA QUIÉN: fotos grandes con el texto encima -->
+  <section class="mx-auto max-w-7xl px-3 py-14 sm:px-4 md:px-6 md:py-20">
+    <p class="antetitulo text-xs font-bold tracking-[.2em] text-naranja-oscuro uppercase">Para quién trabajamos</p>
+    <h2 class="mt-3 text-4xl md:text-5xl">Elige tu caso</h2>
+    <div class="mt-8 grid gap-3 md:mt-10 md:grid-cols-3 md:gap-4">
+      {clientes.map((c) => (
+        <a href={c.href} class="group foto-velo relative isolate block aspect-[4/3] overflow-hidden rounded-[2rem] sm:aspect-[16/10] md:aspect-[4/5]">
+          <img src={c.img} alt={c.alt} width="960" height="640" loading="lazy" decoding="async" class="absolute inset-0 -z-10 size-full object-cover transition duration-700 group-hover:scale-105" />
+          <div class="absolute inset-x-0 bottom-0 z-10 p-6 text-white md:p-8">
+            <h3 class="text-2xl text-white md:text-[1.65rem]">{c.titulo}</h3>
+            <p class="mt-2 text-white/80">{c.texto}</p>
+            <span class="mt-5 inline-flex items-center gap-2 rounded-full bg-white/15 px-4 py-2 text-sm font-bold backdrop-blur transition group-hover:bg-naranja group-hover:text-[#13203a]">
+              {c.enlace}
+              <svg aria-hidden="true" viewBox="0 0 24 24" class="size-4 fill-none stroke-current stroke-[2.5]"><path d="M5 12h14m-6-6 6 6-6 6" /></svg>
+            </span>
+          </div>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <!-- QUÉ DISTRIBUIMOS: lo que venden, como información (9-nov-2026: sin catálogo, el cliente no lo va a pasar).
+       La última casilla lleva a preguntar: la web solo tiene una acción, contactar -->
+  <section class="mx-auto max-w-7xl px-4 md:px-6">
+    <div class="bloque p-6 sm:p-8 md:p-12">
+      <p class="antetitulo text-xs font-bold tracking-[.2em] text-naranja-oscuro uppercase">Nuestro material</p>
+      <h2 class="mt-3 text-4xl md:text-5xl">Qué distribuimos</h2>
+      <div class="mt-8 md:mt-10"><Familias sobreBlanco /></div>
+    </div>
+  </section>
+
+  <!-- CÓMO PEDIR: bloque oscuro, con el botón al final (cuando el cliente ya sabe qué hacer) -->
+  <section class="mx-auto max-w-7xl px-3 py-14 sm:px-4 md:px-6 md:py-20">
+    <div class="zona-oscura relative overflow-hidden rounded-[2rem] p-7 sm:p-10 md:p-14">
+      <p class="antetitulo text-xs font-bold tracking-[.2em] uppercase">Cómo pedir</p>
+      <h2 class="mt-3 max-w-2xl text-4xl md:text-5xl">Tu pedido, en tres pasos</h2>
+      <ol class="mt-10 grid gap-3 md:grid-cols-3 md:gap-4">
+        {pasos.map((p, i) => (
+          <li class="rounded-3xl bg-white/[.06] p-6 ring-1 ring-white/10 md:p-8">
+            <span class="text-5xl leading-none font-extrabold tracking-[-.04em] text-naranja-vivo md:text-6xl">0{i + 1}</span>
+            <h3 class="mt-5 text-xl md:text-2xl">{p.t}</h3>
+            <p class="mt-2 leading-relaxed text-gris">{p.d}</p>
+          </li>
+        ))}
+      </ol>
+      <div class="mt-8 flex flex-col gap-3 sm:flex-row">
+        <a href={correos.general} class="btn-primario">Mandar mi lista por correo</a>
+        <a href={telHref} class="btn-secundario">Llamar al {negocio.telefono}</a>
+      </div>
+    </div>
+  </section>
+
+  <Preguntas preguntas={preguntas} />
+
+  <LlamadaFinal />
+</Base>

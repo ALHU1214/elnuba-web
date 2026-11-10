@@ -1,0 +1,91 @@
+---
+import Base from '../layouts/Base.astro';
+import Encabezado from '../components/Encabezado.astro';
+import Familias from '../components/Familias.astro';
+import Preguntas from '../components/Preguntas.astro';
+import LlamadaFinal from '../components/LlamadaFinal.astro';
+import Pendiente from '../components/Pendiente.astro';
+import { negocio } from '../data/negocio';
+
+const pasos = [
+  { titulo: 'Mándanos la lista', texto: 'Por correo o por teléfono.' },
+  { titulo: 'Te preparamos el presupuesto', texto: 'Artículo por artículo.' },
+  { titulo: 'Lo llevamos al centro', texto: 'O lo recoges en Los Majuelos.' },
+];
+
+const preguntas = [
+  { p: '¿Suministran libros de texto?', r: 'Sí. Además de material escolar y de bellas artes, suministramos libros de texto a centros educativos.' },
+  { p: '¿Trabajan con colegios públicos y privados?', r: 'Sí, con los dos.' },
+  { p: '¿Trabajan con colegios de otras islas?', r: 'Sí. Estamos en Tenerife, pero repartimos a todas las islas Canarias.' },
+];
+---
+<Base
+  titulo="Material escolar al por mayor para colegios en Tenerife · ELNUBA"
+  descripcion="Material escolar, libros de texto y bellas artes al por mayor para colegios públicos y privados de Tenerife. Mándanos la lista de material del centro y te preparamos el presupuesto.">
+
+  <Encabezado
+    correo="colegio"
+    miga="Colegios"
+    antetitulo="Colegios y centros educativos"
+    titulo="Material escolar al por mayor para colegios en Tenerife"
+    entradilla="Mándanos la lista de material de tu centro y te preparamos el presupuesto.">
+    <div slot="lateral" class="h-full">
+      <div class="bloque relative flex h-full flex-col justify-center overflow-hidden text-tinta">
+        <div class="p-7 sm:p-9">
+          <p class="flex items-end gap-4">
+            <span class="font-serif text-[5.5rem] leading-[.78] font-semibold tracking-[-.03em] text-naranja-vivo">{negocio.anios ? <><span class="sr-only">{negocio.anios}</span><span aria-hidden="true" data-contar={negocio.anios} class="tabular-nums">{negocio.anios}</span></> : <Pendiente texto="XX" />}</span>
+            <span class="pb-1 font-serif text-xl leading-tight font-medium">años en<br />el sector</span>
+          </p>
+          <div class="franjas trazo mt-5 h-1.5 w-28 rounded-full" data-revelar style="--i:10"></div>
+          <p class="mt-5 font-serif text-xl leading-snug font-medium">Colegios públicos y privados confían en nosotros</p>
+          <ul class="mt-4 space-y-2 text-gris">
+            <li class="flex items-center gap-2.5"><span aria-hidden="true" class="size-1.5 rounded-full bg-naranja"></span>Material escolar</li>
+            <li class="flex items-center gap-2.5"><span aria-hidden="true" class="size-1.5 rounded-full bg-naranja"></span>Libros de texto</li>
+            <li class="flex items-center gap-2.5"><span aria-hidden="true" class="size-1.5 rounded-full bg-naranja"></span>Bellas artes</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </Encabezado>
+
+  <!-- CÓMO TRABAJAMOS -->
+  <section class="relative mx-auto max-w-7xl px-4 py-16 md:px-6 md:py-20">
+    <div class="grid gap-14 lg:grid-cols-[1fr_1.2fr] lg:items-center">
+      <div>
+        <h2 class="text-4xl font-medium tracking-tight md:text-5xl">Nos mandas la lista y nos encargamos</h2>
+        <div class="relative mt-10 max-w-md">
+          <div class="absolute -bottom-3 -left-3 h-full w-full rounded-2xl ring-1 ring-tinta/15"></div>
+          <img src="/img/nina-dibujando.webp" alt="Una niña dibujando con lápices de colores en una mesa" width="960" height="640" loading="lazy" decoding="async" class="relative aspect-[3/2] w-full rounded-2xl object-cover" />
+        </div>
+      </div>
+      <ol class="grid gap-8">
+        {pasos.map((paso, i) => (
+          <li class="grid grid-cols-[auto_1fr] gap-5 border-t border-tinta/20 pt-6">
+            <span class="font-serif text-5xl leading-none font-semibold text-naranja-vivo">{i + 1}</span>
+            <div>
+              <h3 class="text-xl font-semibold">{paso.titulo}</h3>
+              <p class="mt-2 leading-relaxed text-gris">{paso.texto}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- QUÉ SUMINISTRAMOS -->
+  <section>
+    <div class="mx-auto max-w-7xl px-4 py-16 md:px-6 md:py-20">
+      <div class="flex flex-wrap items-end justify-between gap-6">
+        <div>
+          <p class="antetitulo text-xs font-bold tracking-[.24em] text-naranja-oscuro uppercase">Para el colegio</p>
+          <h2 class="mt-3 text-4xl font-medium tracking-tight md:text-5xl">Qué suministramos a los centros</h2>
+        </div>
+      </div>
+      <div class="mt-10"><Familias para="colegios" /></div>
+    </div>
+  </section>
+
+  <Preguntas preguntas={preguntas} titulo="Preguntas de los colegios" correo="colegio" />
+
+  <LlamadaFinal correo="colegio" titulo="¿Tienes ya la lista de material?" texto="Mándanosla y te preparamos el presupuesto del centro." />
+</Base>

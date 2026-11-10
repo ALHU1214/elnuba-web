@@ -1,0 +1,48 @@
+---
+import Base from '../layouts/Base.astro';
+import Encabezado from '../components/Encabezado.astro';
+import LlamadaFinal from '../components/LlamadaFinal.astro';
+import Pendiente from '../components/Pendiente.astro';
+import Tiendas from '../components/Tiendas.astro';
+import { negocio } from '../data/negocio';
+
+const d = negocio.direccion;
+---
+<Base
+  titulo="Quiénes somos · ELNUBA, distribuidor de papelería en Tenerife"
+  descripcion="ELNUBA es una empresa de Tenerife que distribuye papelería, material escolar y de oficina a colegios, empresas y organismos públicos de Canarias.">
+
+  <Encabezado
+    foto="/img/libros.webp"
+    fotoAlt="Libros apilados"
+    miga="Nosotros"
+    antetitulo="Quiénes somos"
+    titulo="Distribuidores de papelería en Tenerife"
+    entradilla="Desde Los Majuelos (La Laguna), para colegios, empresas y organismos públicos de Canarias."
+    botones={false} />
+
+  <section class="relative mx-auto max-w-7xl px-4 py-16 md:px-6 md:py-20">
+    <div class="grid gap-14 lg:grid-cols-[1.2fr_1fr] lg:items-center">
+      <div class="max-w-[65ch] space-y-5 text-lg leading-relaxed text-gris">
+        <h2 class="text-3xl font-medium tracking-tight text-tinta md:text-4xl">Cerca de nuestros clientes</h2>
+        <p>Llevamos {negocio.anios ? `${negocio.anios} años` : <Pendiente texto="XX años" />} en el sector: sabemos lo que necesita un colegio al empezar el curso y una oficina cada mes.</p>
+        <p>Cuando nos llamas, te atiende alguien que conoce tu pedido.</p>
+        <p><Pendiente texto="algo más de la historia de la empresa, si Gonzalo quiere contarla (pregunta 5)" /></p>
+      </div>
+      <div class="relative">
+        <div class="absolute -bottom-3 -left-3 h-full w-full rounded-2xl ring-1 ring-tinta/15"></div>
+        <img src="/img/mesa-papeleria.webp" alt="Sobres, lápices, clips y portarrollos sobre una mesa blanca" width="960" height="640" loading="lazy" decoding="async" class="relative aspect-[3/2] w-full rounded-2xl object-cover" />
+      </div>
+    </div>
+  </section>
+
+  <!-- 9-nov-2026: fuera "Qué hacemos" (repetía el inicio y la entradilla) -->
+
+  <section class="relative mx-auto max-w-7xl px-4 py-16 md:px-6 md:py-20">
+    <h2 class="text-4xl font-medium tracking-tight md:text-5xl">Nuestras tiendas</h2>
+    <p class="mt-5 max-w-2xl text-lg leading-relaxed text-gris">También vendemos al público.</p>
+    <div class="mt-10"><Tiendas /></div>
+  </section>
+
+  <LlamadaFinal />
+</Base>

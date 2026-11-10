@@ -1,0 +1,60 @@
+---
+// Cabecera de las páginas interiores. Estilo "Escaparate" (9-nov-2026): mosaico con un bloque marino (miga de pan,
+// título, entradilla y botones) y, al lado, una foto grande o lo que se pase en el hueco "lateral".
+import { telHref, negocio, correos, type TipoCorreo } from '../data/negocio';
+import CopiarCorreo from './CopiarCorreo.astro';
+import Marcas from './Marcas.astro';
+
+interface Props { antetitulo: string; titulo: string; entradilla: string; miga: string; botones?: boolean; foto?: string; fotoAlt?: string; correo?: TipoCorreo; marcas?: boolean; }
+const { antetitulo, titulo, entradilla, miga, botones = true, foto, fotoAlt = '', correo = 'general', marcas = true } = Astro.props;
+const lateral = Astro.slots.has('lateral'); // algo a la derecha en lugar de foto (p. ej. la tarjeta de los años)
+const conLado = Boolean(foto || lateral);
+
+const migaJsonld = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Inicio', item: new URL('/', Astro.site).href },
+    { '@type': 'ListItem', position: 2, name: miga, item: new URL(Astro.url.pathname, Astro.site).href },
+  ],
+};
+---
+<section class="mx-auto max-w-7xl px-3 pt-3 sm:px-4 md:px-6 md:pt-5">
+  <div class:list={['grid gap-3 md:gap-4', conLado && 'lg:grid-cols-12']}>
+    <div class:list={['zona-oscura relative flex flex-col justify-center overflow-hidden rounded-[2rem] p-7 sm:p-10 lg:p-12', conLado && 'lg:col-span-7']}>
+      <div class="entra">
+        <nav aria-label="Estás aquí" class="text-sm text-tinta/70">
+          <a href="/" class="hover:text-tinta hover:underline">Inicio</a>
+          <span aria-hidden="true" class="mx-2">/</span>
+          <span aria-current="page" class="text-tinta">{miga}</span>
+        </nav>
+        <p class="antetitulo mt-7 text-xs font-bold tracking-[.2em] uppercase">{antetitulo}</p>
+        <h1 class="mt-5 max-w-3xl text-[2.4rem] leading-[1.04] sm:text-5xl lg:text-[3.3rem]">{titulo}</h1>
+        <p class="mt-5 max-w-2xl text-lg leading-relaxed text-tinta/75">{entradilla}</p>
+        {botones && (
+          <>
+            <div class="mt-8 flex flex-col gap-3 sm:flex-row">
+              <a href={correos[correo]} class="btn-primario">
+                <svg aria-hidden="true" viewBox="0 0 24 24" class="size-5 fill-none stroke-2"><rect x="3" y="5" width="18" height="14" rx="2" /><path d="m3 7 9 6 9-6" /></svg>
+                Pedir presupuesto por correo
+              </a>
+              <a href={telHref} class="btn-secundario">
+                <svg aria-hidden="true" viewBox="0 0 24 24" class="size-5 fill-none stroke-2"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2" /></svg>
+                Llamar al {negocio.telefono}
+              </a>
+            </div>
+            <CopiarCorreo class="mt-4" />
+          </>
+        )}
+      </div>
+    </div>
+    {lateral && <div class="entra-tarde lg:col-span-5"><slot name="lateral" /></div>}
+    {foto && (
+      <figure class="entra-tarde relative aspect-[16/10] overflow-hidden rounded-[2rem] lg:col-span-5 lg:aspect-auto lg:min-h-[22rem]">
+        <img src={foto} alt={fotoAlt} width="960" height="720" loading="eager" decoding="async" class="absolute inset-0 size-full object-cover" />
+      </figure>
+    )}
+  </div>
+  <script type="application/ld+json" set:html={JSON.stringify(migaJsonld)} />
+</section>
+{marcas && <Marcas />}

@@ -1,0 +1,24 @@
+---
+// Página de error (9-nov-2026, CRO): si alguien llega por un enlace roto, en vez de irse tiene a mano
+// el inicio, las secciones y el botón de pedir presupuesto. GitHub Pages la sirve sola como 404.html.
+import Base from '../layouts/Base.astro';
+import { nav } from '../data/negocio';
+---
+<Base
+  titulo="Página no encontrada · ELNUBA"
+  descripcion="Esta página no existe. Vuelve al inicio o pide tu presupuesto de papelería y material de oficina.">
+
+  <section class="mx-auto max-w-7xl px-4 py-3 md:px-6 md:py-5">
+    <div class="zona-oscura relative overflow-hidden rounded-[2rem] p-8 sm:p-12 md:p-16">
+      <div class="entra">
+        <p class="antetitulo text-xs font-bold tracking-[.2em] uppercase">Error 404</p>
+        <h1 class="mt-6 max-w-2xl text-5xl leading-[1.04] md:text-6xl">Esta página no existe</h1>
+        <p class="mt-6 max-w-xl text-lg leading-relaxed text-tinta/75">Puede que el enlace esté mal o que la página ya no exista. Sigue por aquí:</p>
+        <ul class="mt-8 flex flex-wrap gap-3">
+          <li><a href="/" class="btn-primario">Ir al inicio</a></li>
+          {nav.map((n) => <li><a href={n.href} class="btn-secundario">{n.label}</a></li>)}
+        </ul>
+      </div>
+    </div>
+  </section>
+</Base>

@@ -1,0 +1,5 @@
+---
+// Marca visible para lo que falta por confirmar con el cliente. Buscar "pendiente" antes de publicar.
+const { texto = 'PENDIENTE' } = Astro.props;
+---
+<span class="pendiente" title="Falta confirmar con ELNUBA">[{texto}]</span>

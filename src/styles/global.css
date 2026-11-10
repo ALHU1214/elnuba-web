@@ -1,0 +1,157 @@
+@import "tailwindcss";
+/* Estilo "Escaparate" (9-nov-2026): Álvaro pidió "algo totalmente distinto". Mosaico de bloques redondeados sobre
+   fondo piedra, fotos grandes y una sola tipografía (Plus Jakarta Sans). Sin amarillo de fondo (lo rechazó).
+   Copia de la versión anterior ("Color" con portada azul tinta) en el scratchpad de la sesión del 9-nov. */
+@import "@fontsource-variable/plus-jakarta-sans";
+
+/* Paleta. Contrastes comprobados sobre los fondos reales (WCAG AA): marino sobre piedra 14,1:1 · gris 5,4:1 ·
+   enlaces naranja 4,5:1 (5,2:1 sobre blanco) · botón marino sobre naranja 6,7:1 · blanco sobre marino 15,1:1 */
+@theme {
+  --font-sans: "Plus Jakarta Sans Variable", system-ui, sans-serif;
+  --font-display: "Plus Jakarta Sans Variable", system-ui, sans-serif;
+  --font-serif: "Plus Jakarta Sans Variable", system-ui, sans-serif; /* títulos (el nombre "serif" se queda para no tocar todas las páginas) */
+
+  /* Colores del logo: no se cambian */
+  --color-amarillo: #fce265;
+  --color-naranja: #f78a37;
+  --color-rojo: #e84343;
+  --color-madera: #f4c882;
+  --color-naranja-oscuro: #c2410c; /* enlaces y etiquetas */
+  --color-naranja-vivo: #ea580c;   /* números grandes */
+  /* Neutros */
+  --color-tinta: #13203a;    /* azul marino: texto y bloques oscuros */
+  --color-pizarra: #0e1830;  /* pie y barra del móvil */
+  --color-pizarra-2: #24314d;
+  --color-gris: #586173;     /* texto secundario */
+  --color-papel: #f2efe9;    /* fondo general: piedra cálida */
+  --color-crema: #f2efe9;    /* las secciones ya no cambian de color: los bloques blancos hacen la separación */
+  --color-linea: #e4dfd5;
+  --color-melocoton: #ffe9d9;
+
+  --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
+  --radius-3xl: 2rem;
+}
+
+@layer base {
+  html { scroll-behavior: smooth; overflow-x: clip; }
+  body { @apply bg-papel text-tinta font-sans antialiased; overflow-x: clip; }
+  h1, h2, h3 { @apply font-serif text-balance; }
+  h1 em, h2 em { font-style: normal; font-weight: inherit; }
+  :focus-visible { outline: 3px solid var(--color-naranja); outline-offset: 3px; border-radius: 4px; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } * { transition: none !important; animation: none !important; } }
+}
+
+/* Títulos del contenido. Fuera de @layer para ganar a las clases font-medium de cada página (el pie tiene sus propios rótulos) */
+main h1 { font-weight: 800; letter-spacing: -0.03em; }
+main h2 { font-weight: 750; letter-spacing: -0.025em; }
+main h3 { font-weight: 700; letter-spacing: -0.015em; }
+
+/* Botones: el principal es naranja en toda la web (el naranja es "la acción"); el secundario, un contorno que toma
+   el color del texto que lo rodea, así sirve igual sobre blanco que sobre marino */
+@layer components {
+  .btn-primario, .btn-secundario {
+    display: inline-flex; align-items: center; justify-content: center; gap: .625rem;
+    border-radius: 999px; padding: .875rem 1.5rem; font-size: 1rem; line-height: 1.5rem; font-weight: 700; white-space: nowrap;
+    transition: background-color .2s, color .2s, box-shadow .2s, transform .2s cubic-bezier(.22, 1, .36, 1);
+  }
+  .btn-primario { background: var(--color-naranja); color: #13203a; }
+  .btn-primario:hover { background: #13203a; color: #fff; transform: translateY(-2px); box-shadow: 0 16px 30px -14px rgb(19 32 58 / .55); }
+  .zona-oscura .btn-primario:hover { background: #fff; color: #13203a; box-shadow: 0 16px 30px -14px rgb(0 0 0 / .5); }
+  .btn-primario:active { transform: translateY(0) scale(.98); box-shadow: none; }
+  .btn-secundario { color: inherit; box-shadow: inset 0 0 0 2px color-mix(in oklab, currentColor 25%, transparent); }
+  .btn-secundario:hover { box-shadow: inset 0 0 0 2px currentColor; }
+  :is(.btn-primario, .btn-secundario) svg { stroke: currentColor; }
+}
+
+/* Bloques del mosaico: blancos, redondeados y con sombra muy suave (sin borde: una sola forma de separar) */
+.bloque { background: #fff; border-radius: var(--radius-3xl); box-shadow: 0 1px 2px rgb(19 32 58 / .04), 0 14px 34px -22px rgb(19 32 58 / .25); }
+main .ring-1.ring-linea:not(.rounded-full) { --tw-ring-color: transparent; --tw-shadow: 0 1px 2px rgb(19 32 58 / .05), 0 12px 30px -18px rgb(19 32 58 / .22); }
+main a.ring-1.ring-linea:not(.rounded-full):hover { --tw-shadow: 0 2px 6px rgb(19 32 58 / .06), 0 26px 48px -20px rgb(19 32 58 / .3); }
+
+/* Bloques oscuros (marino): mensaje de la portada, cabeceras interiores, "Cómo pedir" y el bloque final.
+   Dentro, la "tinta" es un blanco algo atenuado y el gris y las rayas se aclaran: los textos se escriben con las
+   mismas clases que en el resto de la web */
+.zona-oscura {
+  --color-tinta: #f6f7f9; --color-gris: #b9c0cf; --color-linea: rgb(255 255 255 / .14);
+  color: var(--color-tinta);
+  background:
+    radial-gradient(36rem 26rem at 100% 0%, rgb(247 138 55 / .22) 0%, transparent 70%),
+    radial-gradient(30rem 22rem at 0% 100%, rgb(232 67 67 / .1) 0%, transparent 70%),
+    linear-gradient(135deg, #13203a 0%, #1b2b4b 100%);
+}
+.zona-oscura .antetitulo { background: rgb(255 255 255 / .1); color: #fff; }
+.zona-oscura .text-naranja-vivo { color: #ff8f4a; }
+
+/* Palabras destacadas del título (sobre marino) */
+.marcador { color: #ff9a4d; }
+
+/* Etiqueta sobre los títulos: pastilla naranja clara (el color del texto lo pone cada página) */
+.antetitulo { display: inline-flex; align-items: center; border-radius: 1rem; background: #ffeee2; padding: .4rem .8rem; line-height: 1.35; }
+/* En el móvil, menos espacio entre letras para que la etiqueta quepa en una línea */
+@media (max-width: 639px) { .antetitulo { letter-spacing: .12em; } }
+.antetitulo.sobre-color { background: #fff; } /* sobre un bloque de color (p. ej. el melocotón de las preguntas) */
+
+/* Foto con degradado oscuro abajo para poder escribir encima en blanco */
+.foto-velo::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to top, rgb(14 24 48 / .94) 0%, rgb(14 24 48 / .68) 45%, rgb(14 24 48 / .1) 80%, rgb(14 24 48 / 0) 100%); }
+
+/* El lápiz del logo como dibujo: tres franjas amarillo, naranja y rojo */
+.franjas { background: linear-gradient(90deg, var(--color-amarillo) 0 33.33%, var(--color-naranja) 33.33% 66.66%, var(--color-rojo) 66.66% 100%); }
+
+/* Iconos de las familias y de los servicios: amarillo, naranja y rojo, los tres colores del lápiz del logo */
+li:nth-child(3n+1) .icono-tile { background: #fff0bf; color: #7a5000; }
+li:nth-child(3n+2) .icono-tile { background: #ffe3cf; color: #b93d0a; }
+li:nth-child(3n) .icono-tile { background: #ffdcdc; color: #b42323; }
+a:hover .icono-tile { background: var(--color-tinta); color: var(--color-naranja); }
+
+.pendiente { @apply rounded bg-amarillo/60 px-1.5 font-semibold text-tinta ring-1 ring-naranja; }
+
+/* Textos legales */
+.legal { @apply leading-relaxed text-gris; }
+.legal h2 { @apply mt-12 mb-4 text-2xl font-bold text-tinta first:mt-0; }
+.legal p, .legal ul { @apply mt-4; }
+.legal ul { @apply list-disc space-y-2 pl-6; }
+.legal strong { @apply text-tinta; }
+.legal a { @apply font-semibold text-naranja-oscuro underline underline-offset-2; }
+
+/* Cinta de logos de marcas, a color: se desplaza sola (la lista va duplicada para que no se corte) */
+@keyframes cinta { to { transform: translateX(-50%); } }
+.marcas-cinta { animation: cinta 40s linear infinite; }
+.marca-logo { height: calc(var(--alto) * .8); }
+@media (min-width: 768px) { .marca-logo { height: var(--alto); } }
+@media (prefers-reduced-motion: reduce) { .marcas-cinta { flex-wrap: wrap; justify-content: center; width: auto; } .marcas-cinta > [aria-hidden] { display: none; } }
+
+/* ===== Efectos ===== */
+/* Cambio de página con fundido (navegadores que lo admiten); la cabecera se queda quieta */
+@view-transition { navigation: auto; }
+header { view-transition-name: cabecera; transition: box-shadow .3s ease; }
+/* Cabecera: barra blanca flotante; al bajar, su sombra crece */
+.barra { box-shadow: 0 1px 2px rgb(19 32 58 / .05), 0 10px 30px -18px rgb(19 32 58 / .28); transition: box-shadow .3s ease; }
+header[data-con-sombra] .barra { box-shadow: 0 2px 6px rgb(19 32 58 / .07), 0 18px 40px -18px rgb(19 32 58 / .42); }
+
+/* Portada: entra sola al pintar la página, sin esperar al JavaScript (así se ve enseguida en móviles lentos) */
+@keyframes entrar { from { opacity: 0; transform: translateY(14px); } }
+.entra > * { animation: entrar .7s cubic-bezier(.22, 1, .36, 1) both; }
+.entra > :nth-child(2) { animation-delay: 60ms; }
+.entra > :nth-child(3) { animation-delay: 120ms; }
+.entra > :nth-child(4) { animation-delay: 180ms; }
+.entra > :nth-child(n+5) { animation-delay: 240ms; }
+.entra-tarde { animation: entrar .8s cubic-bezier(.22, 1, .36, 1) .2s both; }
+.entra-tarde-2 { animation: entrar .8s cubic-bezier(.22, 1, .36, 1) .32s both; }
+
+/* Aparición al bajar: sube 18 px y se funde. --i escalona las tarjetas de una rejilla */
+.js [data-revelar] {
+  opacity: 0; transform: translateY(18px);
+  transition: opacity .8s cubic-bezier(.22, 1, .36, 1), transform .8s cubic-bezier(.22, 1, .36, 1);
+  transition-delay: calc(var(--i, 0) * 80ms);
+}
+.js [data-revelar].visible { opacity: 1; transform: none; }
+/* Las franjas del lápiz se dibujan de izquierda a derecha */
+.js .trazo[data-revelar] { opacity: 1; transform: scaleX(0); transform-origin: left; transition-duration: 1.2s; }
+.js .trazo[data-revelar].visible { transform: scaleX(1); }
+
+@media (prefers-reduced-motion: reduce) {
+  @view-transition { navigation: none; }
+  .js [data-revelar], .js .trazo[data-revelar] { opacity: 1; transform: none; transition: none; }
+  .btn-primario:hover { transform: none; }
+}

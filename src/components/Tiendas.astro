@@ -1,0 +1,25 @@
+---
+// Las dos tiendas abiertas al público
+import { tiendas } from '../data/negocio';
+import Pendiente from './Pendiente.astro';
+---
+<div class="grid gap-5 md:grid-cols-2">
+  {tiendas.map((t, i) => (
+    <article id={t.id} class="scroll-mt-28 overflow-hidden rounded-2xl bg-white ring-1 ring-linea">
+      
+      <div class="p-7">
+        <p class="antetitulo text-xs font-bold tracking-[.24em] text-naranja-oscuro uppercase">{t.lugar}</p>
+        <h3 class="mt-2 text-2xl font-semibold">{t.nombre}</h3>
+        <p class="mt-1 text-gris">{t.nota}</p>
+        <p class="mt-4 leading-relaxed">{t.direccion.map((l) => <>{l}<br /></>)}</p>
+        <p class="mt-4"><a href={`tel:${t.telefonoE164}`} class="font-bold text-naranja-oscuro hover:underline">{t.telefono}</a></p>
+        <p class="mt-3 text-gris">{t.horario ? t.horario.join(' · ') : <>Horario: <Pendiente /></>}</p>
+        {t.extras.length > 0 && (
+          <ul class="mt-5 space-y-2 border-t border-linea pt-5 text-gris">
+            {t.extras.map((e) => <li class="flex gap-2.5"><span aria-hidden="true" class="mt-2 size-2 shrink-0 rounded-full bg-naranja"></span>{e}</li>)}
+          </ul>
+        )}
+      </div>
+    </article>
+  ))}
+</div>

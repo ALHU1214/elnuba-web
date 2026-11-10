@@ -1,0 +1,73 @@
+---
+// Efectos de la web (5-nov-2026): aparición suave al bajar, contador de los años y sombra de la cabecera.
+// Todo se apaga si el usuario tiene activado "reducir movimiento". Sin JavaScript, la web se ve entera y quieta.
+---
+<script>
+  const reducir = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const raiz = document.documentElement;
+
+  // 1. Qué aparece al bajar. Las portadas se marcan a mano (data-revelar / data-revelar-hijos);
+  //    el resto de secciones se marca solo: tarjetas de cada rejilla una detrás de otra y los títulos.
+  const marcar = (el: Element, i = 0) => {
+    if (el.closest('[data-revelar]') || el.querySelector('[data-revelar]')) return;
+    el.setAttribute('data-revelar', '');
+    (el as HTMLElement).style.setProperty('--i', String(Math.min(i, 8)));
+  };
+  document.querySelectorAll('[data-revelar-hijos]').forEach((p) =>
+    [...p.children].forEach((c, i) => { c.setAttribute('data-revelar', ''); (c as HTMLElement).style.setProperty('--i', String(i)); }));
+  const secciones = [...document.querySelectorAll('main > section')].slice(1);
+  secciones.forEach((s) => {
+    s.querySelectorAll('[data-revelar-bloque]').forEach((b) => marcar(b));
+    s.querySelectorAll(':is(ul, ol, div).grid').forEach((g) => [...g.children].forEach((c, i) => marcar(c, i)));
+    s.querySelectorAll('h2').forEach((h) => {
+      const antes = h.previousElementSibling, despues = h.nextElementSibling;
+      if (antes?.matches('p')) marcar(antes, 0);
+      marcar(h, 1);
+      if (despues?.matches('p')) marcar(despues, 2);
+    });
+  });
+
+  const vigia = new IntersectionObserver((entradas) => {
+    for (const e of entradas) if (e.isIntersecting) {
+      const el = e.target as HTMLElement;
+      el.classList.add('visible');
+      vigia.unobserve(el);
+      // Al acabar, se quita la marca para que la tarjeta recupere sus propios efectos (p. ej. al pasar el ratón)
+      const i = parseInt(el.style.getPropertyValue('--i') || '0', 10);
+      setTimeout(() => { el.removeAttribute('data-revelar'); el.classList.remove('visible'); }, 1300 + i * 80);
+    }
+  }, { rootMargin: '0px 0px -8% 0px' });
+  // Lo de la portada arranca nada más cargar; lo demás, cuando entra en pantalla
+  const portada = document.querySelector('main > section');
+  document.querySelectorAll('[data-revelar]').forEach((el) => {
+    if (portada?.contains(el)) vigia.observe(el), requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add('visible')));
+    else vigia.observe(el);
+  });
+
+  // 2. Los años cuentan desde 0 cuando se ven
+  if (!reducir) document.querySelectorAll<HTMLElement>('[data-contar]').forEach((el) => {
+    const fin = parseInt(el.dataset.contar || '', 10);
+    if (!fin) return;
+    el.textContent = '0';
+    const vc = new IntersectionObserver(([e]) => {
+      if (!e.isIntersecting) return;
+      vc.disconnect();
+      const t0 = performance.now(), dur = 1500;
+      const paso = (t: number) => {
+        const k = Math.min(1, (t - t0) / dur);
+        el.textContent = String(Math.round(fin * (1 - Math.pow(1 - k, 3))));
+        if (k < 1) requestAnimationFrame(paso);
+      };
+      setTimeout(() => requestAnimationFrame(paso), 350);
+    });
+    vc.observe(el);
+  });
+
+  // 3. La cabecera coge sombra al bajar
+  const cab = document.querySelector('header');
+  const sombra = () => cab?.toggleAttribute('data-con-sombra', scrollY > 8);
+  addEventListener('scroll', sombra, { passive: true });
+  sombra();
+
+  raiz.classList.add('efectos-listos');
+</script>

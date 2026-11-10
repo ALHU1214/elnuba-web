@@ -1,0 +1,70 @@
+---
+// Cabecera (9-nov-2026): barra blanca flotante y redondeada, como los bloques del estilo "Escaparate".
+// Menú con la página actual marcada, teléfono con su etiqueta y el botón principal "Pedir presupuesto".
+// En el móvil: logo y botón de menú (llamar y escribir ya están en la barra fija de abajo).
+import { nav, negocio, telHref, correos } from '../data/negocio';
+const actual = Astro.url.pathname;
+---
+<header class="sticky top-0 z-40 pt-2.5 md:pt-3">
+  <!-- Mismo ancho y márgenes que el contenido, para que la barra alinee con los bloques de debajo -->
+  <div class="mx-auto max-w-7xl px-4 md:px-6">
+  <div class="barra flex h-16 items-center justify-between gap-4 rounded-full bg-white/95 pr-2 pl-5 backdrop-blur md:h-[4.5rem] md:pl-6">
+    <a href="/" class="shrink-0" aria-label="ELNUBA, inicio">
+      <img src="/logo-elnuba.webp" srcset="/logo-elnuba.webp 1x, /logo-elnuba@2x.webp 2x" alt="ELNUBA Distribuciones de Papelería" width="640" height="239" class="h-9 w-auto md:h-11" />
+    </a>
+
+    <nav aria-label="Principal" class="hidden lg:block">
+      <ul class="flex items-center gap-1 text-[15px] font-semibold">
+        {nav.map((n) => (
+          <li>
+            <a href={n.href} aria-current={actual.startsWith(n.href) ? 'page' : undefined}
+               class="block rounded-full px-4 py-2.5 text-tinta/75 transition-colors hover:bg-papel hover:text-tinta aria-[current=page]:bg-melocoton aria-[current=page]:text-tinta">{n.label}</a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+
+    <div class="flex items-center gap-1.5">
+      <a href={telHref} class="hidden items-center gap-2.5 rounded-full py-1.5 pr-4 pl-1.5 transition-colors hover:bg-papel sm:inline-flex">
+        <span class="grid size-10 place-items-center rounded-full bg-tinta">
+          <svg aria-hidden="true" viewBox="0 0 24 24" class="size-[18px] fill-none stroke-naranja stroke-2"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2" /></svg>
+        </span>
+        <span class="leading-tight">
+          <span class="block text-[11px] font-bold tracking-[.14em] text-gris uppercase">Llámanos</span>
+          <span class="block text-[15px] font-bold whitespace-nowrap">{negocio.telefono}</span>
+        </span>
+      </a>
+      <a href={correos.general} class="btn-primario hidden py-3 text-[15px] lg:inline-flex">Pedir presupuesto</a>
+      <button id="menu-boton" type="button" aria-expanded="false" aria-controls="menu-movil"
+              class="inline-flex size-12 items-center justify-center rounded-full bg-papel transition-colors hover:bg-melocoton lg:hidden">
+        <span class="sr-only">Abrir menú</span>
+        <svg aria-hidden="true" viewBox="0 0 24 24" class="size-5 fill-none stroke-tinta stroke-2"><path d="M4 7h16M4 12h16M4 17h16" /></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Menú del móvil y la tableta: panel blanco bajo la barra, con los dos botones de contacto -->
+  <nav id="menu-movil" aria-label="Menú" hidden class="barra mt-2 rounded-[1.75rem] bg-white p-2.5 lg:hidden">
+    <ul>
+      {nav.map((n) => (
+        <li><a href={n.href} aria-current={actual.startsWith(n.href) ? 'page' : undefined}
+               class="block rounded-2xl px-4 py-3.5 text-lg font-semibold transition-colors hover:bg-papel aria-[current=page]:bg-melocoton">{n.label}</a></li>
+      ))}
+    </ul>
+    <div class="mt-2 grid gap-2 sm:grid-cols-2">
+      <a href={correos.general} class="btn-primario">Pedir presupuesto por correo</a>
+      <a href={telHref} class="btn-secundario">Llamar al {negocio.telefono}</a>
+    </div>
+  </nav>
+  </div>
+</header>
+
+<script>
+  const boton = document.getElementById('menu-boton')!;
+  const menu = document.getElementById('menu-movil')!;
+  const poner = (abrir: boolean) => { boton.setAttribute('aria-expanded', String(abrir)); menu.hidden = !abrir; };
+  boton.addEventListener('click', () => poner(boton.getAttribute('aria-expanded') !== 'true'));
+  // Se cierra con Escape y al pulsar fuera
+  addEventListener('keydown', (e) => { if (e.key === 'Escape' && !menu.hidden) { poner(false); boton.focus(); } });
+  addEventListener('click', (e) => { if (!menu.hidden && !(e.target as Element).closest('header')) poner(false); });
+</script>

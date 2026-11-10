@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.astro/
+
+# Documentos internos: el repositorio es público (GitHub Pages gratis). No se suben nunca.
+proyecto/
+CLAUDE.md
+*-INTERNA*
+.env*
