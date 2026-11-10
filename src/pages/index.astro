@@ -1,4 +1,5 @@
 ---
+import { ruta } from '../lib/ruta';
 import Base from '../layouts/Base.astro';
 import Pendiente from '../components/Pendiente.astro';
 import Preguntas from '../components/Preguntas.astro';
@@ -69,7 +70,7 @@ const pasos = [
       </div>
 
       <figure class="entra-tarde relative col-span-2 aspect-[16/10] overflow-hidden rounded-[2rem] lg:col-span-5 lg:aspect-auto lg:min-h-[16rem]">
-        <img src="/img/lapices-abanico.webp" alt="Lápices de colores colocados en círculo sobre fondo blanco" width="960" height="720" loading="eager" decoding="async" class="absolute inset-0 size-full object-cover" />
+        <img src={ruta('/img/lapices-abanico.webp')} alt="Lápices de colores colocados en círculo sobre fondo blanco" width="960" height="720" loading="eager" decoding="async" class="absolute inset-0 size-full object-cover" />
       </figure>
 
       <!-- Los años: lo que más quiere destacar Gonzalo -->
@@ -103,8 +104,8 @@ const pasos = [
     <h2 class="mt-3 text-4xl md:text-5xl">Elige tu caso</h2>
     <div class="mt-8 grid gap-3 md:mt-10 md:grid-cols-3 md:gap-4">
       {clientes.map((c) => (
-        <a href={c.href} class="group foto-velo relative isolate block aspect-[4/3] overflow-hidden rounded-[2rem] sm:aspect-[16/10] md:aspect-[4/5]">
-          <img src={c.img} alt={c.alt} width="960" height="640" loading="lazy" decoding="async" class="absolute inset-0 -z-10 size-full object-cover transition duration-700 group-hover:scale-105" />
+        <a href={ruta(c.href)} class="group foto-velo relative isolate block aspect-[4/3] overflow-hidden rounded-[2rem] sm:aspect-[16/10] md:aspect-[4/5]">
+          <img src={ruta(c.img)} alt={c.alt} width="960" height="640" loading="lazy" decoding="async" class="absolute inset-0 -z-10 size-full object-cover transition duration-700 group-hover:scale-105" />
           <div class="absolute inset-x-0 bottom-0 z-10 p-6 text-white md:p-8">
             <h3 class="text-2xl text-white md:text-[1.65rem]">{c.titulo}</h3>
             <p class="mt-2 text-white/80">{c.texto}</p>

@@ -1,4 +1,5 @@
 ---
+import { ruta } from '../lib/ruta';
 import Base from '../layouts/Base.astro';
 import Encabezado from '../components/Encabezado.astro';
 import LlamadaFinal from '../components/LlamadaFinal.astro';
@@ -31,7 +32,7 @@ const d = negocio.direccion;
       </div>
       <div class="relative">
         <div class="absolute -bottom-3 -left-3 h-full w-full rounded-2xl ring-1 ring-tinta/15"></div>
-        <img src="/img/mesa-papeleria.webp" alt="Sobres, lápices, clips y portarrollos sobre una mesa blanca" width="960" height="640" loading="lazy" decoding="async" class="relative aspect-[3/2] w-full rounded-2xl object-cover" />
+        <img src={ruta('/img/mesa-papeleria.webp')} alt="Sobres, lápices, clips y portarrollos sobre una mesa blanca" width="960" height="640" loading="lazy" decoding="async" class="relative aspect-[3/2] w-full rounded-2xl object-cover" />
       </div>
     </div>
   </section>

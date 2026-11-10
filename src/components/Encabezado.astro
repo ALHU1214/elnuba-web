@@ -1,4 +1,5 @@
 ---
+import { ruta } from '../lib/ruta';
 // Cabecera de las páginas interiores. Estilo "Escaparate" (9-nov-2026): mosaico con un bloque marino (miga de pan,
 // título, entradilla y botones) y, al lado, una foto grande o lo que se pase en el hueco "lateral".
 import { telHref, negocio, correos, type TipoCorreo } from '../data/negocio';
@@ -14,7 +15,7 @@ const migaJsonld = {
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
   itemListElement: [
-    { '@type': 'ListItem', position: 1, name: 'Inicio', item: new URL('/', Astro.site).href },
+    { '@type': 'ListItem', position: 1, name: 'Inicio', item: new URL(ruta('/'), Astro.site).href },
     { '@type': 'ListItem', position: 2, name: miga, item: new URL(Astro.url.pathname, Astro.site).href },
   ],
 };
@@ -24,7 +25,7 @@ const migaJsonld = {
     <div class:list={['zona-oscura relative flex flex-col justify-center overflow-hidden rounded-[2rem] p-7 sm:p-10 lg:p-12', conLado && 'lg:col-span-7']}>
       <div class="entra">
         <nav aria-label="Estás aquí" class="text-sm text-tinta/70">
-          <a href="/" class="hover:text-tinta hover:underline">Inicio</a>
+          <a href={ruta('/')} class="hover:text-tinta hover:underline">Inicio</a>
           <span aria-hidden="true" class="mx-2">/</span>
           <span aria-current="page" class="text-tinta">{miga}</span>
         </nav>
@@ -51,7 +52,7 @@ const migaJsonld = {
     {lateral && <div class="entra-tarde lg:col-span-5"><slot name="lateral" /></div>}
     {foto && (
       <figure class="entra-tarde relative aspect-[16/10] overflow-hidden rounded-[2rem] lg:col-span-5 lg:aspect-auto lg:min-h-[22rem]">
-        <img src={foto} alt={fotoAlt} width="960" height="720" loading="eager" decoding="async" class="absolute inset-0 size-full object-cover" />
+        <img src={ruta(foto)} alt={fotoAlt} width="960" height="720" loading="eager" decoding="async" class="absolute inset-0 size-full object-cover" />
       </figure>
     )}
   </div>

@@ -1,4 +1,5 @@
 ---
+import { ruta } from '../lib/ruta';
 import '../styles/global.css';
 import Cabecera from '../components/Cabecera.astro';
 import Pie from '../components/Pie.astro';
@@ -19,8 +20,8 @@ const jsonld = {
   '@type': 'Store',
   name: negocio.nombreCompleto,
   legalName: negocio.razonSocial,
-  url: Astro.site?.href,
-  logo: new URL('/logo-elnuba.png', Astro.site).href,
+  url: new URL(ruta('/'), Astro.site).href,
+  logo: new URL(ruta('/logo-elnuba.png'), Astro.site).href,
   telephone: negocio.telefonoE164,
   email: negocio.email,
   address: {
@@ -45,14 +46,14 @@ const jsonld = {
     <link rel="canonical" href={canonica} />
     {!PUBLICADA && <meta name="robots" content="noindex, nofollow" />}
     <link rel="preload" href={fuenteTexto} as="font" type="font/woff2" crossorigin />
-    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="icon" type="image/png" href={ruta('/favicon.png')} />
     <meta name="theme-color" content="#f2efe9" />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="es_ES" />
     <meta property="og:title" content={titulo} />
     <meta property="og:description" content={descripcion} />
     <meta property="og:url" content={canonica} />
-    <meta property="og:image" content={new URL('/og-elnuba.jpg', Astro.site)} />
+    <meta property="og:image" content={new URL(ruta('/og-elnuba.jpg'), Astro.site)} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta property="og:image:alt" content="ELNUBA, mayorista de papelería en Tenerife" />

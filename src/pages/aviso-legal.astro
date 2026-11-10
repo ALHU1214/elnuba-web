@@ -1,4 +1,5 @@
 ---
+import { ruta } from '../lib/ruta';
 import Base from '../layouts/Base.astro';
 import Encabezado from '../components/Encabezado.astro';
 import { negocio, mailSimple, telHref } from '../data/negocio';
@@ -46,7 +47,7 @@ const web = Astro.site?.host;
     <p>La web contiene enlaces a redes sociales de terceros (Instagram y Facebook). El titular no controla ni se responsabiliza de los contenidos ni de las políticas de privacidad de esos sitios, que se rigen por sus propias condiciones.</p>
 
     <h2>7. Protección de datos y cookies</h2>
-    <p>El tratamiento de los datos personales se explica en la <a href="/privacidad/">política de privacidad</a>. Esta web no utiliza cookies.</p>
+    <p>El tratamiento de los datos personales se explica en la <a href={ruta('/privacidad/')}>política de privacidad</a>. Esta web no utiliza cookies.</p>
 
     <h2>8. Legislación aplicable y jurisdicción</h2>
     <p>Este aviso legal se rige por la legislación española. Para resolver cualquier controversia derivada del uso de la web, las partes se someten a los juzgados y tribunales que correspondan conforme a la normativa aplicable, sin perjuicio del fuero que legalmente corresponda al usuario como consumidor.</p>

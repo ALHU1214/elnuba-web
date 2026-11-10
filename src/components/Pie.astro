@@ -1,4 +1,5 @@
 ---
+import { ruta } from '../lib/ruta';
 import { negocio, nav, telHref, mailHref } from '../data/negocio';
 import Pendiente from './Pendiente.astro';
 const d = negocio.direccion;
@@ -7,7 +8,7 @@ const d = negocio.direccion;
   <div class="franjas h-1"></div>
   <div class="mx-auto grid max-w-7xl gap-10 px-4 py-14 md:grid-cols-[1.4fr_1fr_1fr] md:px-6">
     <div>
-      <img src="/logo-elnuba.webp" srcset="/logo-elnuba.webp 1x, /logo-elnuba@2x.webp 2x" alt="ELNUBA Distribuciones de Papelería" width="640" height="239" loading="lazy" class="h-14 w-auto" />
+      <img src={ruta('/logo-elnuba.webp')} srcset={`${ruta('/logo-elnuba.webp')} 1x, ${ruta('/logo-elnuba@2x.webp')} 2x`} alt="ELNUBA Distribuciones de Papelería" width="640" height="239" loading="lazy" class="h-14 w-auto" />
       <p class="mt-5 max-w-sm leading-relaxed">Distribución de papelería, material de oficina y librería para colegios, empresas y organismos públicos de Canarias.</p>
     </div>
     <div>
@@ -17,20 +18,20 @@ const d = negocio.direccion;
         <li><a href={mailHref} class="break-all hover:underline">{negocio.email}</a></li>
         <li>{d.calle}<br />{d.zona}<br />{d.cp} {d.localidad}</li>
         <li>{negocio.horario ? negocio.horario.join(' · ') : <>Horario: <Pendiente /></>}</li>
-        <li><a href="/contacto/#candelaria" class="hover:underline">También en Candelaria: Librería Mararía</a></li>
+        <li><a href={ruta('/contacto/#candelaria')} class="hover:underline">También en Candelaria: Librería Mararía</a></li>
       </ul>
     </div>
     <div>
       <h2 class="font-sans text-xs font-bold tracking-[.24em] text-amarillo uppercase">La web</h2>
       <ul class="mt-4 space-y-2.5">
-        {nav.map((n) => <li><a href={n.href} class="hover:underline">{n.label}</a></li>)}
+        {nav.map((n) => <li><a href={ruta(n.href)} class="hover:underline">{n.label}</a></li>)}
       </ul>
     </div>
   </div>
   <div class="border-t border-white/10">
     <div class="mx-auto flex max-w-7xl flex-wrap justify-between gap-3 px-4 py-6 text-sm text-white/60 md:px-6">
       <p>© {new Date().getFullYear()} {negocio.razonSocial} · CIF {negocio.cif}</p>
-      <p class="flex gap-5"><a href="/aviso-legal/" class="hover:underline">Aviso legal</a><a href="/privacidad/" class="hover:underline">Privacidad</a></p>
+      <p class="flex gap-5"><a href={ruta('/aviso-legal/')} class="hover:underline">Aviso legal</a><a href={ruta('/privacidad/')} class="hover:underline">Privacidad</a></p>
     </div>
   </div>
 </footer>

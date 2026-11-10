@@ -1,4 +1,5 @@
 ---
+import { ruta } from '../lib/ruta';
 import Base from '../layouts/Base.astro';
 import Encabezado from '../components/Encabezado.astro';
 import Familias from '../components/Familias.astro';
@@ -55,7 +56,7 @@ const preguntas = [
         <h2 class="text-4xl font-medium tracking-tight md:text-5xl">Nos mandas la lista y nos encargamos</h2>
         <div class="relative mt-10 max-w-md">
           <div class="absolute -bottom-3 -left-3 h-full w-full rounded-2xl ring-1 ring-tinta/15"></div>
-          <img src="/img/nina-dibujando.webp" alt="Una niña dibujando con lápices de colores en una mesa" width="960" height="640" loading="lazy" decoding="async" class="relative aspect-[3/2] w-full rounded-2xl object-cover" />
+          <img src={ruta('/img/nina-dibujando.webp')} alt="Una niña dibujando con lápices de colores en una mesa" width="960" height="640" loading="lazy" decoding="async" class="relative aspect-[3/2] w-full rounded-2xl object-cover" />
         </div>
       </div>
       <ol class="grid gap-8">

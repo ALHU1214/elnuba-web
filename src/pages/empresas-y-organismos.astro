@@ -1,4 +1,5 @@
 ---
+import { ruta } from '../lib/ruta';
 import Base from '../layouts/Base.astro';
 import Encabezado from '../components/Encabezado.astro';
 import Familias from '../components/Familias.astro';
@@ -49,14 +50,14 @@ const preguntas = [
   <!-- EMPRESAS Y ORGANISMOS -->
   <section class="mx-auto grid max-w-7xl gap-6 px-4 pb-20 md:grid-cols-2 md:px-6 md:pb-28">
     <article id="empresas" class="scroll-mt-28 overflow-hidden rounded-2xl bg-white ring-1 ring-linea">
-      <img src="/img/subrayadores.webp" alt="Rotuladores fluorescentes de colores" width="960" height="640" loading="lazy" decoding="async" class="aspect-[2/1] w-full object-cover" />
+      <img src={ruta('/img/subrayadores.webp')} alt="Rotuladores fluorescentes de colores" width="960" height="640" loading="lazy" decoding="async" class="aspect-[2/1] w-full object-cover" />
       <div class="p-7 md:p-9">
         <h2 class="text-2xl font-medium">Empresas y despachos</h2>
         <p class="mt-3 leading-relaxed text-gris">Material del día a día, máquinas, mobiliario y libros jurídicos.</p>
       </div>
     </article>
     <article id="organismos" class="scroll-mt-28 overflow-hidden rounded-2xl bg-white ring-1 ring-linea">
-      <img src="/img/archivadores.webp" alt="Dos archivadores rojos" width="960" height="640" loading="lazy" decoding="async" class="aspect-[2/1] w-full object-cover" />
+      <img src={ruta('/img/archivadores.webp')} alt="Dos archivadores rojos" width="960" height="640" loading="lazy" decoding="async" class="aspect-[2/1] w-full object-cover" />
       <div class="p-7 md:p-9">
         <h2 class="text-2xl font-medium">Organismos públicos</h2>
         <p class="mt-3 leading-relaxed text-gris">Material de oficina para la administración pública en Canarias.</p>

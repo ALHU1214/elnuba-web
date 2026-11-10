@@ -1,4 +1,5 @@
 ---
+import { ruta } from '../lib/ruta';
 // Cabecera (9-nov-2026): barra blanca flotante y redondeada, como los bloques del estilo "Escaparate".
 // Menú con la página actual marcada, teléfono con su etiqueta y el botón principal "Pedir presupuesto".
 // En el móvil: logo y botón de menú (llamar y escribir ya están en la barra fija de abajo).
@@ -9,15 +10,15 @@ const actual = Astro.url.pathname;
   <!-- Mismo ancho y márgenes que el contenido, para que la barra alinee con los bloques de debajo -->
   <div class="mx-auto max-w-7xl px-4 md:px-6">
   <div class="barra flex h-16 items-center justify-between gap-4 rounded-full bg-white/95 pr-2 pl-5 backdrop-blur md:h-[4.5rem] md:pl-6">
-    <a href="/" class="shrink-0" aria-label="ELNUBA, inicio">
-      <img src="/logo-elnuba.webp" srcset="/logo-elnuba.webp 1x, /logo-elnuba@2x.webp 2x" alt="ELNUBA Distribuciones de Papelería" width="640" height="239" class="h-9 w-auto md:h-11" />
+    <a href={ruta('/')} class="shrink-0" aria-label="ELNUBA, inicio">
+      <img src={ruta('/logo-elnuba.webp')} srcset={`${ruta('/logo-elnuba.webp')} 1x, ${ruta('/logo-elnuba@2x.webp')} 2x`} alt="ELNUBA Distribuciones de Papelería" width="640" height="239" class="h-9 w-auto md:h-11" />
     </a>
 
     <nav aria-label="Principal" class="hidden lg:block">
       <ul class="flex items-center gap-1 text-[15px] font-semibold">
         {nav.map((n) => (
           <li>
-            <a href={n.href} aria-current={actual.startsWith(n.href) ? 'page' : undefined}
+            <a href={ruta(n.href)} aria-current={actual.startsWith(ruta(n.href)) ? 'page' : undefined}
                class="block rounded-full px-4 py-2.5 text-tinta/75 transition-colors hover:bg-papel hover:text-tinta aria-[current=page]:bg-melocoton aria-[current=page]:text-tinta">{n.label}</a>
           </li>
         ))}
@@ -47,7 +48,7 @@ const actual = Astro.url.pathname;
   <nav id="menu-movil" aria-label="Menú" hidden class="barra mt-2 rounded-[1.75rem] bg-white p-2.5 lg:hidden">
     <ul>
       {nav.map((n) => (
-        <li><a href={n.href} aria-current={actual.startsWith(n.href) ? 'page' : undefined}
+        <li><a href={ruta(n.href)} aria-current={actual.startsWith(ruta(n.href)) ? 'page' : undefined}
                class="block rounded-2xl px-4 py-3.5 text-lg font-semibold transition-colors hover:bg-papel aria-[current=page]:bg-melocoton">{n.label}</a></li>
       ))}
     </ul>
