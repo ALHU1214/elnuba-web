@@ -37,7 +37,7 @@ export const preguntasInicio: Pregunta[] = [
   { tema: 'reparto', p: '¿Puedo pasar a recoger el pedido?', r: 'Sí, en nuestro almacén de Los Majuelos (La Laguna).' },
 
   // Material (familias: las de catalogo.ts, escritas a mano para que se lean bien)
-  { tema: 'material', p: '¿Qué material tienen?', r: 'Papel y etiquetas, blocs y cuadernos, material de escritura, archivo y sobres, agendas, consumibles de informática (tóner y cartuchos), mobiliario, maquinaria de impresión digital, libros de texto y jurídicos, librería infantil, dibujo y pintura, y artículos de regalo.' },
+  { tema: 'material', p: '¿Qué material tienen?', r: 'Papel, cuadernos, agendas y etiquetas; material de escritura; carpetas, archivadores y sobres; consumibles de informática (tóner y cartuchos); material escolar; dibujo y pintura; libros de texto, infantiles y jurídicos, y artículos de regalo.' },
   { tema: 'material', p: '¿Con qué marcas trabajan?', r: `Con muchas marcas, entre ellas ${listaMarcas}.` },
   { tema: 'material', p: '¿Tienen libros de texto?', r: 'Sí, suministramos libros de texto a centros educativos.' },
 

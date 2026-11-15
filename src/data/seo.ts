@@ -3,13 +3,13 @@
 // y la ficha de la empresa entera en todas las páginas. Solo datos reales que también se ven en la web.
 // Lo que falta (horario, condiciones) se añade solo cuando se rellene en negocio.ts.
 import { negocio, tiendas, islas } from './negocio';
-import { familias, grupos } from './catalogo';
+import { familiasPara } from './catalogo';
 
 // Páginas que se ofrecen a Google y a las IA (sitemap.xml y llms.txt). Las legales y la 404 no: llevan noindex.
 export const paginas = [
   { ruta: '/', nombre: 'Inicio', resumen: 'Qué distribuye ELNUBA, para quién, cómo se pide y preguntas frecuentes.' },
   { ruta: '/colegios/', nombre: 'Colegios', resumen: 'Material escolar, libros de texto y material de dibujo y pintura para colegios y centros educativos.' },
-  { ruta: '/empresas-y-organismos/', nombre: 'Empresas y organismos', resumen: 'Material de oficina, archivo, tóner, cartuchos y mobiliario para empresas, despachos y organismos públicos.' },
+  { ruta: '/empresas-y-organismos/', nombre: 'Empresas y organismos', resumen: 'Material de oficina, archivo, tóner y cartuchos para empresas, despachos y organismos públicos.' },
   { ruta: '/nosotros/', nombre: 'Nosotros', resumen: 'Quiénes somos y nuestras dos tiendas abiertas al público.' },
   { ruta: '/contacto/', nombre: 'Contacto', resumen: 'Teléfono, correo, dirección y cómo llegar.' },
 ];
@@ -22,7 +22,7 @@ const mapa = (q: string) => `https://www.google.com/maps/search/?api=1&query=${e
 // Servicio principal de cada página de cliente (va en su propia página y la ficha de la empresa apunta a él)
 export const servicios = {
   colegios: { nombre: 'Suministro de material escolar a colegios y centros educativos', descripcion: 'Material escolar, libros de texto y material de dibujo y pintura para colegios públicos y privados. El centro manda su lista de material y ELNUBA le prepara el presupuesto.', publico: 'Colegios y centros educativos' },
-  empresas: { nombre: 'Suministro de material de oficina a empresas y organismos públicos', descripcion: 'Material de oficina, archivo, tóner, cartuchos y mobiliario para empresas, despachos y organismos públicos, con entrega en la oficina.', publico: 'Empresas, despachos y organismos públicos' },
+  empresas: { nombre: 'Suministro de material de oficina a empresas y organismos públicos', descripcion: 'Material de oficina, archivo, tóner y cartuchos para empresas, despachos y organismos públicos, con entrega en la oficina.', publico: 'Empresas, despachos y organismos públicos' },
 };
 export type Servicio = (typeof servicios)[keyof typeof servicios];
 
@@ -95,10 +95,10 @@ export function grafo(o: { inicio: string; canonica: string; titulo: string; des
     hasOfferCatalog: {
       '@type': 'OfferCatalog',
       name: 'Qué distribuimos',
-      itemListElement: grupos.map((g) => ({
+      itemListElement: familiasPara().map((f) => ({
         '@type': 'OfferCatalog',
-        name: g.nombre,
-        itemListElement: familias.filter((f) => f.grupo === g.id).map((f) => ({ '@type': 'Offer', itemOffered: { '@type': 'Product', name: f.nombre } })),
+        name: f.nombre,
+        itemListElement: f.productos.map((name) => ({ '@type': 'Offer', itemOffered: { '@type': 'Product', name } })),
       })),
     },
     sameAs: [negocio.instagram, negocio.facebook],

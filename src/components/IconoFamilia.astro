@@ -1,7 +1,8 @@
 ---
-// Icono de línea para cada familia del catálogo (por slug)
-interface Props { slug: string; class?: string; }
-const { slug, class: clase = 'size-6' } = Astro.props;
+// Icono de línea para cada familia del catálogo (por slug).
+// dibujar: el trazo mide 1 (pathLength) para poder dibujarlo de principio a fin con CSS (Familias.astro, 15-nov-2026)
+interface Props { slug: string; class?: string; dibujar?: boolean; }
+const { slug, class: clase = 'size-6', dibujar = false } = Astro.props;
 
 const trazos: Record<string, string> = {
   'papel-y-etiquetas': 'M6 3h9l3 3v15H6z M15 3v3h3 M9 11h6 M9 15h6',
@@ -10,8 +11,7 @@ const trazos: Record<string, string> = {
   'archivo-y-sobres': 'M3 6h6l2 2h10v11H3z M3 11h18',
   'agendas': 'M4 6h16v14H4z M4 10h16 M8 3v5 M16 3v5',
   'ofimatica': 'M7 8V3h10v5 M5 8h14v8H5z M7 13h10v8H7z',
-  'mobiliario': 'M7 3h10v9H7z M5 12h14 M8 12v9 M16 12v9',
-  'impresion-digital': 'M3 5h18v11H3z M9 20h6 M12 16v4',
+  'escolar': 'M9 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z M9 18a3 3 0 1 1-6 0 3 3 0 0 1 6 0z M8.1 8.1L12 12 M20 4L8.1 15.9 M14.8 14.8L20 20',
   'libros-de-texto': 'M4 19V5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2 2 2 0 0 0 2 2h13',
   'libros-juridicos': 'M12 3v18 M6 21h12 M5 7h14 M5 7l-3 6h6z M19 7l-3 6h6z',
   'libreria-infantil': 'M12 3l2.6 5.6 6 .7-4.5 4.1 1.2 6L12 16.5l-5.3 2.9 1.2-6-4.5-4.1 6-.7z',
@@ -19,4 +19,4 @@ const trazos: Record<string, string> = {
   'regalo': 'M3 8h18v4H3z M5 12h14v9H5z M12 8v13 M12 8C10 4 6 4 6 6.5S12 8 12 8s6 1 6-1.5S14 4 12 8',
 };
 ---
-<svg aria-hidden="true" viewBox="0 0 24 24" class={`fill-none stroke-current stroke-[1.75] [stroke-linecap:round] [stroke-linejoin:round] ${clase}`}><path d={trazos[slug] ?? 'M4 4h16v16H4z'} /></svg>
+<svg aria-hidden="true" viewBox="0 0 24 24" class={`fill-none stroke-current stroke-[1.75] [stroke-linecap:round] [stroke-linejoin:round] ${clase}`}><path d={trazos[slug] ?? 'M4 4h16v16H4z'} pathLength={dibujar ? 1 : undefined} /></svg>

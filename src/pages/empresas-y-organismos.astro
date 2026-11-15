@@ -22,13 +22,14 @@ const preguntas = [
   { p: '¿Trabajan con la administración pública?', r: 'Sí. Suministramos material de oficina a organismos públicos de Canarias.' },
   { p: '¿Me llevan el pedido a la oficina?', r: 'Sí, te lo llevamos a tu oficina. Si lo prefieres, también puedes recogerlo en nuestro almacén de Los Majuelos (La Laguna).' },
   { p: '¿Reparten a todas las islas?', r: `Sí, a todas las islas Canarias: ${listaIslas}.` },
-  { p: '¿Venden también mobiliario de oficina?', r: 'Sí, además de material de oficina y de archivo, y consumibles de informática como tóner y cartuchos.' },
+  // 15-nov-2026: antes preguntaba por mobiliario, que no venden (Álvaro)
+  { p: '¿Tienen tóner y cartuchos?', r: 'Sí. Consumibles de informática como tóner y cartuchos, además de papel, archivo y material de escritura.' },
   { p: '¿Tienen libros jurídicos?', r: 'Sí, para despachos y profesionales.' },
 ];
 ---
 <Base
   titulo="Material de oficina para empresas y organismos públicos de Canarias · ELNUBA"
-  descripcion="Material de oficina, archivo, tóner, cartuchos y mobiliario para empresas, despachos y organismos públicos de todas las islas Canarias. Entrega en tu oficina. Pide presupuesto."
+  descripcion="Material de oficina, archivo, tóner y cartuchos para empresas, despachos y organismos públicos de todas las islas Canarias. Entrega en tu oficina. Pide presupuesto."
   servicio={servicios.empresas}>
 
   <Encabezado
@@ -38,7 +39,7 @@ const preguntas = [
     miga="Empresas y organismos"
     antetitulo="Empresas, despachos y organismos públicos"
     titulo="Material de oficina para empresas y organismos públicos en todas las islas"
-    entradilla="Papel, archivo, tóner y mobiliario. Te lo llevamos a la oficina." />
+    entradilla="Papel, archivo, tóner y cartuchos. Te lo llevamos a la oficina." />
 
   {/* POR QUÉ */}
   <section class="relative mx-auto max-w-7xl px-4 py-12 md:px-6 md:py-20">
@@ -59,7 +60,7 @@ const preguntas = [
       <img src={ruta('/img/subrayadores.webp')} alt="Rotuladores fluorescentes de colores" width="960" height="640" loading="lazy" decoding="async" class="aspect-[2/1] w-full object-cover" />
       <div class="p-7 md:p-9">
         <h2 class="text-2xl font-medium">Empresas y despachos</h2>
-        <p class="mt-3 leading-relaxed text-gris">Material del día a día, máquinas, mobiliario y libros jurídicos.</p>
+        <p class="mt-3 leading-relaxed text-gris">Material del día a día, tóner y cartuchos, y libros jurídicos.</p>
       </div>
     </article>
     <article id="organismos" class="scroll-mt-28 overflow-hidden rounded-2xl bg-white ring-1 ring-linea">

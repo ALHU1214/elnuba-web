@@ -1,36 +1,46 @@
-// Familias de producto. Salen de lo que ELNUBA dice que vende (CLAUDE.md del cliente).
-// [PENDIENTE] confirmar familias y quitar lo que no quiera que salga (pregunta 12).
-// 9-nov-2026: la web no lleva catálogo (el cliente no lo va a pasar). Las familias salen como información, sin enlaces.
+// Familias de producto: lo que ELNUBA distribuye. La web no lleva catálogo (9-nov-2026): salen como información.
+//
+// 15-nov-2026 (Álvaro: "verificar que se vende eso, no poner cualquier cosa, y repartirlo mejor, no tan al azar").
+// Solo lo comprobado:
+//  - En las reuniones: bolígrafos (BIC), carpetas, folios y sobres (Gonzalo, 8-oct) y tóner y cartuchos (Elena, 15-oct).
+//  - Por las marcas que trabajan (lista de Álvaro, 9-nov): Pilot (rotuladores), Tipp-Ex (correctores), Oxford
+//    (cuadernos), Post-it (notas adhesivas), Apli (etiquetas), Alpino y Giotto (lápices de colores), Plastidecor
+//    (ceras), Carioca (rotuladores de colores), Pritt (pegamento), Maped (tijeras y reglas), Milan (gomas), Totto (mochilas).
+//  - Confirmados por Álvaro el 15-nov: libros de texto, libros jurídicos, libros infantiles, agendas y artículos de regalo.
+//  - NO venden mobiliario ni maquinaria de impresión digital (Álvaro, 15-nov): venían de Páginas Amarillas. No ponerlos.
+// Orden: primero lo que usan colegios y oficinas, luego lo del colegio y al final libros y regalo.
+// Cada producto dice para quién es: en Colegios y en Empresas solo sale lo suyo (y la familia, si le queda algo).
 
-// resumen: solo si añade algo al nombre (para quién es). Si repetiría el título, se deja vacío y no sale.
-// grupo (10-nov-2026): solo para ordenar el índice del cuaderno en columnas; no es un dato del cliente.
-export type Grupo = 'papeleria' | 'oficina' | 'libreria' | 'arte-regalo';
-export type Familia = { slug: string; nombre: string; resumen: string; para: ('colegios' | 'empresas')[]; grupo: Grupo };
+export type Para = 'colegios' | 'empresas';
+export type Producto = { nombre: string; para: Para[] };
+// icono: el trazo de IconoFamilia.astro. nombres: si en una página la familia se queda solo con parte de lo suyo
+export type Familia = { slug: string; nombre: string; icono: string; productos: Producto[]; nombres?: Partial<Record<Para, string>> };
 
-// partes: si el grupo junta cosas distintas, su nombre se forma solo con las que salen en esa página
-// (en Colegios solo hay dibujo y pintura y en Empresas solo regalo)
-export const grupos: { id: Grupo; nombre: string; partes?: Record<string, string> }[] = [
-  { id: 'papeleria', nombre: 'Papelería' },
-  { id: 'oficina', nombre: 'Oficina' },
-  { id: 'libreria', nombre: 'Librería' },
-  { id: 'arte-regalo', nombre: 'Arte y regalo', partes: { 'bellas-artes': 'Arte', regalo: 'Regalo' } },
-];
+const todos: Para[] = ['colegios', 'empresas'];
+const p = (nombre: string, para: Para[] = todos): Producto => ({ nombre, para });
 
 export const familias: Familia[] = [
-  { slug: 'papel-y-etiquetas', nombre: 'Papel y etiquetas', resumen: 'Papel y etiquetas para el aula y la oficina.', para: ['colegios', 'empresas'], grupo: 'papeleria' },
-  { slug: 'blocs-y-cuadernos', nombre: 'Blocs y cuadernos', resumen: 'Blocs y cuadernos para el aula y la oficina.', para: ['colegios', 'empresas'], grupo: 'papeleria' },
-  { slug: 'escritura', nombre: 'Escritura', resumen: 'Bolígrafos y material de escritura.', para: ['colegios', 'empresas'], grupo: 'papeleria' },
-  { slug: 'archivo-y-sobres', nombre: 'Archivo y sobres', resumen: '', para: ['colegios', 'empresas'], grupo: 'papeleria' },
-  { slug: 'agendas', nombre: 'Agendas', resumen: '', para: ['colegios', 'empresas'], grupo: 'papeleria' },
-  { slug: 'ofimatica', nombre: 'Tóner y cartuchos', resumen: '', para: ['empresas'], grupo: 'oficina' },
-  { slug: 'mobiliario', nombre: 'Mobiliario de oficina', resumen: 'Mobiliario para oficinas y despachos.', para: ['empresas'], grupo: 'oficina' },
-  { slug: 'impresion-digital', nombre: 'Maquinaria de impresión digital', resumen: '', para: ['empresas'], grupo: 'oficina' },
-  { slug: 'libros-de-texto', nombre: 'Libros de texto', resumen: 'Libros de texto para centros educativos.', para: ['colegios'], grupo: 'libreria' },
-  { slug: 'libros-juridicos', nombre: 'Libros jurídicos', resumen: 'Libros jurídicos para despachos y profesionales.', para: ['empresas'], grupo: 'libreria' },
-  { slug: 'libreria-infantil', nombre: 'Librería infantil', resumen: '', para: ['colegios'], grupo: 'libreria' },
-  { slug: 'bellas-artes', nombre: 'Dibujo y pintura', resumen: '', para: ['colegios'], grupo: 'arte-regalo' },
-  { slug: 'regalo', nombre: 'Artículos de regalo', resumen: '', para: ['empresas'], grupo: 'arte-regalo' },
+  { slug: 'papel', nombre: 'Papel y cuadernos', icono: 'blocs-y-cuadernos', productos: [p('Folios'), p('Cuadernos y blocs'), p('Agendas'), p('Notas adhesivas'), p('Etiquetas')] },
+  { slug: 'escritura', nombre: 'Escritura', icono: 'escritura', productos: [p('Bolígrafos'), p('Rotuladores'), p('Lápices'), p('Correctores')] },
+  { slug: 'archivo', nombre: 'Archivo y oficina', icono: 'archivo-y-sobres', productos: [p('Carpetas y archivadores'), p('Sobres'), p('Tóner y cartuchos')] },
+  { slug: 'escolar', nombre: 'Material escolar', icono: 'escolar', productos: [p('Pegamento', ['colegios']), p('Tijeras', ['colegios']), p('Reglas', ['colegios']), p('Gomas', ['colegios']), p('Mochilas', ['colegios'])] },
+  { slug: 'dibujo', nombre: 'Dibujo y pintura', icono: 'bellas-artes', productos: [p('Lápices de colores', ['colegios']), p('Ceras', ['colegios']), p('Rotuladores de colores', ['colegios'])] },
+  {
+    slug: 'libros', nombre: 'Libros y regalo', icono: 'libros-de-texto', nombres: { colegios: 'Libros' },
+    productos: [p('Libros de texto', ['colegios']), p('Libros infantiles', ['colegios']), p('Libros jurídicos', ['empresas']), p('Artículos de regalo', ['empresas'])],
+  },
 ];
+
+// Las familias de una página, ya con solo sus productos (sin `para`, todas enteras: el inicio)
+export const familiasPara = (para?: Para) =>
+  familias
+    .map((f) => ({
+      slug: f.slug,
+      icono: f.icono,
+      nombre: (para && f.nombres?.[para]) || f.nombre,
+      productos: f.productos.filter((x) => !para || x.para.includes(para)).map((x) => x.nombre),
+    }))
+    .filter((f) => f.productos.length > 0);
 
 // Marcas con las que trabaja ELNUBA, para la franja de logos del inicio.
 // 9-nov-2026: lista que pasó Álvaro (14 marcas). Cada logo va en public/marcas/<archivo>.

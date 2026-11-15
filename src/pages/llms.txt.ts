@@ -4,7 +4,7 @@
 import type { APIRoute } from 'astro';
 import { ruta } from '../lib/ruta';
 import { negocio, tiendas } from '../data/negocio';
-import { familias, marcas } from '../data/catalogo';
+import { familiasPara, marcas } from '../data/catalogo';
 import { preguntasInicio } from '../data/preguntas';
 import { paginas, descripcionNegocio } from '../data/seo';
 
@@ -33,7 +33,7 @@ export const GET: APIRoute = ({ site }) => {
     '',
     '## Qué distribuimos',
     '',
-    ...familias.map((f) => `- ${f.nombre}`),
+    ...familiasPara().map((f) => `- ${f.nombre}: ${f.productos.join(', ').toLowerCase()}.`),
     '',
     `Marcas con las que trabajamos, entre otras: ${marcas.map((m) => m.nombre).join(', ')}.`,
     '',
