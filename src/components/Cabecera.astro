@@ -7,11 +7,13 @@ import { nav, negocio, telHref, correos } from '../data/negocio';
 const actual = Astro.url.pathname;
 ---
 <header class="sticky top-0 z-40 pt-2.5 md:pt-3">
-  <!-- Mismo ancho y márgenes que el contenido, para que la barra alinee con los bloques de debajo -->
+  {/* Mismo ancho y márgenes que el contenido, para que la barra alinee con los bloques de debajo */}
   <div class="mx-auto max-w-7xl px-4 md:px-6">
-  <div class="barra flex h-16 items-center justify-between gap-4 rounded-full bg-white/95 pr-2 pl-5 backdrop-blur md:h-[4.5rem] md:pl-6">
+  {/* Blanca opaca (11-nov-2026): con el fondo punteado, al 95 % se transparentaban los puntos y el texto de debajo */}
+  <div class="barra flex h-16 items-center justify-between gap-4 rounded-full bg-white pr-2 pl-5 md:h-[4.5rem] md:pl-6">
     <a href={ruta('/')} class="shrink-0" aria-label="ELNUBA, inicio">
-      <img src={ruta('/logo-elnuba.webp')} srcset={`${ruta('/logo-elnuba.webp')} 1x, ${ruta('/logo-elnuba@2x.webp')} 2x`} alt="ELNUBA Distribuciones de Papelería" width="640" height="239" class="h-9 w-auto md:h-11" />
+      {/* 13-nov-2026: logo a su tamaño (96 px de ancho en el móvil, 118 en el ordenador); antes bajaba uno de 1280 px y 117 KB */}
+      <img src={ruta('/logo-elnuba-240.webp')} srcset={`${ruta('/logo-elnuba-240.webp')} 240w, ${ruta('/logo-elnuba-480.webp')} 480w`} sizes="(min-width: 768px) 118px, 96px" alt="ELNUBA Distribuciones de Papelería" width="240" height="90" fetchpriority="high" class="h-9 w-auto md:h-11" />
     </a>
 
     <nav aria-label="Principal" class="hidden lg:block">
@@ -19,32 +21,38 @@ const actual = Astro.url.pathname;
         {nav.map((n) => (
           <li>
             <a href={ruta(n.href)} aria-current={actual.startsWith(ruta(n.href)) ? 'page' : undefined}
-               class="block rounded-full px-4 py-2.5 text-tinta/75 transition-colors hover:bg-papel hover:text-tinta aria-[current=page]:bg-melocoton aria-[current=page]:text-tinta">{n.label}</a>
+               class="block rounded-full px-4 py-2.5 whitespace-nowrap text-tinta/75 transition-colors hover:bg-papel hover:text-tinta aria-[current=page]:bg-melocoton aria-[current=page]:text-tinta">{n.label}</a>
           </li>
         ))}
       </ul>
     </nav>
 
-    <div class="flex items-center gap-1.5">
-      <a href={telHref} class="hidden items-center gap-2.5 rounded-full py-1.5 pr-4 pl-1.5 transition-colors hover:bg-papel sm:inline-flex">
-        <span class="grid size-10 place-items-center rounded-full bg-tinta">
-          <svg aria-hidden="true" viewBox="0 0 24 24" class="size-[18px] fill-none stroke-naranja stroke-2"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2" /></svg>
+    {/* 11-nov-2026 (Álvaro: "más llamativos"): llamar en pastilla marino y "Pedir presupuesto" con sobre y brillo.
+        "Pedir presupuesto" sale ya desde 768 px (antes, solo con el menú a la vista). Entre 1024 y 1179 px queda solo el
+        círculo del teléfono (el número se sigue leyendo con lector de pantalla). Estilos: .btn-llamar y .btn-cabecera */}
+    <div class="flex items-center gap-2">
+      <a href={telHref} class="btn-llamar hidden sm:inline-flex">
+        <span class="btn-llamar-icono">
+          <svg aria-hidden="true" viewBox="0 0 24 24" class="size-[18px] fill-none stroke-[#13203a] stroke-2 md:size-5"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2" /></svg>
         </span>
-        <span class="leading-tight">
-          <span class="block text-[11px] font-bold tracking-[.14em] text-gris uppercase">Llámanos</span>
+        <span class="leading-tight lg:max-[1179px]:sr-only">
+          <span class="block text-[11px] font-bold tracking-[.14em] text-[#ff9a4d] uppercase">Llámanos</span>
           <span class="block text-[15px] font-bold whitespace-nowrap">{negocio.telefono}</span>
         </span>
       </a>
-      <a href={correos.general} class="btn-primario hidden py-3 text-[15px] lg:inline-flex">Pedir presupuesto</a>
+      <a href={correos.general} class="btn-primario btn-cabecera hidden md:inline-flex">
+        <svg aria-hidden="true" viewBox="0 0 24 24" class="size-5 fill-none stroke-2 lg:max-[1179px]:hidden"><rect x="3" y="5" width="18" height="14" rx="2" /><path d="m3 7 9 6 9-6" /></svg>
+        Pedir presupuesto
+      </a>
       <button id="menu-boton" type="button" aria-expanded="false" aria-controls="menu-movil"
-              class="inline-flex size-12 items-center justify-center rounded-full bg-papel transition-colors hover:bg-melocoton lg:hidden">
+              class="inline-flex size-12 items-center justify-center rounded-full bg-papel transition-colors hover:bg-melocoton md:size-14 lg:hidden">
         <span class="sr-only">Abrir menú</span>
         <svg aria-hidden="true" viewBox="0 0 24 24" class="size-5 fill-none stroke-tinta stroke-2"><path d="M4 7h16M4 12h16M4 17h16" /></svg>
       </button>
     </div>
   </div>
 
-  <!-- Menú del móvil y la tableta: panel blanco bajo la barra, con los dos botones de contacto -->
+  {/* Menú del móvil y la tableta: panel blanco bajo la barra, con los dos botones de contacto */}
   <nav id="menu-movil" aria-label="Menú" hidden class="barra mt-2 rounded-[1.75rem] bg-white p-2.5 lg:hidden">
     <ul>
       {nav.map((n) => (

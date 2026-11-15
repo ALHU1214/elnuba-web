@@ -8,7 +8,7 @@ interface Props { class?: string; antes?: string; direccion?: boolean; }
 const { class: clase = '', antes = 'o escribe a', direccion = true } = Astro.props;
 ---
 <p class={`text-sm text-tinta/75 ${clase}`}>
-  {antes}{direccion && <> <span class="font-semibold break-all text-tinta select-all">{negocio.email}</span></>}
+  {antes}{direccion && <> <span class="font-semibold whitespace-nowrap text-tinta select-all">{negocio.email}</span></>}
   <button type="button" data-copiar={negocio.email}
           class="ml-1 rounded-full px-2.5 py-1 text-xs font-bold text-tinta ring-1 ring-tinta/25 transition hover:ring-tinta">
     {direccion ? 'Copiar' : 'Copiar la dirección'}

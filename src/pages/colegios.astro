@@ -6,7 +6,10 @@ import Familias from '../components/Familias.astro';
 import Preguntas from '../components/Preguntas.astro';
 import LlamadaFinal from '../components/LlamadaFinal.astro';
 import Pendiente from '../components/Pendiente.astro';
-import { negocio } from '../data/negocio';
+import Lapices from '../components/Lapices.astro';
+import CopiarCorreo from '../components/CopiarCorreo.astro';
+import { negocio, listaIslas, correos } from '../data/negocio';
+import { servicios } from '../data/seo';
 
 const pasos = [
   { titulo: 'Mándanos la lista', texto: 'Por correo o por teléfono.' },
@@ -14,27 +17,33 @@ const pasos = [
   { titulo: 'Lo llevamos al centro', texto: 'O lo recoges en Los Majuelos.' },
 ];
 
+// 10-nov-2026: tres más (Álvaro: "más FAQ"), solo con datos confirmados
 const preguntas = [
-  { p: '¿Suministran libros de texto?', r: 'Sí. Además de material escolar y de bellas artes, suministramos libros de texto a centros educativos.' },
+  { p: '¿Cómo les mando la lista de material del centro?', r: `Por correo a ${negocio.email}, adjunta o copiada en el mensaje, o por teléfono al ${negocio.telefono}. Te preparamos el presupuesto artículo por artículo.` },
+  { p: '¿Suministran libros de texto?', r: 'Sí. Además de material escolar, de dibujo y de pintura, suministramos libros de texto a centros educativos.' },
+  { p: '¿Nos llevan el material al centro?', r: 'Sí, te lo llevamos al centro. Si lo prefieres, también puedes recogerlo en nuestro almacén de Los Majuelos (La Laguna).' },
   { p: '¿Trabajan con colegios públicos y privados?', r: 'Sí, con los dos.' },
-  { p: '¿Trabajan con colegios de otras islas?', r: 'Sí. Estamos en Tenerife, pero repartimos a todas las islas Canarias.' },
+  { p: '¿Trabajan con colegios de todas las islas?', r: `Sí, con colegios de todas las islas Canarias: ${listaIslas}.` },
+  { p: '¿Tienen libros infantiles y material de dibujo y pintura?', r: 'Sí, además de papel, cuadernos, escritura, archivo y agendas.' },
 ];
 ---
 <Base
-  titulo="Material escolar al por mayor para colegios en Tenerife · ELNUBA"
-  descripcion="Material escolar, libros de texto y bellas artes al por mayor para colegios públicos y privados de Tenerife. Mándanos la lista de material del centro y te preparamos el presupuesto.">
+  titulo="Material escolar al por mayor para colegios de Canarias · ELNUBA"
+  descripcion="Material escolar, libros de texto, dibujo y pintura al por mayor para colegios públicos y privados de todas las islas Canarias. Mándanos la lista y te preparamos el presupuesto."
+  servicio={servicios.colegios}>
 
   <Encabezado
     correo="colegio"
     miga="Colegios"
     antetitulo="Colegios y centros educativos"
-    titulo="Material escolar al por mayor para colegios en Tenerife"
+    titulo="Material escolar al por mayor para colegios en todas las islas"
     entradilla="Mándanos la lista de material de tu centro y te preparamos el presupuesto.">
     <div slot="lateral" class="h-full">
-      <div class="bloque relative flex h-full flex-col justify-center overflow-hidden text-tinta">
-        <div class="p-7 sm:p-9">
+      {/* 13-nov-2026 (Álvaro: "más decorado"): lápices de colores que asoman por abajo (Lapices.astro) */}
+      <div class="bloque relative flex h-full flex-col overflow-hidden text-tinta">
+        <div class="lado-anios p-7 sm:p-9 lg:pt-11">
           <p class="flex items-end gap-4">
-            <span class="font-serif text-[5.5rem] leading-[.78] font-semibold tracking-[-.03em] text-naranja-vivo">{negocio.anios ? <><span class="sr-only">{negocio.anios}</span><span aria-hidden="true" data-contar={negocio.anios} class="tabular-nums">{negocio.anios}</span></> : <Pendiente texto="XX" />}</span>
+            <span class="font-serif text-[5.5rem] leading-[.78] font-semibold tracking-[-.03em] whitespace-nowrap text-naranja-vivo">{negocio.anios ? <><span class="sr-only">Más de {negocio.anios}</span><span aria-hidden="true" class="mas">+</span><span aria-hidden="true" data-contar={negocio.anios} class="tabular-nums">{negocio.anios}</span></> : <Pendiente texto="XX" />}</span>
             <span class="pb-1 font-serif text-xl leading-tight font-medium">años en<br />el sector</span>
           </p>
           <div class="franjas trazo mt-5 h-1.5 w-28 rounded-full" data-revelar style="--i:10"></div>
@@ -42,51 +51,66 @@ const preguntas = [
           <ul class="mt-4 space-y-2 text-gris">
             <li class="flex items-center gap-2.5"><span aria-hidden="true" class="size-1.5 rounded-full bg-naranja"></span>Material escolar</li>
             <li class="flex items-center gap-2.5"><span aria-hidden="true" class="size-1.5 rounded-full bg-naranja"></span>Libros de texto</li>
-            <li class="flex items-center gap-2.5"><span aria-hidden="true" class="size-1.5 rounded-full bg-naranja"></span>Bellas artes</li>
+            <li class="flex items-center gap-2.5"><span aria-hidden="true" class="size-1.5 rounded-full bg-naranja"></span>Dibujo y pintura</li>
           </ul>
         </div>
+        <Lapices class="mt-auto px-3 sm:px-5" />
       </div>
     </div>
   </Encabezado>
 
-  <!-- CÓMO TRABAJAMOS -->
-  <section class="relative mx-auto max-w-7xl px-4 py-16 md:px-6 md:py-20">
-    <div class="grid gap-14 lg:grid-cols-[1fr_1.2fr] lg:items-center">
-      <div>
-        <h2 class="text-4xl font-medium tracking-tight md:text-5xl">Nos mandas la lista y nos encargamos</h2>
-        <div class="relative mt-10 max-w-md">
-          <div class="absolute -bottom-3 -left-3 h-full w-full rounded-2xl ring-1 ring-tinta/15"></div>
-          <img src={ruta('/img/nina-dibujando.webp')} alt="Una niña dibujando con lápices de colores en una mesa" width="960" height="640" loading="lazy" decoding="async" class="relative aspect-[3/2] w-full rounded-2xl object-cover" />
+  {/* CÓMO TRABAJAMOS (13-nov-2026, Álvaro: "está bastante simple"): la lista de material del centro, que se va
+      marcando. Título grande con "nos encargamos" pintado con subrayador (se pinta al verlo), la foto más grande y los
+      tres pasos como casillas que se marcan una detrás de otra, como quien repasa la lista. Al final, el botón para
+      mandarla. Sin JavaScript o con "reducir movimiento", todo marcado desde el principio. CSS: .lista-… en global.css.
+      Antes: título, foto pequeña con un marco desplazado y tres números. */}
+  <section class="mx-auto max-w-7xl px-3 py-10 sm:px-4 md:px-6 md:py-20">
+    <h2 class="lista-titulo max-w-4xl">Nos mandas la lista y <span class="subrayador" data-al-ver>nos encargamos</span></h2>
+    <div class="mt-10 grid gap-8 md:mt-14 lg:grid-cols-12 lg:gap-14">
+      <figure class="relative aspect-[3/2] overflow-hidden rounded-[2rem] lg:col-span-5 lg:aspect-auto lg:min-h-[25rem]">
+        <img src={ruta('/img/nina-dibujando.webp')} alt="Una niña dibujando con lápices de colores en una mesa" width="960" height="640" loading="lazy" decoding="async" class="absolute inset-0 size-full object-cover object-[20%_50%]" />
+      </figure>
+      <div class="lg:col-span-7">
+        <ol class="lista-pasos" data-al-ver>
+          {pasos.map((paso, i) => (
+            <li style={`--n:${i}`}>
+              <svg class="lista-casilla" viewBox="0 0 44 44" aria-hidden="true" focusable="false">
+                <rect x="2" y="2" width="40" height="40" rx="10" class="lista-caja" />
+                <path d="M11.5 23.2c2.3 2.1 4.5 4.4 6.9 7.1 3.9-6.2 8.5-11.7 14.3-16.7" pathLength="1" class="lista-tick" />
+              </svg>
+              <div>
+                <h3 class="lista-paso">{paso.titulo}</h3>
+                <p class="mt-1.5 text-lg leading-relaxed text-gris">{paso.texto}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+        <div class="mt-9 flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-center">
+          <a href={correos.colegio} class="btn-primario">
+            <svg aria-hidden="true" viewBox="0 0 24 24" class="size-5 fill-none stroke-2"><rect x="3" y="5" width="18" height="14" rx="2" /><path d="m3 7 9 6 9-6" /></svg>
+            Mandar la lista por correo
+          </a>
+          <CopiarCorreo />
         </div>
       </div>
-      <ol class="grid gap-8">
-        {pasos.map((paso, i) => (
-          <li class="grid grid-cols-[auto_1fr] gap-5 border-t border-tinta/20 pt-6">
-            <span class="font-serif text-5xl leading-none font-semibold text-naranja-vivo">{i + 1}</span>
-            <div>
-              <h3 class="text-xl font-semibold">{paso.titulo}</h3>
-              <p class="mt-2 leading-relaxed text-gris">{paso.texto}</p>
-            </div>
-          </li>
-        ))}
-      </ol>
     </div>
   </section>
 
-  <!-- QUÉ SUMINISTRAMOS -->
-  <section>
-    <div class="mx-auto max-w-7xl px-4 py-16 md:px-6 md:py-20">
-      <div class="flex flex-wrap items-end justify-between gap-6">
-        <div>
-          <p class="antetitulo text-xs font-bold tracking-[.24em] text-naranja-oscuro uppercase">Para el colegio</p>
-          <h2 class="mt-3 text-4xl font-medium tracking-tight md:text-5xl">Qué suministramos a los centros</h2>
-        </div>
-      </div>
-      <div class="mt-10"><Familias para="colegios" /></div>
-    </div>
+  {/* QUÉ SUMINISTRAMOS */}
+  <section class="mx-auto max-w-7xl px-4 py-12 md:px-6 md:py-20">
+    <Familias para="colegios" antetitulo="Para el colegio" titulo="Qué suministramos a los centros" />
   </section>
 
-  <Preguntas preguntas={preguntas} titulo="Preguntas de los colegios" correo="colegio" />
+  <Preguntas preguntas={preguntas} titulo="Preguntas de los colegios" correo="colegio" etiqueta="Colegios" />
 
   <LlamadaFinal correo="colegio" titulo="¿Tienes ya la lista de material?" texto="Mándanosla y te preparamos el presupuesto del centro." />
 </Base>
+
+<script>
+  // El subrayador y las casillas se marcan cuando se ven (una sola vez). El estilo de antes de verse solo se aplica con
+  // JavaScript y sin "reducir movimiento" (global.css), así que si este script no llega, todo se ve marcado.
+  const vigia = new IntersectionObserver((entradas) => entradas.forEach((e) => {
+    if (e.isIntersecting) { e.target.classList.add('visto'); vigia.unobserve(e.target); }
+  }), { rootMargin: '0px 0px -18% 0px' });
+  document.querySelectorAll('[data-al-ver]').forEach((el) => vigia.observe(el));
+</script>

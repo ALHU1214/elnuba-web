@@ -35,7 +35,11 @@
 
 @layer base {
   html { scroll-behavior: smooth; overflow-x: clip; }
+  /* Fondo liso (piedra). 11-nov-2026: se probaron un punteado y un papel arrugado suave y Álvaro dijo "quítale fondo":
+     se queda liso. No volver a proponer texturas de fondo salvo que lo pida */
   body { @apply bg-papel text-tinta font-sans antialiased; overflow-x: clip; }
+  /* 13-nov-2026: Álvaro se queda con el fondo liso. Las pruebas de grano, cuadrícula, ondas y tonos se quitaron con la
+     barra de prueba */
   h1, h2, h3 { @apply font-serif text-balance; }
   h1 em, h2 em { font-style: normal; font-weight: inherit; }
   :focus-visible { outline: 3px solid var(--color-naranja); outline-offset: 3px; border-radius: 4px; }
@@ -62,6 +66,8 @@ main h3 { font-weight: 700; letter-spacing: -0.015em; }
   .btn-secundario { color: inherit; box-shadow: inset 0 0 0 2px color-mix(in oklab, currentColor 25%, transparent); }
   .btn-secundario:hover { box-shadow: inset 0 0 0 2px currentColor; }
   :is(.btn-primario, .btn-secundario) svg { stroke: currentColor; }
+  /* 15-nov-2026: en móviles de 360-375 px el texto del botón apretaba el icono hasta hacerlo desaparecer */
+  :is(.btn-primario, .btn-secundario) svg { flex-shrink: 0; }
 }
 
 /* Bloques del mosaico: blancos, redondeados y con sombra muy suave (sin borde: una sola forma de separar) */
@@ -106,6 +112,235 @@ a:hover .icono-tile { background: var(--color-tinta); color: var(--color-naranja
 
 .pendiente { @apply rounded bg-amarillo/60 px-1.5 font-semibold text-tinta ring-1 ring-naranja; }
 
+/* ===== Objetos de papelería (10-nov-2026, prueba) =====
+   Cada recuadro principal es el objeto que corresponde a lo que tiene dentro, con UN solo detalle en el borde,
+   los colores de siempre y sin texturas ni giros:
+   cuaderno de anillas = lo que vendemos. (El libro de "Cómo pedir" y la nota adhesiva de las preguntas se quitaron el
+   11-nov-2026 por algo "moderno y profesional": ver más abajo.)
+   La portada, las cabeceras interiores, los recuadros pequeños, el bloque final (con el lápiz del logo) y las
+   preguntas se quedan sin objeto: Álvaro quitó el sobre, la carpeta y el efecto cuaderno de las preguntas el 10-nov. */
+
+/* Cuaderno de anillas: la espiral asoma por el borde de arriba, con sus agujeros, y por debajo asoman dos hojas */
+.cuaderno {
+  position: relative; padding-top: 3rem;
+  box-shadow: 0 1px 2px rgb(19 32 58 / .04), 0 6px 0 -3px #fff, 0 7px 0 -3px #e4dfd5, 0 12px 0 -7px #fbfaf8, 0 13px 0 -7px #e4dfd5, 0 28px 40px -26px rgb(19 32 58 / .3);
+}
+.cuaderno::before {
+  content: ""; position: absolute; top: -12px; left: 2rem; right: 2rem; height: 30px; pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 30 30'%3E%3Ccircle cx='15' cy='22' r='3.3' fill='%23e4dfd5'/%3E%3Cpath d='M13.2 22V6.2a1.8 1.8 0 0 1 3.6 0V22' fill='none' stroke='%2397a0b2' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-size: 30px 30px; background-position: 0 0; background-repeat: space no-repeat;
+}
+@media (min-width: 768px) { .cuaderno { padding-top: 3.75rem; } .cuaderno::before { left: 3rem; right: 3rem; } }
+
+/* Cómo pedir, "el viaje del pedido" (11-nov-2026; 4.ª versión: vuelo solo, sin depender de bajar, y "más visual").
+   Marino liso (sin los resplandores de .zona-oscura), título grande, números gigantes de contorno que se rellenan de
+   naranja (con un salto) cuando el avión de papel pasa por su parada, onda expansiva en cada parada y la estela naranja
+   brillante que el avión va dibujando (la ruta no se ve antes de que pase).
+   Móvil: paradas en una columna a la izquierda y vuelo de arriba abajo. Ordenador (1024 px): tres columnas y vuelo de
+   lado por encima de los números, con un tirabuzón. Sin JavaScript (sin .viaje-vuela), todo encendido */
+.viaje { background: #13203a; }
+/* El destino del avión (13-nov-2026; sustituye a unas nubes que a Álvaro no le cuadraban): las islas en un mapa de
+   puntos, arriba a la derecha y solo en el ordenador. Islas en blanco muy suave y Tenerife en naranja; cuando el avión
+   aterriza en Los Majuelos (.reparte, lo pone el script de index.astro) salen las rutas de puntos a cada isla y cada
+   una se enciende al llegarle la suya. Sin JavaScript o con "reducir movimiento", todo dibujado: los estados de
+   "antes de llegar" van solo con .viaje-vuela */
+.viaje-mapa { display: none; }
+@media (min-width: 1024px) {
+  .viaje-mapa { display: block; position: absolute; top: 2.75rem; right: 3.5rem; width: clamp(24rem, 42%, 34rem); height: auto; overflow: visible; pointer-events: none; }
+}
+.vuelo-siluetas path { fill: #fff; fill-opacity: .045; }
+.vuelo-puntos path { fill-opacity: .46; transition: fill-opacity .7s ease; transition-delay: calc(.9s + var(--r) * 110ms); }
+.vuelo-tf-silueta { fill: var(--color-naranja); fill-opacity: .16; }
+.vuelo-ruta { fill: none; stroke: var(--color-naranja); stroke-width: 2.2px; stroke-linecap: round; stroke-dasharray: 0 5.5px; vector-effect: non-scaling-stroke; }
+.vuelo-trazo { fill: none; stroke: #fff; stroke-width: 12; stroke-dasharray: 1; stroke-dashoffset: 0; transition: stroke-dashoffset 1.1s cubic-bezier(.45, 0, .25, 1); transition-delay: calc(.15s + var(--r) * 110ms); }
+.vuelo-destino { fill: #fff; stroke: #13203a; stroke-width: 1.4; transform-box: fill-box; transform-origin: center; transition: transform .45s cubic-bezier(.34, 1.56, .64, 1), opacity .3s; transition-delay: calc(1s + var(--r) * 110ms); }
+.vuelo-origen { fill: #fff; stroke: var(--color-naranja); stroke-width: 2.4; }
+.vuelo-onda { fill: none; stroke: var(--color-naranja); stroke-width: 1.5; opacity: 0; transform-box: fill-box; transform-origin: center; }
+.reparte .vuelo-onda { animation: vuelo-onda 1.3s ease-out 2; }
+@keyframes vuelo-onda { from { opacity: .9; transform: scale(1); } to { opacity: 0; transform: scale(4); } }
+.viaje-vuela:not(.reparte) .vuelo-puntos path { fill-opacity: .2; transition-delay: 0s; }
+.viaje-vuela:not(.reparte) .vuelo-trazo { stroke-dashoffset: 1; transition-delay: 0s; }
+.viaje-vuela:not(.reparte) .vuelo-destino { opacity: 0; transform: scale(.3); transition-delay: 0s; }
+.viaje-titulo { font-size: clamp(2.6rem, 6vw, 4.6rem); line-height: .98; letter-spacing: -.045em; }
+.viaje-ruta { position: relative; }
+.viaje-svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+.viaje-camino { fill: none; stroke: none; } /* solo sirve para medir el camino: la ruta la dibuja la estela */
+.viaje-estela { fill: none; stroke: var(--color-naranja); stroke-width: 4; stroke-linecap: round; stroke-dasharray: .1 12; filter: drop-shadow(0 0 5px rgb(247 138 55 / .7)); }
+.viaje-revela { fill: none; stroke: #fff; stroke-width: 24; }
+.viaje-avion { filter: drop-shadow(0 8px 7px rgb(0 0 0 / .4)); }
+.viaje-pasos { position: relative; display: grid; gap: 2.75rem; padding-left: 3.25rem; }
+.viaje-paso { position: relative; }
+.viaje-parada {
+  position: absolute; left: -2.7rem; top: 1.25rem; width: 1.15rem; height: 1.15rem; border-radius: 999px; background: #13203a;
+  box-shadow: inset 0 0 0 2px rgb(255 255 255 / .35); transition: background-color .4s, box-shadow .4s, transform .4s cubic-bezier(.34, 1.56, .64, 1);
+}
+/* Onda que sale de la parada cuando llega el avión */
+.viaje-parada::after { content: ""; position: absolute; inset: 0; border-radius: inherit; box-shadow: 0 0 0 2px var(--color-naranja); opacity: 0; }
+.viaje-vuela .viaje-paso.activo .viaje-parada::after { animation: viaje-onda 1s cubic-bezier(.22, 1, .36, 1); }
+@keyframes viaje-onda { from { opacity: 1; transform: scale(1); } to { opacity: 0; transform: scale(4); } }
+/* El número salta al encenderse */
+.viaje-vuela .viaje-paso.activo .viaje-num { animation: viaje-salto .7s cubic-bezier(.34, 1.56, .64, 1); }
+@keyframes viaje-salto { 40% { transform: scale(1.08) translateY(-4px); } }
+.viaje-num {
+  display: block; font-size: clamp(3.4rem, 7vw, 6.25rem); font-weight: 800; line-height: .9; letter-spacing: -.05em;
+  color: transparent; -webkit-text-stroke: 1.5px rgb(255 255 255 / .38); transition: color .6s, -webkit-text-stroke-color .6s;
+  transform-origin: left bottom;
+}
+.viaje-texto { margin-top: 1rem; transition: opacity .6s; }
+@media (min-width: 1024px) {
+  .viaje-pasos { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 3rem; padding-left: 0; padding-top: 6.5rem; }
+  .viaje-parada { left: .35rem; top: -4.25rem; }
+}
+/* Encendido: el número se rellena, la parada se vuelve naranja y el texto se ve entero */
+.viaje:not(.viaje-vuela) .viaje-num, .viaje-paso.activo .viaje-num { color: var(--color-naranja); -webkit-text-stroke-color: var(--color-naranja); }
+.viaje:not(.viaje-vuela) .viaje-parada, .viaje-paso.activo .viaje-parada { background: var(--color-naranja); box-shadow: 0 0 0 6px rgb(247 138 55 / .22); transform: scale(1.1); }
+.viaje-vuela .viaje-paso:not(.activo) .viaje-texto { opacity: .4; }
+
+/* Colegios, "Nos mandas la lista y nos encargamos" (13-nov-2026, Álvaro: "está bastante simple"): la lista del centro.
+   Título de revista con "nos encargamos" pintado con subrayador amarillo (el del logo), que se pasa de izquierda a
+   derecha al verlo; y los pasos como casillas que se marcan en naranja una detrás de otra. Sin cajas: filetes finos.
+   Antes de verse (solo con JavaScript y sin "reducir movimiento"), subrayador y marcas están sin pintar */
+.lista-titulo { font-size: clamp(2.5rem, 5.6vw, 4.4rem); line-height: 1.02; letter-spacing: -.045em; }
+.subrayador {
+  padding: 0 .1em; margin: 0 -.1em; -webkit-box-decoration-break: clone; box-decoration-break: clone;
+  background-image: linear-gradient(100deg, rgb(252 226 101 / .55) 0, #fce265 .35em, #fce265 calc(100% - .3em), rgb(252 226 101 / .6) 100%);
+  background-repeat: no-repeat; background-position: 0 92%; background-size: 100% .5em;
+  transition: background-size 1s cubic-bezier(.65, 0, .35, 1) .45s;
+}
+.lista-pasos { border-bottom: 1px solid rgb(19 32 58 / .15); }
+.lista-pasos li { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 1.1rem; align-items: start; padding: 1.5rem 0; border-top: 1px solid rgb(19 32 58 / .15); }
+.lista-paso { font-size: clamp(1.45rem, 2.3vw, 1.95rem); line-height: 1.15; }
+.lista-casilla { width: 2.6rem; height: 2.6rem; margin-top: -.15rem; overflow: visible; }
+.lista-caja { fill: #fff; stroke: var(--color-tinta); stroke-width: 2.5; }
+.lista-tick {
+  fill: none; stroke: var(--color-naranja-vivo); stroke-width: 4.5; stroke-linecap: round; stroke-linejoin: round;
+  stroke-dasharray: 1; stroke-dashoffset: 0; transition: stroke-dashoffset .5s cubic-bezier(.65, 0, .35, 1);
+  transition-delay: calc(.35s + var(--n, 0) * 450ms);
+}
+@media (min-width: 768px) { .lista-pasos li { gap: 1.5rem; padding: 1.75rem 0; } .lista-casilla { width: 3rem; height: 3rem; } }
+@media (prefers-reduced-motion: no-preference) {
+  .js .subrayador:not(.visto) { background-size: 0% .5em; }
+  .js .lista-pasos:not(.visto) .lista-tick { stroke-dashoffset: 1; }
+}
+
+/* Índice del cuaderno: una columna por grupo (las que haya en esa página); en el móvil, uno debajo de otro */
+.indice { display: grid; gap: 2.25rem 2.5rem; }
+.indice h3 { letter-spacing: .2em; }
+@media (min-width: 640px) { .indice { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 1024px) { .indice { grid-template-columns: repeat(var(--cols), minmax(0, 1fr)); } }
+
+/* Dudas: el estilo está en Preguntas.astro ("tarjetas que giran", 11-nov-2026). Las versiones anteriores (hoja con
+   rayas, tarjetas blancas y editorial) se quitaron; copia de la editorial en el scratchpad del 11-nov */
+
+/* "+35" (Álvaro, 11-nov-2026): el + más pequeño y algo subido, sin pasar del alto de las cifras */
+.mas { display: inline-block; font-size: .52em; line-height: 1; vertical-align: .6em; margin-right: -.08em; letter-spacing: 0; }
+
+/* Mapa del reparto (recuadro de la portada, 11-nov-2026): islas en marino muy suave, Tenerife en naranja, rutas de
+   puntos en naranja oscuro y un punto marino en cada isla. Las rutas salen de Los Majuelos y se dibujan una sola vez,
+   cuando ya ha entrado el recuadro; con "reducir movimiento" se ven ya dibujadas */
+.mapa-reparto { display: block; width: 100%; height: auto; overflow: visible; }
+.mapa-reparto .isla { fill: #13203a; fill-opacity: .2; }
+.mapa-reparto .isla-origen { fill: var(--color-naranja); }
+/* Las rutas, con el mismo grosor y separación de puntos en pantalla sea cual sea el tamaño del mapa */
+.mapa-reparto .ruta { fill: none; stroke: var(--color-naranja-oscuro); stroke-width: 2.4px; stroke-linecap: round; stroke-dasharray: 0 5.5px; vector-effect: non-scaling-stroke; }
+.mapa-reparto .ruta-trazo {
+  fill: none; stroke: #fff; stroke-width: 12; stroke-dasharray: 1;
+  animation: ruta 1.1s cubic-bezier(.45, 0, .25, 1) both; animation-delay: calc(.9s + var(--r) * 110ms);
+}
+.mapa-reparto .destino {
+  fill: var(--color-tinta); stroke: #fff; stroke-width: 1.6; transform-box: fill-box; transform-origin: center;
+  animation: destino .45s cubic-bezier(.34, 1.56, .64, 1) both; animation-delay: calc(1.75s + var(--r) * 110ms);
+}
+.mapa-reparto .origen { fill: var(--color-tinta); stroke: #fff; stroke-width: 2.2; }
+.mapa-reparto .origen-onda { fill: none; stroke: var(--color-tinta); stroke-opacity: .3; stroke-width: 1.5; }
+@keyframes ruta { from { stroke-dashoffset: 1; } }
+@keyframes destino { from { opacity: 0; transform: scale(.3); } }
+
+/* Botones de la cabecera (11-nov-2026, Álvaro: "un poco más llamativos"): llamar, en una pastilla marino con el
+   teléfono en un círculo naranja; "Pedir presupuesto", con su sobre y un brillo naranja debajo. Los dos con el mismo
+   alto, que deja el mismo margen arriba, abajo y a la derecha de la barra */
+.btn-llamar {
+  align-items: center; gap: .625rem; height: 3rem; padding: .25rem 1.15rem .25rem .25rem; border-radius: 999px;
+  background: var(--color-tinta); color: #fff; box-shadow: 0 8px 18px -10px rgb(19 32 58 / .6);
+  transition: background-color .2s, box-shadow .2s, transform .2s cubic-bezier(.22, 1, .36, 1);
+}
+.btn-llamar:hover { background: #24314d; transform: translateY(-2px); box-shadow: 0 14px 26px -12px rgb(19 32 58 / .6); }
+.btn-llamar:active { transform: translateY(0) scale(.98); }
+.btn-llamar-icono { display: grid; flex-shrink: 0; place-items: center; width: 2.5rem; height: 2.5rem; border-radius: 999px; background: var(--color-naranja); }
+.btn-cabecera { height: 3rem; padding-block: 0; font-size: .9375rem; box-shadow: 0 10px 22px -10px rgb(247 138 55 / .9); }
+.btn-cabecera:hover { box-shadow: 0 16px 30px -14px rgb(19 32 58 / .55); }
+@media (min-width: 768px) {
+  .btn-llamar, .btn-cabecera { height: 3.5rem; }
+  .btn-llamar-icono { width: 3rem; height: 3rem; }
+}
+/* De 1024 a 1179 px, con el menú a la vista, no cabe el número: queda solo el círculo del teléfono */
+@media (min-width: 1024px) and (max-width: 1179px) { .btn-llamar { padding-right: .25rem; } }
+@media (prefers-reduced-motion: reduce) { .btn-llamar:hover { transform: none; } }
+
+/* Mapas de las tiendas (Contacto, 11-nov-2026, Álvaro: "discreto, no muy grande, son dos mapas"). Arriba de cada
+   ficha, un mapa dibujado con CSS (calles claras sobre piedra) con la chincheta y "Ver en el mapa"; al pulsar se carga
+   el de Google en el mismo hueco y con el mismo alto, así no se mueve nada (Tiendas.astro) */
+.mapa-portada, .mapa-marco { display: block; width: 100%; height: 11.5rem; border: 0; }
+@media (min-width: 768px) { .mapa-portada, .mapa-marco { height: 12.5rem; } }
+.mapa-portada {
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .4rem;
+  background-color: #ebe6dc;
+  background-image:
+    linear-gradient(24deg, transparent calc(50% - 7px), #fbfaf7 calc(50% - 7px) calc(50% + 7px), transparent calc(50% + 7px)),
+    linear-gradient(112deg, transparent calc(36% - 4px), #f8f6f2 calc(36% - 4px) calc(36% + 4px), transparent calc(36% + 4px)),
+    repeating-linear-gradient(112deg, transparent 0 58px, #f4f1eb 58px 62px),
+    repeating-linear-gradient(24deg, transparent 0 44px, #f4f1eb 44px 47px);
+  transition: filter .25s;
+}
+.mapa-portada:hover { filter: brightness(.97); }
+.mapa-portada:focus-visible { outline-offset: -4px; border-radius: 1rem; }
+.mapa-pin { width: 2.4rem; height: 2.4rem; color: var(--color-naranja); filter: drop-shadow(0 5px 6px rgb(19 32 58 / .28)); transition: transform .25s cubic-bezier(.22, 1, .36, 1); }
+.mapa-portada:hover .mapa-pin { transform: translateY(-3px); }
+.mapa-boton { padding: .45rem 1rem; border-radius: 999px; background: #fff; color: var(--color-tinta); font-size: .9375rem; font-weight: 700; box-shadow: 0 6px 16px -8px rgb(19 32 58 / .4); }
+.mapa-aviso { padding: .1rem .55rem; border-radius: 999px; background: rgb(255 255 255 / .75); color: var(--color-gris); font-size: .75rem; }
+/* 13-nov-2026: la chincheta, con su onda y (en el mapa grande) el nombre debajo. Cae en su sitio al ver el mapa
+   (MapaGoogle.astro pone .aterriza); con "reducir movimiento" ya está quieta en su sitio */
+.mapa-sitio { position: relative; display: flex; flex-direction: column; align-items: center; }
+.mapa-onda { position: absolute; left: 50%; top: 1.95rem; width: 1.1rem; height: .5rem; border-radius: 50%; border: 2px solid var(--color-naranja); opacity: 0; transform: translateX(-50%); pointer-events: none; }
+.mapa-etiqueta { margin-top: .3rem; padding: .3rem .8rem; border-radius: 999px; background: var(--color-tinta); color: #fff; font-size: .8125rem; font-weight: 700; white-space: nowrap; box-shadow: 0 8px 18px -10px rgb(19 32 58 / .6); }
+@media (prefers-reduced-motion: no-preference) {
+  .mapas-listos .mapa-portada:not(.aterriza) .mapa-pin { opacity: 0; transform: translateY(-2.5rem); }
+  .mapas-listos .mapa-portada:not(.aterriza) .mapa-etiqueta { opacity: 0; }
+  .aterriza .mapa-pin { animation: pin-cae .75s cubic-bezier(.34, 1.56, .64, 1) backwards; }
+  .aterriza .mapa-etiqueta { animation: entrar .6s .45s cubic-bezier(.22, 1, .36, 1) backwards; }
+  .aterriza .mapa-onda { animation: pin-onda 1.3s .55s ease-out 2; }
+}
+@keyframes pin-cae { from { opacity: 0; transform: translateY(-2.5rem); } 55% { opacity: 1; } }
+@keyframes pin-onda { from { opacity: .9; transform: translateX(-50%) scale(1); } to { opacity: 0; transform: translateX(-50%) scale(5); } }
+/* Rótulos del mapa dibujado: el barrio arriba a la izquierda y la calle tumbada sobre la calle ancha (24°, la del
+   primer degradado de .mapa-portada, que pasa por el centro, donde está la chincheta) */
+.mapa-portada { position: relative; }
+.mapa-zona, .mapa-calle { position: absolute; color: #9c9483; font-weight: 800; text-transform: uppercase; white-space: nowrap; pointer-events: none; }
+.mapa-zona { left: 7%; top: 9%; font-size: .78rem; letter-spacing: .32em; line-height: 1.6; max-width: 60%; white-space: normal; }
+.mapa-calle { left: 50%; top: 50%; font-size: .66rem; letter-spacing: .22em; transform: translate(-50%, -50%) rotate(24deg) translate(-9.5rem, .05rem); }
+@media (min-width: 1024px) { .mapa-zona { font-size: .9rem; } }
+/* Mapa grande de Contacto: llena su columna. Mapa pequeño (Candelaria): redondeado y suelto */
+.mapa-portada.mapa-grande, .mapa-marco.mapa-grande { position: absolute; inset: 0; height: auto; }
+.mapa-grande .mapa-pin { width: 3.2rem; height: 3.2rem; }
+.mapa-grande .mapa-onda { top: 2.65rem; }
+.mapa-portada.mapa-mini, .mapa-marco.mapa-mini { height: 11rem; border-radius: 1.5rem; overflow: hidden; }
+@media (min-width: 768px) { .mapa-portada.mapa-mini, .mapa-marco.mapa-mini { height: 13rem; } }
+
+/* Contacto (13-nov-2026): tarjetas de teléfono y correo que se pulsan enteras (el ::after del enlace las cubre) */
+.tarjeta-enlace::after { content: ""; position: absolute; inset: 0; border-radius: 2rem; }
+.tarjeta-tel { transition: background-color .25s; }
+.tarjeta-tel:hover { background: var(--color-amarillo); }
+.tarjeta-tel .tarjeta-enlace:focus-visible { outline-color: var(--color-tinta); }
+.tarjeta-correo { transition: box-shadow .25s; }
+.tarjeta-correo:hover { box-shadow: 0 2px 6px rgb(19 32 58 / .06), 0 26px 48px -20px rgb(19 32 58 / .3); }
+.tarjeta-flecha { transition: transform .3s cubic-bezier(.22, 1, .36, 1); }
+:is(.tarjeta-tel, .tarjeta-correo):hover .tarjeta-flecha { transform: translate(3px, -3px); }
+/* La dirección en letra de revista: la calle grande y el número enorme en naranja, como el de un portal */
+.direccion-grande { font-size: clamp(2.4rem, 4.6vw, 3.4rem); line-height: 1; letter-spacing: -.04em; }
+.direccion-grande > span { display: block; margin-top: .05em; font-size: 2.6em; line-height: .82; letter-spacing: -.06em; }
+.mismo-sitio { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 1.5rem; }
+.mismo-sitio li { border-top: 1px solid var(--color-linea); padding: .8rem 0; font-weight: 700; line-height: 1.3; }
+
 /* Textos legales */
 .legal { @apply leading-relaxed text-gris; }
 .legal h2 { @apply mt-12 mb-4 text-2xl font-bold text-tinta first:mt-0; }
@@ -113,6 +348,210 @@ a:hover .icono-tile { background: var(--color-tinta); color: var(--color-naranja
 .legal ul { @apply list-disc space-y-2 pl-6; }
 .legal strong { @apply text-tinta; }
 .legal a { @apply font-semibold text-naranja-oscuro underline underline-offset-2; }
+
+/* Primera pantalla del inicio en el ordenador (10-nov-2026): barra de arriba + portada + franja de marcas = alto de la
+   ventana, así lo último que se ve al abrir es el final de la franja. La franja tiene un alto fijo y la portada se
+   estira para llenar el resto: lo que crece es la foto; los recuadros de los años y el reparto se quedan a su medida.
+   Si la ventana es tan baja que el contenido no cabe, la portada se queda a su medida y la franja asoma al bajar.
+   En el móvil no se aplica: la portada sola ya ocupa más.
+   OJO al medir: el alto que cuenta es el de la VENTANA del navegador, no el de la pantalla (una pantalla de 1366 × 768
+   deja unos 610-640 px de ventana, por la barra de tareas y las barras de Chrome). */
+:root { --alto-cabecera: 74px; --alto-marcas: 10rem; --hueco-marcas: .75rem; --alto-servicios: 5rem; }
+@media (min-width: 768px) { :root { --alto-cabecera: 84px; --hueco-marcas: 1rem; } }
+@media (min-width: 1024px) {
+  /* min-height y no height: con "reducir movimiento" los logos se colocan en dos filas y la franja tiene que crecer */
+  .franja-marcas { display: flex; flex-direction: column; justify-content: center; min-height: var(--alto-marcas); padding-block: 0; }
+  /* 15-nov-2026 (Álvaro): la primera pantalla acaba ahora al final de los tres recuadros de servicios (entrega a
+     domicilio, recogida en Los Majuelos, al por mayor y al detalle), no al final de las marcas. Los recuadros tienen
+     un alto fijo; el hueco de encima y el de debajo (para que no parezcan cortados) son el mismo que el de las marcas */
+  .portada { display: flex; flex-direction: column; min-height: calc(100svh - var(--alto-cabecera) - var(--hueco-marcas) - var(--alto-marcas) - var(--hueco-marcas) - var(--alto-servicios) - var(--hueco-marcas)); }
+  .portada > .grid { flex: 1; grid-template-rows: 1fr auto; }
+  .servicios li { min-height: var(--alto-servicios); padding-block: 0; padding-inline: 1.25rem; }
+  .servicios .icono-tile { width: 2.5rem; height: 2.5rem; }
+  .servicios .icono-tile svg { width: 1.25rem; height: 1.25rem; }
+}
+/* 15-nov-2026: con los servicios dentro de la primera pantalla hacen falta unos 100 px más, así que hay un tramo
+   nuevo (hasta 960 px de alto, p. ej. 1920 × 915 o 1536 × 864) y en cada tramo encogen un poco la franja de marcas
+   (--alto-marcas), los servicios (--alto-servicios), el mensaje y el mínimo de la foto.
+   Medido con el script primera-pantalla (scratchpad del 15-nov) en 26 tamaños de ventana. */
+@media (min-width: 1024px) and (max-height: 960px) {
+  :root { --alto-marcas: 8.5rem; --alto-servicios: 4.5rem; }
+  .franja-marcas .marcas-pista { margin-top: 1rem; }
+  .portada .zona-oscura { padding: 2.5rem 3rem; }
+  .portada h1 { font-size: 3.3rem; }
+  .portada .entra > h1 { margin-top: 1.25rem; }
+  .portada .entra > h1 + p { margin-top: 1.1rem; }
+  .portada .entra > p + div { margin-top: 1.75rem; }
+  .portada figure { min-height: 10rem; }
+}
+/* Portátiles con pantalla baja (768-860 px de alto) */
+@media (min-width: 1024px) and (max-height: 860px) {
+  :root { --alto-marcas: 7rem; --alto-servicios: 4.25rem; }
+  .franja-marcas .marcas-pista { margin-top: .75rem; }
+  .portada .zona-oscura { padding: 2rem 2.75rem; }
+  .portada h1 { font-size: 2.9rem; }
+  .portada .entra > h1 { margin-top: 1rem; }
+  .portada .entra > h1 + p { margin-top: .9rem; font-size: 1.05rem; }
+  .portada .entra > p + div { margin-top: 1.4rem; }
+  .portada figure { min-height: 8rem; }
+}
+/* Ventanas más bajas (hasta 760 px) */
+@media (min-width: 1024px) and (max-height: 760px) {
+  :root { --alto-marcas: 6.25rem; --alto-servicios: 4rem; }
+  .franja-marcas .marcas-pista { margin-top: .6rem; }
+  .portada .zona-oscura { padding: 1.75rem 2.5rem; }
+  .portada h1 { font-size: 2.6rem; }
+  .portada .entra > h1 + p { font-size: 1rem; }
+  .portada .entra > p + div { margin-top: 1.25rem; }
+  /* el recuadro del reparto lleva el mapa: se recogen un poco los dos recuadros pequeños */
+  .portada .bg-naranja, .portada .grid > .bloque { padding: 1.25rem 1.6rem; }
+  .portada .grid > .bloque { gap: .75rem; }
+  .portada figure { min-height: 6rem; }
+}
+/* Portátiles de 1366 × 768 y parecidos (ventana de 640-680 px): todo un punto más recogido */
+@media (min-width: 1024px) and (max-height: 680px) {
+  :root { --alto-marcas: 5.5rem; --alto-servicios: 3.75rem; }
+  .franja-marcas .marcas-pista { margin-top: .5rem; }
+  .portada .zona-oscura { padding: 1.5rem 2.25rem; }
+  .portada h1 { font-size: 2.35rem; }
+  .portada .entra > h1 { margin-top: .8rem; }
+  .portada .entra > h1 + p { margin-top: .65rem; }
+  .portada .entra > p + div { margin-top: 1.1rem; }
+  .portada figure { min-height: 5rem; }
+  .portada .bg-naranja, .portada .grid > .bloque { padding: 1rem 1.4rem; gap: .6rem; }
+  .portada .bg-naranja .text-7xl { font-size: 3.6rem; }
+  .portada .reparto svg { max-height: 5.25rem; }
+}
+/* Ventanas de 600-640 px (1366 × 610, 1280 × 600) */
+@media (min-width: 1024px) and (max-height: 640px) {
+  :root { --alto-marcas: 5.25rem; --alto-servicios: 3.5rem; }
+  .portada .zona-oscura { padding: 1.25rem 2rem; }
+  .portada h1 { font-size: 2.15rem; }
+  .portada .entra > h1 { margin-top: .6rem; }
+  .portada .entra > p + div { margin-top: .9rem; }
+  .portada .entra .btn-primario, .portada .entra .btn-secundario { padding-block: .7rem; }
+  .portada .reparto svg { max-height: 4.25rem; }
+}
+/* Pantallas estrechas (1024-1279 px): los dos botones no caben en una línea y el segundo baja; se compensa con el
+   título y la frase un poco más pequeños. Va al final para que gane a los tramos de alto de arriba */
+@media (min-width: 1024px) and (max-width: 1279px) and (max-height: 960px) {
+  .portada h1 { font-size: 2.6rem; }
+  .portada .entra > h1 + p { font-size: 1rem; }
+  /* 15-nov: los dos botones, algo más finos para que quepan en una línea (uno debajo de otro ocupaban 55 px más) */
+  .portada .entra > p + div { flex-wrap: nowrap; gap: .5rem; }
+  .portada .entra :is(.btn-primario, .btn-secundario) { padding-inline: 1rem; gap: .5rem; font-size: .9rem; white-space: nowrap; }
+  /* los servicios, sin que el texto baje de línea */
+  .servicios ul { gap: .75rem; }
+  .servicios li { gap: .75rem; padding-inline: 1rem; }
+  .servicios li .text-sm { font-size: .8125rem; }
+}
+@media (min-width: 1024px) and (max-width: 1279px) and (max-height: 860px) {
+  .portada .zona-oscura { padding: 1.5rem 2rem; }
+  .portada h1 { font-size: 2.2rem; }
+  .portada .entra > h1 { margin-top: .8rem; }
+  .portada .entra > h1 + p { margin-top: .6rem; }
+  .portada .entra > p + div { margin-top: 1rem; }
+}
+@media (min-width: 1024px) and (max-width: 1279px) and (max-height: 680px) {
+  .portada .zona-oscura { padding-block: 1.1rem; }
+  .portada h1 { font-size: 2rem; }
+  .portada .entra .btn-primario, .portada .entra .btn-secundario { padding-block: .65rem; }
+  .portada .entra > div + * { margin-top: .6rem; }
+}
+
+/* Cabeceras interiores con franja de marcas (Colegios, Empresas, Nosotros), 15-nov-2026 (Álvaro: "que aparezca solo
+   hasta un poquito más de las marcas, para que no se vea mal distribuido"): barra + cabecera + marcas + un poco de
+   fondo (--aire-interior) = alto de la ventana. Usa las mismas medidas de la franja que el inicio (tramos de arriba) */
+:root { --aire-interior: 1.5rem; }
+@media (min-width: 1024px) {
+  .cabecera-interior { display: flex; flex-direction: column; min-height: calc(100svh - var(--alto-cabecera) - var(--hueco-marcas) - var(--alto-marcas) - var(--aire-interior)); }
+  .cabecera-interior > .grid { flex: 1; }
+}
+/* Tramos por alto de ventana: el bloque marino se recoge (márgenes, título, botones) para que quepa la franja */
+@media (min-width: 1024px) and (max-height: 960px) {
+  .cabecera-interior .zona-oscura { padding: 2.5rem 3rem; }
+  .cabecera-interior .antetitulo { margin-top: 1.25rem; }
+  .cabecera-interior h1 { margin-top: 1rem; font-size: 3rem; }
+  .cabecera-interior h1 + p { margin-top: 1rem; }
+  .cabecera-interior .entra > p + div { margin-top: 1.5rem; }
+}
+@media (min-width: 1024px) and (max-height: 860px) {
+  .cabecera-interior .zona-oscura { padding: 2rem 2.75rem; }
+  .cabecera-interior .antetitulo { margin-top: 1rem; }
+  .cabecera-interior h1 { margin-top: .85rem; font-size: 2.6rem; }
+  .cabecera-interior h1 + p { margin-top: .85rem; font-size: 1.05rem; }
+  .cabecera-interior .entra > p + div { margin-top: 1.25rem; }
+  .cabecera-interior .entra > div + * { margin-top: .6rem; }
+}
+@media (min-width: 1024px) and (max-height: 760px) {
+  .cabecera-interior .zona-oscura { padding: 1.6rem 2.5rem; }
+  .cabecera-interior .antetitulo { margin-top: .8rem; }
+  .cabecera-interior h1 { margin-top: .7rem; font-size: 2.35rem; }
+  .cabecera-interior h1 + p { margin-top: .7rem; font-size: 1rem; }
+  .cabecera-interior .entra > p + div { margin-top: 1.1rem; }
+}
+@media (min-width: 1024px) and (max-height: 680px) {
+  :root { --aire-interior: 1rem; }
+  .cabecera-interior .zona-oscura { padding: 1.35rem 2.25rem; }
+  .cabecera-interior h1 { font-size: 2.15rem; }
+  .cabecera-interior .entra :is(.btn-primario, .btn-secundario) { padding-block: .7rem; }
+}
+@media (min-width: 1024px) and (max-height: 640px) {
+  .cabecera-interior .zona-oscura { padding: 1.15rem 2rem; }
+  .cabecera-interior h1 { font-size: 2rem; }
+  .cabecera-interior .antetitulo { margin-top: .6rem; }
+}
+/* Colegios, tarjeta de los años (lado derecho): los lápices ocupan el hueco que queda debajo del texto (entre 4.5rem y
+   su alto natural); si hay poco, asoman menos (se recortan por abajo: Lapices.astro usa preserveAspectRatio
+   "xMidYMin slice"). En las ventanas bajas el texto se recoge */
+@media (min-width: 1024px) {
+  .cabecera-interior svg.lapices { flex: 1 1 0; min-height: 4.5rem; max-height: 12rem; margin-top: 0; }
+  /* en las ventanas altas sobra sitio: el texto se centra en el hueco de encima de los lápices, como el bloque marino */
+  .cabecera-interior .lado-anios { margin-block: auto; }
+}
+@media (min-width: 1024px) and (max-height: 860px) {
+  .cabecera-interior .lado-anios { padding-top: 2rem; }
+}
+@media (min-width: 1024px) and (max-height: 760px) {
+  .cabecera-interior .lado-anios { padding: 1.5rem 2rem .5rem; }
+  .cabecera-interior .lado-anios > p:first-child > span:first-child { font-size: 4.6rem; }
+  .cabecera-interior .lado-anios > * + * { margin-top: .8rem; }
+  .cabecera-interior .lado-anios li { margin-block: .1rem 0; }
+}
+@media (min-width: 1024px) and (max-height: 680px) {
+  .cabecera-interior .lado-anios { padding-top: 1.25rem; }
+  .cabecera-interior .lado-anios > p:first-child > span:first-child { font-size: 4rem; }
+  .cabecera-interior .lado-anios > * + * { margin-top: .6rem; }
+  .cabecera-interior .lado-anios > p + div + p { font-size: 1.1rem; }
+}
+/* Cabeceras sin botones (Contacto, Nosotros): con la ventana alta el bloque marino quedaba vacío; título más grande */
+@media (min-width: 1280px) and (min-height: 900px) {
+  .cabecera-interior:not(:has(.btn-primario)) h1 { font-size: 4.4rem; line-height: 1; }
+  .cabecera-interior:not(:has(.btn-primario)) h1 + p { font-size: 1.25rem; margin-top: 1.5rem; }
+}
+/* Contacto, tarjetas del teléfono y el correo: en las ventanas bajas, más recogidas para que quepa la franja de marcas */
+@media (min-width: 1024px) and (max-height: 760px) {
+  .cabecera-interior .tarjeta-tel { padding: 1.5rem 2rem; gap: 1rem; }
+  .cabecera-interior .tarjeta-correo { padding: 1.5rem 2rem; gap: .7rem; }
+}
+@media (min-width: 1024px) and (max-height: 680px) {
+  .cabecera-interior .tarjeta-tel { padding-block: 1.25rem; }
+  .cabecera-interior .tarjeta-correo { padding-block: 1.25rem; gap: .55rem; }
+}
+/* Estrechas (1024-1279 px): botones en una línea y título algo menor, como en el inicio */
+@media (min-width: 1024px) and (max-width: 1279px) and (max-height: 960px) {
+  .cabecera-interior .zona-oscura { padding-inline: 2rem; }
+  .cabecera-interior .entra > p + div { flex-wrap: nowrap; gap: .5rem; }
+  .cabecera-interior .entra :is(.btn-primario, .btn-secundario) { padding-inline: 1rem; gap: .5rem; font-size: .9rem; white-space: nowrap; }
+  .cabecera-interior h1 { font-size: 2.5rem; }
+}
+@media (min-width: 1024px) and (max-width: 1279px) and (max-height: 860px) {
+  .cabecera-interior h1 { font-size: 2.2rem; }
+  .cabecera-interior h1 + p { font-size: 1rem; }
+}
+@media (min-width: 1024px) and (max-width: 1279px) and (max-height: 680px) {
+  .cabecera-interior h1 { font-size: 1.95rem; }
+}
 
 /* Cinta de logos de marcas, a color: se desplaza sola (la lista va duplicada para que no se corte) */
 @keyframes cinta { to { transform: translateX(-50%); } }
@@ -155,3 +594,8 @@ header[data-con-sombra] .barra { box-shadow: 0 2px 6px rgb(19 32 58 / .07), 0 18
   .js [data-revelar], .js .trazo[data-revelar] { opacity: 1; transform: none; transition: none; }
   .btn-primario:hover { transform: none; }
 }
+
+/* Botón "Copiar" del correo (15-nov-2026, móvil): se ve pequeño, pero la zona que se puede pulsar es más grande
+   para acertar con el dedo */
+[data-copiar] { position: relative; }
+[data-copiar]::after { content: ''; position: absolute; inset: -10px -8px; }

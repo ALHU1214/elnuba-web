@@ -6,35 +6,22 @@ import Pie from '../components/Pie.astro';
 import BarraContacto from '../components/BarraContacto.astro';
 import Efectos from '../components/Efectos.astro';
 import { negocio, PUBLICADA } from '../data/negocio';
+import { grafo, type Servicio } from '../data/seo';
 // La tipografía se pide lo primero (9-nov-2026): si llegan tarde, el texto se recoloca y la página "salta" en el móvil
 import fuenteTexto from '@fontsource-variable/plus-jakarta-sans/files/plus-jakarta-sans-latin-wght-normal.woff2?url';
 
-interface Props { titulo: string; descripcion: string; }
-const { titulo, descripcion } = Astro.props;
+// indexar: false en las legales y la 404 (como en aimanganell.com): no compiten en Google, pero sus enlaces sí cuentan.
+// modificado: fecha AAAA-MM-DD de la última actualización, si la página la enseña (legales).
+// servicio: el servicio principal de la página (Colegios, Empresas), de servicios en src/data/seo.ts
+interface Props { titulo: string; descripcion: string; indexar?: boolean; modificado?: string; servicio?: Servicio; }
+const { titulo, descripcion, indexar = true, modificado, servicio } = Astro.props;
 const canonica = new URL(Astro.url.pathname, Astro.site);
+const absoluta = (r: string) => new URL(ruta(r), Astro.site).href;
+const imagen = absoluta('/og-elnuba.jpg');
 
-// Datos estructurados: solo datos reales y visibles en la web
-const d = negocio.direccion;
-const jsonld = {
-  '@context': 'https://schema.org',
-  '@type': 'Store',
-  name: negocio.nombreCompleto,
-  legalName: negocio.razonSocial,
-  url: new URL(ruta('/'), Astro.site).href,
-  logo: new URL(ruta('/logo-elnuba.png'), Astro.site).href,
-  telephone: negocio.telefonoE164,
-  email: negocio.email,
-  address: {
-    '@type': 'PostalAddress',
-    streetAddress: `${d.calle}, ${d.zona}`,
-    postalCode: d.cp,
-    addressLocality: d.localidad,
-    addressRegion: d.provincia,
-    addressCountry: 'ES',
-  },
-  areaServed: { '@type': 'State', name: 'Canarias' },
-  sameAs: [negocio.instagram, negocio.facebook],
-};
+// Datos estructurados (13-nov-2026): grafo empresa + web + página, en src/data/seo.ts
+const jsonld = grafo({ inicio: absoluta('/'), canonica: canonica.href, titulo, descripcion, logo: absoluta('/logo-elnuba.png'), imagen, url: absoluta, modificado, servicio });
+const robots = !PUBLICADA ? 'noindex, nofollow' : indexar ? null : 'noindex, follow';
 ---
 <!doctype html>
 <html lang="es">
@@ -44,22 +31,28 @@ const jsonld = {
     <title>{titulo}</title>
     <meta name="description" content={descripcion} />
     <link rel="canonical" href={canonica} />
-    {!PUBLICADA && <meta name="robots" content="noindex, nofollow" />}
+    {robots && <meta name="robots" content={robots} />}
     <link rel="preload" href={fuenteTexto} as="font" type="font/woff2" crossorigin />
-    <link rel="icon" type="image/png" href={ruta('/favicon.png')} />
+    {/* Iconos (13-nov-2026): Google pide un múltiplo de 48 px; el .ico lo piden solos los navegadores; el de Apple, con fondo */}
+    <link rel="icon" href={ruta('/favicon.ico')} sizes="48x48" />
+    <link rel="icon" type="image/png" href={ruta('/favicon-192.png')} sizes="192x192" />
+    <link rel="apple-touch-icon" href={ruta('/apple-touch-icon.png')} />
     <meta name="theme-color" content="#f2efe9" />
+    <meta name="author" content={negocio.razonSocial} />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="es_ES" />
+    <meta property="og:site_name" content={negocio.nombre} />
     <meta property="og:title" content={titulo} />
     <meta property="og:description" content={descripcion} />
     <meta property="og:url" content={canonica} />
-    <meta property="og:image" content={new URL(ruta('/og-elnuba.jpg'), Astro.site)} />
+    <meta property="og:image" content={imagen} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="ELNUBA, mayorista de papelería en Tenerife" />
+    <meta property="og:image:alt" content="ELNUBA, distribución de papelería" />
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image:alt" content="ELNUBA, distribución de papelería" />
     <script type="application/ld+json" set:html={JSON.stringify(jsonld)} />
-    <!-- Efectos: se activan antes de pintar; si el script no llega a cargar, a los 2,5 s se muestra todo igualmente -->
+    {/* Efectos: se activan antes de pintar; si el script no llega a cargar, a los 2,5 s se muestra todo igualmente */}
     <script is:inline>document.documentElement.classList.add('js');setTimeout(function(){var r=document.documentElement;if(!r.classList.contains('efectos-listos'))r.classList.remove('js');},2500);</script>
   </head>
   <body class="pb-16 md:pb-0">

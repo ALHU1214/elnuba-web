@@ -5,8 +5,8 @@ import { negocio, mailSimple } from '../data/negocio';
 
 const d = negocio.direccion;
 ---
-<Base titulo="Política de privacidad · ELNUBA" descripcion="Cómo trata Elnuba Distribuciones de Papelería SL los datos personales de quienes la contactan.">
-  <Encabezado marcas={false} miga="Privacidad" antetitulo="Información legal" titulo="Política de privacidad" entradilla="Última actualización: 20 de octubre de 2026" botones={false} />
+<Base titulo="Política de privacidad · ELNUBA" descripcion="Cómo trata Elnuba Distribuciones de Papelería SL los datos personales de quienes la contactan." indexar={false} modificado="2026-11-11">
+  <Encabezado marcas={false} miga="Privacidad" antetitulo="Información legal" titulo="Política de privacidad" entradilla="Última actualización: 11 de noviembre de 2026" fecha="2026-11-11" botones={false} />
 
   <article class="legal mx-auto max-w-3xl px-4 py-16 md:px-6 md:py-20">
     <h2>1. Responsable del tratamiento</h2>
@@ -33,9 +33,11 @@ const d = negocio.direccion;
     <h2>5. A quién se comunican</h2>
     <p>No cedemos tus datos a terceros, salvo obligación legal (por ejemplo, a la Agencia Tributaria) o cuando hace falta para entregarte un pedido (la agencia de transporte que lo lleva a otra isla).</p>
     <p>La web está alojada en GitHub Pages (GitHub, Inc.), que, como cualquier servidor, registra datos técnicos de las visitas, como la dirección IP, por motivos de seguridad. GitHub está adherido al Marco de Privacidad de Datos UE-EE. UU.</p>
+    <p>En la página de Contacto puedes ver nuestras tiendas en un mapa de Google Maps. El mapa solo se carga si pulsas «Ver en el mapa»; en ese momento tu navegador se conecta con Google, que recibe datos técnicos como tu dirección IP y los trata según su propia <a href="https://policies.google.com/privacy" rel="noopener">política de privacidad</a>. Si no lo pulsas, no se envía nada a Google.</p>
 
     <h2>6. Cookies</h2>
-    <p>Esta web no utiliza cookies ni herramientas de analítica o publicidad. Las fuentes tipográficas se sirven desde la propia web, sin conexiones a terceros.</p>
+    <p>Esta web no utiliza cookies propias ni herramientas de analítica o publicidad. Las fuentes tipográficas se sirven desde la propia web, sin conexiones a terceros.</p>
+    <p>La única excepción son los mapas de la página de Contacto: si pulsas «Ver en el mapa», Google Maps puede instalar sus propias cookies en tu navegador. Antes de pulsar se te avisa, y si no lo haces, no se carga nada de Google. Puedes borrar esas cookies cuando quieras desde la configuración de tu navegador.</p>
 
     <h2>7. Tus derechos</h2>
     <p>Puedes pedir el acceso, la rectificación o la supresión de tus datos, oponerte a su tratamiento, pedir que se limite o solicitar su portabilidad. Escríbenos a <a href={mailSimple}>{negocio.email}</a> o por correo postal a la dirección de arriba, indicando qué derecho quieres ejercer.</p>

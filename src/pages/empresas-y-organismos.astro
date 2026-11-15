@@ -6,7 +6,8 @@ import Familias from '../components/Familias.astro';
 import Preguntas from '../components/Preguntas.astro';
 import LlamadaFinal from '../components/LlamadaFinal.astro';
 import Pendiente from '../components/Pendiente.astro';
-import { negocio } from '../data/negocio';
+import { negocio, listaIslas } from '../data/negocio';
+import { servicios } from '../data/seo';
 
 const ventajas = [
   { titulo: 'Un solo proveedor', texto: 'Todo en un mismo pedido.' },
@@ -15,15 +16,20 @@ const ventajas = [
   { titulo: 'Trato directo', texto: 'Te atiende quien conoce tu pedido.' },
 ];
 
+// 10-nov-2026: tres más (Álvaro: "más FAQ"), solo con datos confirmados
 const preguntas = [
-  { p: '¿Trabajan con la administración pública?', r: 'Sí. Suministramos material de oficina a organismos públicos de Canarias.' },
   { p: '¿Cómo hago un pedido?', r: `Llámanos al ${negocio.telefono} o escríbenos a ${negocio.email} con lo que necesitas y te preparamos el presupuesto.` },
-  { p: '¿Venden también mobiliario de oficina?', r: 'Sí, además de material de oficina y de archivo, ofimática y máquinas de oficina.' },
+  { p: '¿Trabajan con la administración pública?', r: 'Sí. Suministramos material de oficina a organismos públicos de Canarias.' },
+  { p: '¿Me llevan el pedido a la oficina?', r: 'Sí, te lo llevamos a tu oficina. Si lo prefieres, también puedes recogerlo en nuestro almacén de Los Majuelos (La Laguna).' },
+  { p: '¿Reparten a todas las islas?', r: `Sí, a todas las islas Canarias: ${listaIslas}.` },
+  { p: '¿Venden también mobiliario de oficina?', r: 'Sí, además de material de oficina y de archivo, y consumibles de informática como tóner y cartuchos.' },
+  { p: '¿Tienen libros jurídicos?', r: 'Sí, para despachos y profesionales.' },
 ];
 ---
 <Base
-  titulo="Material de oficina para empresas y organismos públicos en Tenerife · ELNUBA"
-  descripcion="Material de oficina, archivo, ofimática y mobiliario para empresas, despachos y organismos públicos de Tenerife y Canarias. Entrega en tu oficina. Pide presupuesto.">
+  titulo="Material de oficina para empresas y organismos públicos de Canarias · ELNUBA"
+  descripcion="Material de oficina, archivo, tóner, cartuchos y mobiliario para empresas, despachos y organismos públicos de todas las islas Canarias. Entrega en tu oficina. Pide presupuesto."
+  servicio={servicios.empresas}>
 
   <Encabezado
     foto="/img/oficina-material.webp"
@@ -31,11 +37,11 @@ const preguntas = [
     correo="empresa"
     miga="Empresas y organismos"
     antetitulo="Empresas, despachos y organismos públicos"
-    titulo="Material de oficina para empresas y organismos públicos en Tenerife"
-    entradilla="Papel, archivo, ofimática y mobiliario. Te lo llevamos a la oficina." />
+    titulo="Material de oficina para empresas y organismos públicos en todas las islas"
+    entradilla="Papel, archivo, tóner y mobiliario. Te lo llevamos a la oficina." />
 
-  <!-- POR QUÉ -->
-  <section class="relative mx-auto max-w-7xl px-4 py-16 md:px-6 md:py-20">
+  {/* POR QUÉ */}
+  <section class="relative mx-auto max-w-7xl px-4 py-12 md:px-6 md:py-20">
     <h2 class="max-w-2xl text-4xl font-medium tracking-tight md:text-5xl">Todo el material de tu oficina en un solo pedido</h2>
     <ul class="mt-12 grid gap-x-10 gap-y-9 sm:grid-cols-2 lg:grid-cols-4">
       {ventajas.map((v) => (
@@ -47,8 +53,8 @@ const preguntas = [
     </ul>
   </section>
 
-  <!-- EMPRESAS Y ORGANISMOS -->
-  <section class="mx-auto grid max-w-7xl gap-6 px-4 pb-20 md:grid-cols-2 md:px-6 md:pb-28">
+  {/* EMPRESAS Y ORGANISMOS */}
+  <section class="mx-auto grid max-w-7xl gap-6 px-4 pb-12 md:grid-cols-2 md:px-6 md:pb-28">
     <article id="empresas" class="scroll-mt-28 overflow-hidden rounded-2xl bg-white ring-1 ring-linea">
       <img src={ruta('/img/subrayadores.webp')} alt="Rotuladores fluorescentes de colores" width="960" height="640" loading="lazy" decoding="async" class="aspect-[2/1] w-full object-cover" />
       <div class="p-7 md:p-9">
@@ -66,20 +72,12 @@ const preguntas = [
     </article>
   </section>
 
-  <!-- QUÉ SUMINISTRAMOS -->
-  <section>
-    <div class="mx-auto max-w-7xl px-4 py-16 md:px-6 md:py-20">
-      <div class="flex flex-wrap items-end justify-between gap-6">
-        <div>
-          <p class="antetitulo text-xs font-bold tracking-[.24em] text-naranja-oscuro uppercase">Para la oficina</p>
-          <h2 class="mt-3 text-4xl font-medium tracking-tight md:text-5xl">Qué suministramos</h2>
-        </div>
-      </div>
-      <div class="mt-10"><Familias para="empresas" /></div>
-    </div>
+  {/* QUÉ SUMINISTRAMOS */}
+  <section class="mx-auto max-w-7xl px-4 py-12 md:px-6 md:py-20">
+    <Familias para="empresas" antetitulo="Para la oficina" titulo="Qué suministramos" />
   </section>
 
-  <Preguntas preguntas={preguntas} titulo="Preguntas de empresas y organismos" correo="empresa" />
+  <Preguntas preguntas={preguntas} titulo="Preguntas de empresas y organismos" correo="empresa" etiqueta="Empresas" />
 
   <LlamadaFinal correo="empresa" titulo="¿Qué necesita tu oficina?" texto="Cuéntanos lo que necesitas y te preparamos el presupuesto." />
 </Base>

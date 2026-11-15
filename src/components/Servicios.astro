@@ -1,13 +1,16 @@
 ---
 // Servicios bajo las marcas, en bloques (9-nov-2026, "Escaparate"). Solo servicios confirmados (CLAUDE.md del cliente).
 // "Reparto a todas las islas" ya va en la portada, así que aquí no se repite.
+// 15-nov-2026 (Álvaro): en el ordenador estos tres recuadros entran en la primera pantalla (CSS: .servicios en global.css).
+// 11-nov-2026 (Álvaro): los pedidos solo se recogen en Los Majuelos, donde la tienda está dentro del almacén.
+// La tienda de Candelaria es solo para el público: ni se hacen pedidos ni se recogen allí.
 const servicios = [
   { titulo: 'Entrega a domicilio', texto: 'En tu colegio u oficina', icono: 'M3 11l9-7 9 7 M5 10v10h14V10 M10 20v-6h4v6' },
-  { titulo: 'Recogida en tienda', texto: 'Los Majuelos y Candelaria', icono: 'M4 9l1.5-5h13L20 9 M4 9h16v2a3 3 0 0 1-6 0 3 3 0 0 1-4 0 3 3 0 0 1-6 0z M5 13v7h14v-7' },
+  { titulo: 'Recogida en Los Majuelos', texto: 'En nuestro almacén de La Laguna', icono: 'M3 21V9l9-5 9 5v12 M7 21v-8h10v8 M7 17h10' },
   { titulo: 'Al por mayor y al detalle', texto: 'Para centros, empresas y público', icono: 'M3 8l9-5 9 5-9 5z M3 8v8l9 5 9-5V8 M12 13v8' },
 ];
 ---
-<section aria-label="Servicios" class="mx-auto mt-3 max-w-7xl px-4 md:mt-4 md:px-6">
+<section aria-label="Servicios" class="servicios mx-auto mt-3 max-w-7xl px-4 md:mt-4 md:px-6">
   <ul class="grid gap-3 sm:grid-cols-3 md:gap-4">
     {servicios.map((s) => (
       <li class="bloque flex items-center gap-4 p-5 md:p-6">

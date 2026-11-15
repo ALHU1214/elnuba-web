@@ -8,53 +8,49 @@ import Servicios from '../components/Servicios.astro';
 import Familias from '../components/Familias.astro';
 import Marcas from '../components/Marcas.astro';
 import CopiarCorreo from '../components/CopiarCorreo.astro';
+import MapaCanarias from '../components/MapaCanarias.astro';
+import MapaVuelo from '../components/MapaVuelo.astro';
 import { negocio, telHref, correos, condiciones } from '../data/negocio';
-
-const preguntas = [
-  { p: '¿Venden solo al por mayor?', r: 'No. También vendemos al público en nuestra tienda de Los Majuelos (La Laguna) y en la Librería Mararía de Candelaria.' },
-  { p: '¿Reparten fuera de Tenerife?', r: 'Sí, repartimos a todas las islas Canarias.' },
-  { p: '¿Cómo pido un presupuesto?', r: `Llámanos al ${negocio.telefono} o escríbenos a ${negocio.email} con la lista de lo que necesitas.` },
-  { p: '¿Dónde están?', r: `En ${negocio.direccion.calle}, ${negocio.direccion.zona}, ${negocio.direccion.cp} ${negocio.direccion.localidad} (Tenerife).` },
-  // Dudas que frenan a un comprador: salen solas cuando Gonzalo conteste (condiciones, en negocio.ts)
-  ...(condiciones.entrega ? [{ p: '¿Cuánto tardan en entregar?', r: condiciones.entrega }] : []),
-  ...(condiciones.pedidoMinimo ? [{ p: '¿Hay pedido mínimo?', r: condiciones.pedidoMinimo }] : []),
-  ...(condiciones.pago ? [{ p: '¿Cómo se paga?', r: condiciones.pago }] : []),
-];
+// Preguntas por temas (botones Pedidos · Reparto · Material · Tiendas). Las de condiciones salen solas cuando conteste Gonzalo
+import { preguntasInicio as preguntas } from '../data/preguntas';
 
 // Frase de confianza bajo los botones (solo con datos confirmados por Gonzalo)
 const garantias = [condiciones.sinCompromiso && 'Presupuesto sin compromiso', condiciones.plazoPresupuesto && `Te lo enviamos ${condiciones.plazoPresupuesto}`].filter(Boolean);
 
 const clientes = [
-  { img: '/img/ceras.webp', alt: 'Ceras de colores vistas de cerca', titulo: 'Colegios y centros educativos', texto: 'Material escolar, libros de texto y bellas artes.', href: '/colegios/', enlace: 'Material para colegios' },
-  { img: '/img/rotuladores.webp', alt: 'Rotuladores azules, naranjas y negros', titulo: 'Empresas y despachos', texto: 'Papel, archivo, ofimática y mobiliario.', href: '/empresas-y-organismos/', enlace: 'Material para empresas' },
+  { img: '/img/ceras.webp', alt: 'Ceras de colores vistas de cerca', titulo: 'Colegios y centros educativos', texto: 'Material escolar, libros de texto, dibujo y pintura.', href: '/colegios/', enlace: 'Material para colegios' },
+  { img: '/img/rotuladores.webp', alt: 'Rotuladores azules, naranjas y negros', titulo: 'Empresas y despachos', texto: 'Papel, archivo, tóner y mobiliario.', href: '/empresas-y-organismos/', enlace: 'Material para empresas' },
   { img: '/img/archivadores.webp', alt: 'Dos archivadores rojos', titulo: 'Organismos públicos', texto: 'Material de oficina para la administración.', href: '/empresas-y-organismos/#organismos', enlace: 'Material para organismos' },
 ];
 
 const pasos = [
   { t: 'Mándanos tu lista', d: 'Por correo o por teléfono.' },
   { t: 'Te preparamos el presupuesto', d: 'Artículo por artículo.' },
-  { t: 'Te lo llevamos', d: 'A cualquier isla, o lo recoges en tienda.' },
+  { t: 'Te lo llevamos', d: 'A cualquier isla, o lo recoges en Los Majuelos.' },
 ];
 ---
 <Base
-  titulo="ELNUBA · Distribuidor de papelería y material de oficina en Tenerife"
-  descripcion="Mayorista de papelería, material escolar y de oficina en Los Majuelos (La Laguna). Colegios, empresas y organismos públicos. Repartimos a todas las islas Canarias.">
+  titulo="ELNUBA · Distribuidor de papelería y material de oficina en Canarias"
+  descripcion="Distribución de papelería, material escolar y de oficina desde Los Majuelos (La Laguna). Colegios, empresas y organismos públicos. Repartimos a todas las islas Canarias.">
 
-  <!-- 9-nov-2026, estilo "Escaparate" (Álvaro: "dame algo totalmente distinto"). Copia de antes en el scratchpad de la sesión. -->
-  <!-- PORTADA: mosaico con el mensaje, una foto grande, los años y el reparto -->
-  <section class="mx-auto max-w-7xl px-3 pt-3 sm:px-4 md:px-6 md:pt-5">
+  {/* 9-nov-2026, estilo "Escaparate" (Álvaro: "dame algo totalmente distinto"). Copia de antes en el scratchpad de la sesión. */}
+  {/* PORTADA: mosaico con el mensaje, una foto grande, los años y el reparto */}
+  {/* 10-nov-2026: en el ordenador la portada mide lo que deja la pantalla, para que lo último que se vea al abrir la
+       web sea el final de la franja de marcas (Álvaro: "que la primera visión sea más bonita"). CSS: .portada */}
+  <section class="portada mx-auto max-w-7xl px-3 pt-3 sm:px-4 md:px-6 md:pt-5">
     <div class="grid grid-cols-2 gap-3 md:gap-4 lg:grid-cols-12">
       <div class="zona-oscura relative col-span-2 flex flex-col justify-center overflow-hidden rounded-[2rem] p-7 sm:p-10 lg:col-span-7 lg:row-span-2 lg:p-12 xl:p-14">
         <div class="entra">
-          <p class="antetitulo text-xs font-bold tracking-[.2em] uppercase">Mayorista de papelería en Tenerife</p>
-          <!-- El título dice lo que gana el cliente; la palabra clave va en la etiqueta de arriba y en el título de la pestaña -->
-          <h1 class="mt-6 text-[2.5rem] leading-[1.02] sm:text-6xl lg:text-[3.9rem]">
+          {/* 11-nov-2026 (Álvaro): "Distribución de papelería", sin "mayorista" ni "en Tenerife" */}
+          <p class="antetitulo text-xs font-bold tracking-[.2em] uppercase">Distribución de papelería</p>
+          {/* El título dice lo que gana el cliente; la palabra clave va en la etiqueta de arriba y en el título de la pestaña */}
+          <h1 class="mt-6 text-[clamp(2.15rem,10vw,2.5rem)] leading-[1.02] sm:text-6xl lg:text-[3.9rem]">
             Todo el material de tu colegio u oficina, <em class="marcador">en un solo pedido</em>
           </h1>
           <p class="mt-6 max-w-xl text-lg leading-relaxed text-tinta/75">
             Para colegios, empresas y organismos públicos de Canarias. Mándanos tu lista y te preparamos el presupuesto.
           </p>
-          <div class="mt-9 flex flex-col gap-3 sm:flex-row">
+          <div class="mt-9 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
             <a href={correos.general} class="btn-primario">
               <svg aria-hidden="true" viewBox="0 0 24 24" class="size-5 fill-none stroke-2"><rect x="3" y="5" width="18" height="14" rx="2" /><path d="m3 7 9 6 9-6" /></svg>
               Pedir presupuesto por correo
@@ -70,25 +66,29 @@ const pasos = [
       </div>
 
       <figure class="entra-tarde relative col-span-2 aspect-[16/10] overflow-hidden rounded-[2rem] lg:col-span-5 lg:aspect-auto lg:min-h-[16rem]">
-        <img src={ruta('/img/lapices-abanico.webp')} alt="Lápices de colores colocados en círculo sobre fondo blanco" width="960" height="720" loading="eager" decoding="async" class="absolute inset-0 size-full object-cover" />
+        <img src={ruta('/img/lapices-abanico.webp')} alt="Lápices de colores colocados en círculo sobre fondo blanco" width="960" height="720" loading="eager" fetchpriority="high" decoding="async" class="absolute inset-0 size-full object-cover" />
       </figure>
 
-      <!-- Los años: lo que más quiere destacar Gonzalo -->
+      {/* Los años: lo que más quiere destacar Gonzalo. "+35" (Álvaro, 11-nov-2026); el + no cuenta, solo el número.
+          Entre 1024 y 1279 px el recuadro es estrecho: el número baja un poco para que quepa con el + */}
       <div class="entra-tarde-2 col-span-2 flex flex-col justify-between gap-6 rounded-[2rem] bg-naranja p-6 text-[#13203a] sm:col-span-1 md:p-7 lg:col-span-2">
         <span class="text-xs font-bold tracking-[.2em] uppercase">Experiencia</span>
         <p>
-          <span class="block text-7xl leading-none font-extrabold tracking-[-.05em] lg:text-[5.2rem]">{negocio.anios ? <><span class="sr-only">{negocio.anios}</span><span aria-hidden="true" data-contar={negocio.anios} class="tabular-nums">{negocio.anios}</span></> : <Pendiente texto="XX" />}</span>
+          <span class="block text-7xl leading-none font-extrabold tracking-[-.05em] whitespace-nowrap lg:text-[4.1rem] xl:text-[5.2rem]">{negocio.anios ? <><span class="sr-only">Más de {negocio.anios}</span><span aria-hidden="true" class="mas">+</span><span aria-hidden="true" data-contar={negocio.anios} class="tabular-nums">{negocio.anios}</span></> : <Pendiente texto="XX" />}</span>
           <span class="mt-2 block leading-tight font-bold">años en el sector</span>
         </p>
       </div>
 
-      <div class="entra-tarde-2 bloque col-span-2 flex flex-col justify-between gap-6 p-6 sm:col-span-1 md:p-7 lg:col-span-3">
-        <span class="grid size-12 place-items-center rounded-full bg-[#ffe3cf] text-[#b93d0a]">
-          <svg aria-hidden="true" viewBox="0 0 24 24" class="size-6 fill-none stroke-current stroke-[1.6] [stroke-linecap:round] [stroke-linejoin:round]"><path d="M3 7h11v9H3z M14 10h4l3 3v3h-7 M7 19a2 2 0 1 0 0-.01 M17 19a2 2 0 1 0 0-.01" /></svg>
-        </span>
+      {/* Reparto (11-nov-2026, Álvaro: "mejorar el aspecto visual"; el texto se queda): mapa de las islas con las rutas
+          desde Los Majuelos. El punto de la leyenda es el mismo que marca Los Majuelos en el mapa */}
+      <div class="entra-tarde-2 bloque reparto col-span-2 flex flex-col justify-between gap-4 p-6 sm:col-span-1 md:p-7 lg:col-span-3">
+        <MapaCanarias />
         <p>
           <span class="block text-xl leading-tight font-bold">Reparto a todas las islas Canarias</span>
-          <span class="mt-1.5 block text-sm text-gris">Desde Los Majuelos (La Laguna)</span>
+          <span class="mt-1.5 flex items-start gap-2 text-sm text-gris">
+            <svg aria-hidden="true" viewBox="0 0 16 16" class="mt-[3px] size-3.5 shrink-0"><circle cx="8" cy="8" r="6.5" fill="none" stroke="#13203a" stroke-opacity=".3" stroke-width="1.2" /><circle cx="8" cy="8" r="3.6" fill="#13203a" stroke="#fff" stroke-width="1.3" /></svg>
+            <span>Desde Los Majuelos (La&nbsp;Laguna)</span>
+          </span>
         </p>
       </div>
     </div>
@@ -98,8 +98,8 @@ const pasos = [
 
   <Servicios />
 
-  <!-- PARA QUIÉN: fotos grandes con el texto encima -->
-  <section class="mx-auto max-w-7xl px-3 py-14 sm:px-4 md:px-6 md:py-20">
+  {/* PARA QUIÉN: fotos grandes con el texto encima */}
+  <section class="mx-auto max-w-7xl px-3 py-10 sm:px-4 md:px-6 md:py-20">
     <p class="antetitulo text-xs font-bold tracking-[.2em] text-naranja-oscuro uppercase">Para quién trabajamos</p>
     <h2 class="mt-3 text-4xl md:text-5xl">Elige tu caso</h2>
     <div class="mt-8 grid gap-3 md:mt-10 md:grid-cols-3 md:gap-4">
@@ -119,33 +119,64 @@ const pasos = [
     </div>
   </section>
 
-  <!-- QUÉ DISTRIBUIMOS: lo que venden, como información (9-nov-2026: sin catálogo, el cliente no lo va a pasar).
-       La última casilla lleva a preguntar: la web solo tiene una acción, contactar -->
+  {/* QUÉ DISTRIBUIMOS: lo que venden, como información (9-nov-2026: sin catálogo, el cliente no lo va a pasar).
+       La última casilla lleva a preguntar: la web solo tiene una acción, contactar */}
   <section class="mx-auto max-w-7xl px-4 md:px-6">
-    <div class="bloque p-6 sm:p-8 md:p-12">
-      <p class="antetitulo text-xs font-bold tracking-[.2em] text-naranja-oscuro uppercase">Nuestro material</p>
-      <h2 class="mt-3 text-4xl md:text-5xl">Qué distribuimos</h2>
-      <div class="mt-8 md:mt-10"><Familias sobreBlanco /></div>
-    </div>
+    <Familias antetitulo="Nuestro material" titulo="Qué distribuimos" />
   </section>
 
-  <!-- CÓMO PEDIR: bloque oscuro, con el botón al final (cuando el cliente ya sabe qué hacer) -->
-  <section class="mx-auto max-w-7xl px-3 py-14 sm:px-4 md:px-6 md:py-20">
-    <div class="zona-oscura relative overflow-hidden rounded-[2rem] p-7 sm:p-10 md:p-14">
-      <p class="antetitulo text-xs font-bold tracking-[.2em] uppercase">Cómo pedir</p>
-      <h2 class="mt-3 max-w-2xl text-4xl md:text-5xl">Tu pedido, en tres pasos</h2>
-      <ol class="mt-10 grid gap-3 md:grid-cols-3 md:gap-4">
-        {pasos.map((p, i) => (
-          <li class="rounded-3xl bg-white/[.06] p-6 ring-1 ring-white/10 md:p-8">
-            <span class="text-5xl leading-none font-extrabold tracking-[-.04em] text-naranja-vivo md:text-6xl">0{i + 1}</span>
-            <h3 class="mt-5 text-xl md:text-2xl">{p.t}</h3>
-            <p class="mt-2 leading-relaxed text-gris">{p.d}</p>
-          </li>
-        ))}
-      </ol>
-      <div class="mt-8 flex flex-col gap-3 sm:flex-row">
-        <a href={correos.general} class="btn-primario">Mandar mi lista por correo</a>
-        <a href={telHref} class="btn-secundario">Llamar al {negocio.telefono}</a>
+  {/* CÓMO PEDIR, "el viaje del pedido" (11-nov-2026, 3.ª versión; Álvaro: "más moderno, sin que se note tanto IA, algo
+      con efecto wow"; antes: libro y después tarjetas con vistas previas). Al bajar por la página, un avión de papel
+      recorre los tres pasos dejando una estela naranja, y cada número gigante de contorno se rellena cuando el avión
+      pasa por su parada. En el ordenador vuela de izquierda a derecha; en el móvil, de arriba abajo. El camino se calcula
+      con la posición real de las paradas (script de abajo). Sin JavaScript o con "reducir movimiento", todo se ve
+      encendido y quieto. Marino liso, sin resplandores. Los botones, al final (decisión de conversión del 9-nov) */}
+  <section class="mx-auto max-w-7xl px-3 py-10 sm:px-4 md:px-6 md:py-20">
+    <div class="zona-oscura viaje relative overflow-hidden rounded-[2rem] px-6 py-10 sm:px-10 sm:py-12 md:px-12 md:py-14 lg:px-14" data-viaje>
+      <div class="max-w-3xl">
+        <p class="antetitulo text-xs font-bold tracking-[.2em] uppercase">Cómo pedir</p>
+        {/* Siempre en dos líneas: a 1024-1279 px cabía en una y chocaba con el mapa de las islas */}
+        <h2 class="viaje-titulo mt-5">Tu pedido,<br /> en tres pasos</h2>
+        <p class="mt-5 max-w-md text-lg leading-relaxed text-tinta/75">Sin registros ni formularios: solo tu lista de material.</p>
+      </div>
+      {/* 13-nov-2026: el destino del avión, las islas (en el ordenador, arriba a la derecha). Sustituye a las nubes de
+          papel de esa misma mañana, que Álvaro vio sin sentido. Va antes de la ruta para que el avión pase por encima */}
+      <MapaVuelo />
+
+      <div class="viaje-ruta mt-12 md:mt-14">
+        <svg class="viaje-svg" aria-hidden="true" focusable="false">
+          <defs><mask id="viaje-mascara" maskUnits="userSpaceOnUse" x="-500" y="-500" width="6000" height="6000"><path class="viaje-revela" /></mask></defs>
+          <path class="viaje-camino" />
+          <path class="viaje-estela" mask="url(#viaje-mascara)" />
+          <g class="viaje-avion">
+            <path d="M17 0-14-11-6 0z" fill="#ffffff" />
+            <path d="M17 0-14 11-6 0z" fill="#d5dce8" />
+            <path d="M17 0-6 0-10 5z" fill="#a9b4c7" />
+          </g>
+        </svg>
+        <ol class="viaje-pasos">
+          {pasos.map((p, i) => (
+            <li class="viaje-paso">
+              <span class="viaje-parada" data-parada></span>
+              <span class="viaje-num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+              <div class="viaje-texto">
+                <h3 class="text-xl md:text-2xl">{p.t}</h3>
+                <p class="mt-2 leading-relaxed text-gris">{p.d}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </div>
+
+      <div class="mt-12 flex flex-col gap-5 border-t border-linea pt-8 md:mt-14 lg:flex-row lg:items-center lg:justify-between">
+        <div class="flex flex-col gap-3 sm:flex-row">
+          <a href={correos.general} class="btn-primario">
+            <svg aria-hidden="true" viewBox="0 0 24 24" class="size-5 fill-none stroke-2"><rect x="3" y="5" width="18" height="14" rx="2" /><path d="m3 7 9 6 9-6" /></svg>
+            Mandar mi lista por correo
+          </a>
+          <a href={telHref} class="btn-secundario">Llamar al {negocio.telefono}</a>
+        </div>
+        <CopiarCorreo />
       </div>
     </div>
   </section>
@@ -154,3 +185,146 @@ const pasos = [
 
   <LlamadaFinal />
 </Base>
+
+<script>
+  // "El viaje del pedido" (11-nov-2026, 4.ª versión; Álvaro: "que sea como una animación sola, que no tengas que
+  // scrollear" y "más visual"). Cuando la ruta aparece en pantalla, el avión de papel despega solo, va dibujando su ruta
+  // con una estela naranja, enciende cada paso al pasar (onda y número que salta), hace un tirabuzón entre el 2 y el 3
+  // y sale volando del bloque. Si la sección sale de la pantalla y vuelve, repite el viaje.
+  // El camino se calcula con la posición real de las paradas (de lado en el ordenador; de arriba abajo en el móvil, sin
+  // tirabuzón) y se rehace si cambia el tamaño. Con "reducir movimiento" o sin JavaScript, todo encendido y quieto.
+  const viaje = document.querySelector<HTMLElement>('[data-viaje]');
+  if (viaje) {
+    const ruta = viaje.querySelector<HTMLElement>('.viaje-ruta')!;
+    const svg = viaje.querySelector<SVGSVGElement>('.viaje-svg')!;
+    const camino = svg.querySelector<SVGPathElement>('.viaje-camino')!;
+    const revela = svg.querySelector<SVGPathElement>('.viaje-revela')!;
+    const todos = svg.querySelectorAll<SVGPathElement>('.viaje-camino, .viaje-estela, .viaje-revela');
+    const avion = svg.querySelector<SVGGElement>('.viaje-avion')!;
+    // 13-nov-2026: en el ordenador el vuelo acaba en Los Majuelos, en el mapa de las islas (MapaVuelo.astro)
+    const destino = viaje.querySelector<SVGGraphicsElement>('[data-destino]');
+    let haciaMapa = false;
+    const paradas = [...viaje.querySelectorAll<HTMLElement>('[data-parada]')];
+    const pasos = paradas.map((p) => p.closest('.viaje-paso')!);
+    const quieto = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const DURACION = 5200; // milisegundos que dura el vuelo
+    let largo = 0, escala = 1, avance = quieto ? 1 : 0, inicio = 0, proporcion = 0;
+    let estado: 'espera' | 'vuela' | 'hecho' = quieto ? 'hecho' : 'espera';
+    let enParada: number[] = [];
+
+    const pintar = () => {
+      if (!largo) return;
+      const l = avance * largo;
+      const aqui = camino.getPointAtLength(l);
+      const antes = camino.getPointAtLength(Math.max(0, l - 3));
+      const despues = camino.getPointAtLength(Math.min(largo, l + 3));
+      const giro = (Math.atan2(despues.y - antes.y, despues.x - antes.x) * 180) / Math.PI;
+      // Aterrizaje (ordenador): pasado el paso 3 se va haciendo pequeño, como si se alejara, y se desvanece al llegar
+      let s = escala, o = 1;
+      if (haciaMapa && l > enParada[2]) {
+        const k = Math.min(1, (l - enParada[2]) / Math.max(1, largo - enParada[2]));
+        s = escala * (1 - 0.62 * k * k);
+        o = k < 0.82 ? 1 : Math.max(0, 1 - (k - 0.82) / 0.18);
+      }
+      avion.setAttribute('transform', `translate(${aqui.x.toFixed(1)} ${aqui.y.toFixed(1)}) rotate(${giro.toFixed(1)}) scale(${s.toFixed(3)})`);
+      avion.style.opacity = o.toFixed(2);
+      revela.style.strokeDashoffset = String(largo - l);
+      pasos.forEach((paso, i) => paso.classList.toggle('activo', l >= enParada[i] - 4));
+    };
+
+    // Vuelo: suave al despegar y al salir
+    const suave = (x: number) => -(Math.cos(Math.PI * x) - 1) / 2;
+    const cuadro = (t: number) => {
+      if (estado !== 'vuela') return;
+      const x = Math.min(1, (t - inicio) / DURACION);
+      avance = suave(x);
+      pintar();
+      if (x < 1) requestAnimationFrame(cuadro);
+      else { estado = 'hecho'; viaje.classList.add('reparte'); if (proporcion === 0) reiniciar(); } // al llegar, salen las rutas
+    };
+    const despegar = () => {
+      if (estado !== 'espera' || !largo) return;
+      estado = 'vuela';
+      inicio = performance.now();
+      requestAnimationFrame(cuadro);
+    };
+    const reiniciar = () => {
+      if (quieto) return;
+      estado = 'espera';
+      viaje.classList.remove('reparte');
+      avance = 0;
+      pintar();
+    };
+
+    const trazar = () => {
+      const caja = svg.getBoundingClientRect();
+      const c = paradas.map((p) => { const b = p.getBoundingClientRect(); return [b.left + b.width / 2 - caja.left, b.top + b.height / 2 - caja.top]; });
+      const n = c.length - 1;
+      const deLado = Math.abs(c[n][0] - c[0][0]) > Math.abs(c[n][1] - c[0][1]);
+      const pts: number[][] = [];
+      if (deLado) {
+        escala = 1.6;
+        pts.push([-70, c[0][1] + 64]); // entra desde abajo a la izquierda, por el margen del bloque
+        pts.push(c[0]);
+        pts.push([(c[0][0] + c[1][0]) / 2, c[0][1] - 34]);
+        pts.push(c[1]);
+        // Tirabuzón entre la 2 y la 3: sube, da la vuelta por arriba y sigue hacia la derecha
+        const y = c[1][1], r = Math.min(42, (c[2][0] - c[1][0]) / 7), cx = (c[1][0] + c[2][0]) / 2;
+        pts.push([cx - r * 1.4, y + 6], [cx + r, y - r], [cx, y - 2 * r], [cx - r, y - r], [cx + r * 0.3, y + 6]);
+        pts.push(c[2]);
+        // Destino: Los Majuelos en el mapa de las islas (solo se ve en el ordenador). Sube abriéndose a la derecha y
+        // aterriza. Si el mapa no se ve, sale por arriba a la derecha, fuera del bloque, como antes
+        const d = destino?.getBoundingClientRect();
+        haciaMapa = !!d && d.width > 0;
+        if (d && haciaMapa) {
+          const tx = d.left + d.width / 2 - caja.left, ty = d.top + d.height / 2 - caja.top;
+          // sube en curva suave por el canal entre Tenerife y Gran Canaria, sin pasar por encima de otra isla
+          pts.push([c[2][0] + 55, c[2][1] - 55], [tx + 18, ty + 80], [tx, ty]);
+        } else pts.push([caja.width + 90, c[2][1] - 80]);
+      } else {
+        haciaMapa = false;
+        escala = 1.15;
+        pts.push([c[0][0] + 10, c[0][1] - 60]);
+        c.forEach((p, i) => { pts.push(p); if (i < n) pts.push([p[0] + (i % 2 ? -12 : 12), (p[1] + c[i + 1][1]) / 2]); });
+        pts.push([-70, c[n][1] + 46]); // sale por la izquierda, fuera del bloque
+      }
+      // Curva suave que pasa por todos los puntos (Catmull-Rom pasada a Bézier). De paso se guarda el trozo de camino
+      // que llega hasta cada parada, para saber a qué distancia del despegue está cada una
+      const f = (v: number) => v.toFixed(1);
+      const enPts = c.map((p) => pts.indexOf(p)); // las paradas son puntos del camino
+      let d = `M${f(pts[0][0])} ${f(pts[0][1])}`;
+      const hasta: string[] = c.map(() => d); // (si una parada fuera el primer punto, su distancia sería 0)
+      for (let i = 0; i < pts.length - 1; i++) {
+        const a = pts[i - 1] ?? pts[i], b = pts[i], e = pts[i + 1], g = pts[i + 2] ?? pts[i + 1];
+        d += ` C${f(b[0] + (e[0] - a[0]) / 6)} ${f(b[1] + (e[1] - a[1]) / 6)} ${f(e[0] - (g[0] - b[0]) / 6)} ${f(e[1] - (g[1] - b[1]) / 6)} ${f(e[0])} ${f(e[1])}`;
+        const parada = enPts.indexOf(i + 1);
+        if (parada >= 0) hasta[parada] = d;
+      }
+      // 13-nov-2026 (velocidad): se mide el largo de esos trozos (3 medidas) en lugar de recorrer el camino de 3 en 3 px
+      // buscando la parada (unas 2.000 medidas: congelaba la pantalla más de medio segundo al llegar a la sección)
+      enParada = hasta.map((t) => { camino.setAttribute('d', t); return camino.getTotalLength(); });
+      todos.forEach((p) => p.setAttribute('d', d));
+      largo = camino.getTotalLength();
+      revela.style.strokeDasharray = `${largo} ${largo}`;
+      pintar();
+      if (proporcion >= 0.45) despegar();
+    };
+
+    if (!quieto) viaje.classList.add('viaje-vuela');
+    else viaje.classList.add('reparte'); // con "reducir movimiento", las rutas del mapa ya dibujadas
+    // Despega cuando se ve casi la mitad de la ruta; si la sección sale de la pantalla, se prepara para repetir
+    new IntersectionObserver(([e]) => {
+      proporcion = e.isIntersecting ? e.intersectionRatio : 0;
+      if (proporcion >= 0.45) despegar();
+      else if (!e.isIntersecting && estado === 'hecho') reiniciar();
+    }, { threshold: [0, 0.45] }).observe(ruta);
+    // 13-nov-2026 (velocidad): el camino se calcula cuando la sección está a una pantalla de distancia, no al abrir la
+    // página. Calcularlo al cargar ocupaba el móvil justo cuando tiene que pintar la portada.
+    new IntersectionObserver(([e], vigia) => {
+      if (!e.isIntersecting) return;
+      vigia.disconnect();
+      new ResizeObserver(trazar).observe(ruta);
+      document.fonts?.ready.then(trazar);
+    }, { rootMargin: '100% 0px' }).observe(ruta);
+  }
+</script>

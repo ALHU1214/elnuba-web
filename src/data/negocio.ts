@@ -26,12 +26,25 @@ export const negocio = {
 };
 
 // Tiendas abiertas al público (20-oct: Álvaro pide nombrar las dos).
+// 11-nov-2026 (Álvaro): la de Los Majuelos está dentro del almacén, así que allí sí se recogen pedidos. La de Candelaria
+// es una tienda aparte, solo para el público que va a comprar: se nombra, pero sin decir que allí se pide o se recoge.
+// mapa: lo que se busca en Google Maps (11-nov-2026, mapas de Contacto). Comprobado que cae en su ficha de Google:
+// "ELNUBA Distribuciones de Papelería y Librería" y "Librería Papelería Mararía" (no confundir con LER Librerías).
+// 13-nov-2026 (Álvaro): no hay aparcamiento propio (se aparca en la calle): fuera "aparcamiento adaptado", que venía de
+// su ficha de Google. Accesibilidad dicha como recomiendan las guías y la norma: "accesible" (no "adaptado") y "personas
+// usuarias de silla de ruedas".
 // Candelaria: nombre y dirección de su web antigua (papeleriaylibreriaelnuba.es, "frente al Ayuntamiento");
 // teléfono de directorios y del listado de comercios del Ayuntamiento de Candelaria. [PENDIENTE] confirmar teléfono y horario (pregunta 9).
 export const tiendas = [
-  { id: 'los-majuelos', nombre: 'Tienda de Los Majuelos', lugar: 'La Laguna', direccion: ['Av. El Paso 43, bajo', 'Polígono Industrial Los Majuelos', '38108 San Cristóbal de La Laguna'], telefono: '922 62 63 69', telefonoE164: '+34922626369', horario: null as string[] | null, nota: 'En la misma dirección que el almacén.', extras: ['Acceso, aparcamiento y aseo adaptados para silla de ruedas', 'Pago con tarjeta de crédito, débito y con el móvil', 'Recogida de pedidos'] },
-  { id: 'candelaria', nombre: 'Librería Mararía', lugar: 'Candelaria', direccion: ['C/ Periodista Ernesto Salcedo, 5', 'Frente al Ayuntamiento', 'Candelaria'], telefono: '922 50 26 65', telefonoE164: '+34922502665', horario: null as string[] | null, nota: 'Librería y papelería en el centro de Candelaria.', extras: [] as string[] },
+  { id: 'los-majuelos', nombre: 'Tienda de Los Majuelos', lugar: 'La Laguna', direccion: ['Av. El Paso 43, bajo', 'Polígono Industrial Los Majuelos', '38108 San Cristóbal de La Laguna'], telefono: '922 62 63 69', telefonoE164: '+34922626369', horario: null as string[] | null, nota: 'Dentro de nuestro almacén.', mapa: 'ELNUBA Distribuciones de Papelería, Av. El Paso 43, La Laguna', extras: ['Entrada y aseo accesibles para personas usuarias de silla de ruedas', 'Pago con tarjeta de crédito, débito y con el móvil', 'Recogida de pedidos'] },
+  { id: 'candelaria', nombre: 'Librería Mararía', lugar: 'Candelaria', direccion: ['C/ Periodista Ernesto Salcedo, 5', 'Frente al Ayuntamiento', 'Candelaria'], telefono: '922 50 26 65', telefonoE164: '+34922502665', horario: null as string[] | null, nota: 'Librería y papelería para el público, en el centro de Candelaria.', mapa: 'Librería Mararía, Calle Periodista Ernesto Salcedo 5, Candelaria', extras: [] as string[] },
 ];
+
+// Reparto (13-nov-2026, Álvaro): a las 8 islas Canarias. La web no se limita a Tenerife: solo dice que estamos en
+// Tenerife cuando se da la dirección. Se escribe "todas las islas" (y, en las preguntas, la lista), nunca "8 islas"
+// como cifra (decisión del 20-oct).
+export const islas = ['Tenerife', 'Gran Canaria', 'Lanzarote', 'Fuerteventura', 'La Palma', 'La Gomera', 'El Hierro', 'La Graciosa'];
+export const listaIslas = `${islas.slice(0, -1).join(', ')} y ${islas.at(-1)}`;
 
 export const telHref = `tel:${negocio.telefonoE164}`;
 // Correos de presupuesto con el asunto y un guion ya escritos (9-nov-2026, CRO): quien escribe solo rellena.

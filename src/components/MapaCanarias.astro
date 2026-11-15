@@ -1,0 +1,26 @@
+---
+// Mapa del reparto (11-nov-2026, Álvaro: "mejorar el aspecto visual" del recuadro "Reparto a todas las islas Canarias").
+// Las 8 islas con su forma real (src/data/mapa-islas.ts, compartido con el mapa de "Cómo pedir" desde el 13-nov).
+// Tenerife en naranja con Los Majuelos marcado y una ruta de puntos hasta cada isla, que se dibuja una vez al cargar.
+// Es decorativo (aria-hidden): el texto de al lado ya lo dice. Sin JavaScript se ve entero y quieto.
+import { vistaIslas, tenerife, origen, islas } from '../data/mapa-islas';
+
+interface Props { class?: string }
+const { class: clase = '' } = Astro.props;
+---
+<svg viewBox={vistaIslas} aria-hidden="true" focusable="false" class:list={['mapa-reparto', clase]}>
+  <defs>
+    {/* Máscara que va descubriendo las rutas desde Tenerife hacia cada isla */}
+    <mask id="mapa-reparto-rutas" maskUnits="userSpaceOnUse" x="-8" y="-8" width="416" height="174">
+      {islas.map((i, n) => <path d={i.ruta} pathLength="1" class="ruta-trazo" style={`--r:${n}`} />)}
+    </mask>
+  </defs>
+  {islas.map((i) => <path d={i.d} class="isla" />)}
+  <g mask="url(#mapa-reparto-rutas)">
+    {islas.map((i) => <path d={i.ruta} class="ruta" />)}
+  </g>
+  <path d={tenerife} class="isla-origen" />
+  {islas.map((i, n) => <circle cx={i.fin[0]} cy={i.fin[1]} r="4.2" class="destino" style={`--r:${n}`} />)}
+  <circle cx={origen[0]} cy={origen[1]} r="11" class="origen-onda" />
+  <circle cx={origen[0]} cy={origen[1]} r="5.4" class="origen" />
+</svg>

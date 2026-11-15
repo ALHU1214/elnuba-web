@@ -1,0 +1,48 @@
+---
+// Lápices de colores que asoman por el borde de abajo del recuadro de los años (Colegios, 13-nov-2026; Álvaro: "el
+// cuadro de +35 años podría estar más decorado"). Dibujo plano con los colores del logo: cuerpo con sus caras, madera
+// y mina del color del lápiz. Al cargar suben uno detrás de otro, como si se sacaran del estuche.
+// Decorativo (aria-hidden). Con "reducir movimiento" o sin animaciones, se ven ya en su sitio.
+interface Props { class?: string }
+const { class: clase = '' } = Astro.props;
+
+const colores = ['#f78a37', '#13203a', '#fce265', '#e84343'];
+const altos = [112, 148, 128, 172, 140, 188, 152, 132, 168, 120, 150];
+const ancho = 34, hueco = 13, punta = 46, base = 210;
+const lapices = altos.map((h, i) => {
+  const x = 8 + i * (ancho + hueco);
+  const arriba = 200 - h;
+  const cuerpo = arriba + punta; // donde empieza la pintura
+  const m = x + ancho / 2;
+  const mina = arriba + punta * 0.34;
+  const t = ancho / 6;
+  return {
+    i, color: colores[i % colores.length],
+    madera: `${x},${cuerpo} ${x + ancho},${cuerpo} ${m},${arriba}`,
+    maderaSombra: `${m},${arriba} ${x + ancho},${cuerpo} ${x + ancho * 2 / 3},${cuerpo}`,
+    mina: `${m - ancho * 0.17},${mina} ${m + ancho * 0.17},${mina} ${m},${arriba}`,
+    // la pintura acaba en tres ondas que suben por la madera, como en un lápiz recién afilado
+    cuerpo: `M${x} ${cuerpo}q${t} -7 ${2 * t} 0q${t} -7 ${2 * t} 0q${t} -7 ${2 * t} 0V${base}H${x}Z`,
+    luz: { x, y: cuerpo, w: ancho / 3, h: base - cuerpo },
+    sombra: { x: x + ancho * 2 / 3, y: cuerpo, w: ancho / 3, h: base - cuerpo },
+  };
+});
+---
+<svg viewBox="0 0 520 200" preserveAspectRatio="xMidYMin slice" aria-hidden="true" focusable="false" class:list={['lapices', clase]}>
+  {lapices.map((l) => (
+    <g class="lapiz" style={`--i:${l.i}`}>
+      <polygon points={l.madera} fill="#f4c882" />
+      <polygon points={l.maderaSombra} fill="#e0ad66" />
+      <polygon points={l.mina} fill={l.color} />
+      <path d={l.cuerpo} fill={l.color} />
+      <rect x={l.luz.x} y={l.luz.y} width={l.luz.w} height={l.luz.h} fill="#fff" fill-opacity=".2" />
+      <rect x={l.sombra.x} y={l.sombra.y} width={l.sombra.w} height={l.sombra.h} fill="#000" fill-opacity=".13" />
+    </g>
+  ))}
+</svg>
+
+<style>
+  .lapices { display: block; width: 100%; height: auto; }
+  .lapiz { transform-box: fill-box; animation: lapiz-sube .9s cubic-bezier(.34, 1.4, .64, 1) both; animation-delay: calc(.45s + var(--i) * 60ms); }
+  @keyframes lapiz-sube { from { transform: translateY(105%); } }
+</style>

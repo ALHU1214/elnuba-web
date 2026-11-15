@@ -1,0 +1,49 @@
+---
+// Mapa de una tienda que no se conecta con Google hasta que se pulsa (11-nov-2026; componente propio desde el 13-nov).
+// Hasta entonces solo hay un mapa dibujado con CSS (calles claras sobre piedra) con la chincheta y "Ver en el mapa":
+// sin cookies ni conexión con Google, como explica la política de privacidad. Al pulsar, el mapa de Google se carga en
+// el mismo hueco y con el mismo alto, así no se mueve nada. Sin JavaScript, abre Google Maps en otra pestaña.
+// etiqueta: nombre que sale junto a la chincheta (mapa grande de Contacto). clase: alto y forma del hueco.
+// zona y calle: rótulos de mapa, en gris (la calle, a lo largo de la calle ancha del dibujo, que pasa por la chincheta).
+interface Props { consulta: string; titulo: string; etiqueta?: string; zona?: string; calle?: string; class?: string }
+const { consulta, titulo, etiqueta, zona, calle, class: clase = '' } = Astro.props;
+const q = encodeURIComponent(consulta);
+---
+<a href={`https://www.google.com/maps/search/?api=1&query=${q}`} target="_blank" rel="noopener"
+   class:list={['mapa-portada', clase]} data-mapa={`https://maps.google.com/maps?q=${q}&z=16&hl=es&output=embed`}
+   data-titulo={titulo} data-clase={clase}>
+  {zona && <span class="mapa-zona" aria-hidden="true">{zona}</span>}
+  {calle && <span class="mapa-calle" aria-hidden="true">{calle}</span>}
+  <span class="mapa-sitio">
+    <span class="mapa-onda" aria-hidden="true"></span>
+    <svg aria-hidden="true" viewBox="0 0 24 24" class="mapa-pin"><path fill="currentColor" d="M12 22.5s7.5-6.6 7.5-12.7a7.5 7.5 0 1 0-15 0c0 6.1 7.5 12.7 7.5 12.7z" /><circle cx="12" cy="9.8" r="2.8" fill="#13203a" /></svg>
+    {etiqueta && <span class="mapa-etiqueta">{etiqueta}</span>}
+  </span>
+  <span class="mapa-boton">Ver en el mapa</span>
+  <span class="mapa-aviso">Se carga Google Maps al pulsar</span>
+</a>
+
+<script>
+  // "Ver en el mapa": en lugar de abrir Google Maps, carga el mapa en el mismo hueco (solo al pulsar).
+  // Con Ctrl, Mayúsculas o la rueda del ratón se deja abrir en otra pestaña, como cualquier enlace.
+  document.querySelectorAll<HTMLAnchorElement>('a[data-mapa]').forEach((a) => {
+    a.addEventListener('click', (e) => {
+      if (e.ctrlKey || e.metaKey || e.shiftKey || e.button !== 0) return;
+      e.preventDefault();
+      const marco = document.createElement('iframe');
+      marco.src = a.dataset.mapa!;
+      marco.title = a.dataset.titulo!;
+      marco.className = `mapa-marco ${a.dataset.clase || ''}`;
+      marco.referrerPolicy = 'no-referrer-when-downgrade';
+      marco.allowFullscreen = true;
+      a.replaceWith(marco);
+      marco.focus();
+    });
+  });
+  // La chincheta cae en su sitio cuando el mapa aparece en pantalla
+  const vigia = new IntersectionObserver((entradas) => entradas.forEach((e) => {
+    if (e.isIntersecting) { e.target.classList.add('aterriza'); vigia.unobserve(e.target); }
+  }), { rootMargin: '0px 0px -15% 0px' });
+  document.querySelectorAll('a[data-mapa]').forEach((a) => vigia.observe(a));
+  document.documentElement.classList.add('mapas-listos');
+</script>

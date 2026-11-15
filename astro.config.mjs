@@ -1,6 +1,5 @@
 import { defineConfig } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
-import sitemap from '@astrojs/sitemap';
 
 // [PENDIENTE] dominio definitivo: elnuba.com o elnuba.es (pregunta 16 a Gonzalo)
 // 10-nov-2026: la versión de prueba de GitHub Pages pasa SITE_URL y BASE_PATH (ver .github/workflows/publicar.yml).
@@ -8,7 +7,7 @@ import sitemap from '@astrojs/sitemap';
 export default defineConfig({
   site: process.env.SITE_URL || 'https://elnuba.com',
   base: process.env.BASE_PATH || '/',
-  integrations: [sitemap()],
+  // 13-nov-2026: sin el plugin de sitemap; robots.txt, sitemap.xml y llms.txt salen de src/pages/*.ts
   devToolbar: { enabled: false },
   // La hoja de estilos (8 KB comprimida) va dentro de cada página: el móvil pinta antes, sin esperar otra descarga (9-nov-2026)
   build: { inlineStylesheets: 'always' },
