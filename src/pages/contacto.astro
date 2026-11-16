@@ -19,41 +19,48 @@ const comoLlegar = (t: string) => `https://www.google.com/maps/dir/?api=1&destin
 // En Los Majuelos, todo en el mismo sitio (Álvaro, 13-nov-2026; la recogida de pedidos, 11-nov)
 const aqui = ['Oficinas', 'Almacén', 'Tienda abierta al público', 'Recogida de pedidos'];
 const flecha = 'M7 17 17 7 M9 7h8v8';
+const [usuarioCorreo, dominioCorreo] = negocio.email.split('@');
 ---
 <Base
   titulo="Contacto · ELNUBA, papelería en Los Majuelos (La Laguna)"
   descripcion={`Llámanos al ${negocio.telefono} o escríbenos a ${negocio.email}. Estamos en ${d.calle}, ${d.zona}, ${d.cp} ${d.localidad}, Tenerife.`}>
 
-  {/* 15-nov-2026 (Álvaro): ahora también con la franja de marcas, para que la primera pantalla sea como la de las demás */}
+  {/* 16-nov-2026 (Álvaro): sin franja de marcas y sin las tarjetas del teléfono y el correo ("demasiado grandes" para
+      un número y un correo). Ahora van dentro del bloque marino, a la derecha del título, separados por una raya.
+      Antes (15-nov) la cabecera se estiraba para que las marcas cerraran la pantalla y la tarjeta naranja crecía con ella */}
   <Encabezado
     miga="Contacto"
     antetitulo="Contacto"
     titulo="Llámanos o escríbenos"
     entradilla="Te preparamos el presupuesto, resolvemos tus dudas o te decimos si tenemos un artículo."
-    botones={false}>
-    {/* Teléfono y correo, a la vista nada más entrar. Toda la tarjeta se puede pulsar (el enlace la cubre) */}
-    <div slot="lateral" class="grid h-full gap-3 md:gap-4 lg:grid-rows-[1fr_auto]">
-      <div class="tarjeta-tel relative flex flex-col justify-between gap-10 rounded-[2rem] bg-naranja p-7 text-[#13203a] sm:p-9">
-        <span class="flex items-start justify-between gap-4">
-          <span class="text-xs font-bold tracking-[.2em] uppercase">Llámanos</span>
-          <svg aria-hidden="true" viewBox="0 0 24 24" class="tarjeta-flecha size-7 fill-none stroke-current stroke-2"><path d={flecha} /></svg>
+    botones={false}
+    marcas={false}>
+    <div slot="dentro" class="contacto-directo">
+      <a href={telHref} class="group block">
+        <span class="flex items-center gap-2 text-xs font-bold tracking-[.2em] text-amarillo uppercase">
+          Llámanos
+          <svg aria-hidden="true" viewBox="0 0 24 24" class="contacto-flecha size-4 fill-none stroke-current stroke-2"><path d={flecha} /></svg>
         </span>
-        <a href={telHref} class="tarjeta-enlace block text-[2.6rem] leading-none font-extrabold tracking-[-.045em] whitespace-nowrap tabular-nums sm:text-6xl lg:text-[2.9rem] xl:text-[3.5rem]">{negocio.telefono}</a>
-      </div>
-      <div class="bloque tarjeta-correo relative flex flex-col gap-4 p-7 sm:p-9">
-        <span class="flex items-start justify-between gap-4">
-          <span class="text-xs font-bold tracking-[.2em] text-naranja-oscuro uppercase">Escríbenos</span>
-          <svg aria-hidden="true" viewBox="0 0 24 24" class="tarjeta-flecha size-6 fill-none stroke-naranja-oscuro stroke-2"><path d={flecha} /></svg>
-        </span>
-        <a href={mailHref} class="tarjeta-enlace block text-lg font-bold break-words sm:text-2xl lg:text-[1.15rem] xl:text-2xl">{negocio.email}</a>
-        <p class="text-sm leading-relaxed text-gris">Para pedir presupuesto, mándanos la lista con las cantidades, el nombre de tu centro o empresa y dónde quieres recibirlo.</p>
-        <CopiarCorreo class="relative z-10" antes="¿No se abre tu correo?" direccion={false} />
+        <span class="contacto-dato mt-2 block text-[2.4rem] leading-none font-extrabold tracking-[-.04em] whitespace-nowrap text-naranja-vivo tabular-nums sm:text-5xl">{negocio.telefono}</span>
+      </a>
+      <div class="mt-7 border-t border-linea pt-7">
+        <a href={mailHref} class="group block">
+          <span class="flex items-center gap-2 text-xs font-bold tracking-[.2em] text-amarillo uppercase">
+            Escríbenos
+            <svg aria-hidden="true" viewBox="0 0 24 24" class="contacto-flecha size-4 fill-none stroke-current stroke-2"><path d={flecha} /></svg>
+          </span>
+          {/* en los móviles estrechos se parte después de la @ (si no, ensancha el bloque) */}
+          <span class="contacto-dato mt-2 block text-lg font-bold sm:text-xl">{usuarioCorreo}@<wbr />{dominioCorreo}</span>
+        </a>
+        <p class="mt-2 text-sm leading-relaxed text-gris">Para el presupuesto, mándanos la lista con las cantidades, tu centro o empresa y dónde lo quieres recibir.</p>
+        <CopiarCorreo class="mt-3" antes="¿No se abre tu correo?" direccion={false} />
       </div>
     </div>
   </Encabezado>
 
   {/* DÓNDE ESTAMOS: lo principal de la página. La dirección en grande y, al lado, el mapa (la chincheta cae al verlo) */}
-  <section id={majuelos.id} class="mx-auto max-w-7xl scroll-mt-28 px-3 py-10 sm:px-4 md:px-6 md:py-20">
+  {/* 16-nov-2026: pegado a la cabecera, con el mismo hueco que entre los bloques del mosaico (ya no hay marcas en medio) */}
+  <section id={majuelos.id} class="mx-auto max-w-7xl scroll-mt-28 px-3 pt-3 pb-10 sm:px-4 md:px-6 md:pt-4 md:pb-20">
     <div class="bloque grid overflow-hidden lg:grid-cols-12">
       <div class="p-7 sm:p-10 lg:col-span-5 lg:p-12">
         <p class="antetitulo text-xs font-bold tracking-[.2em] text-naranja-oscuro uppercase">Dónde estamos</p>
@@ -71,7 +78,7 @@ const flecha = 'M7 17 17 7 M9 7h8v8';
             <svg aria-hidden="true" viewBox="0 0 24 24" class="size-5 fill-none stroke-2"><path d={flecha} /></svg>
             <span class="sr-only">(abre Google Maps en otra pestaña)</span>
           </a>
-          <p class="text-gris">{negocio.horario ? negocio.horario.join(' · ') : <>Horario: <Pendiente texto="horario real (pregunta 8)" /></>}</p>
+          <p class="text-gris">{negocio.horario ? negocio.horario.map((h) => <span class="block">{h}</span>) : <>Horario: <Pendiente texto="horario real (pregunta 8)" /></>}</p>
         </div>
         <ul class="mt-8 space-y-2 border-t border-linea pt-6 text-sm text-gris">
           {majuelos.extras.filter((e) => e !== 'Recogida de pedidos').map((e) => <li class="flex gap-2.5"><span aria-hidden="true" class="mt-[.45rem] size-1.5 shrink-0 rounded-full bg-naranja"></span>{e}</li>)}

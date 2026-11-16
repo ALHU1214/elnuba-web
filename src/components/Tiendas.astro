@@ -33,7 +33,7 @@ const comoLlegar = (t: string) => `https://www.google.com/maps/dir/?api=1&destin
           </p>
         )}
         <p class="mt-4"><a href={`tel:${t.telefonoE164}`} class="font-bold text-naranja-oscuro hover:underline">{t.telefono}</a></p>
-        <p class="mt-3 text-gris">{t.horario ? t.horario.join(' · ') : <>Horario: <Pendiente /></>}</p>
+        <p class="mt-3 text-gris">{t.horario ? t.horario.map((h) => <span class="block">{h}</span>) : <>Horario: <Pendiente /></>}</p>
         {t.extras.length > 0 && (
           <ul class="mt-5 space-y-2 border-t border-linea pt-5 text-gris">
             {t.extras.map((e) => <li class="flex gap-2.5"><span aria-hidden="true" class="mt-2 size-2 shrink-0 rounded-full bg-naranja"></span>{e}</li>)}

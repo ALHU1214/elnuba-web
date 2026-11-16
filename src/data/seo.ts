@@ -2,7 +2,7 @@
 // Mismo criterio que aimanganell.com: un grafo con la empresa, la web y cada página, unido por @id,
 // y la ficha de la empresa entera en todas las páginas. Solo datos reales que también se ven en la web.
 // Lo que falta (horario, condiciones) se añade solo cuando se rellene en negocio.ts.
-import { negocio, tiendas, islas } from './negocio';
+import { negocio, tiendas, islas, horarioTramos } from './negocio';
 import { familiasPara } from './catalogo';
 
 // Páginas que se ofrecen a Google y a las IA (sitemap.xml y llms.txt). Las legales y la 404 no: llevan noindex.
@@ -64,10 +64,17 @@ export function grafo(o: { inicio: string; canonica: string; titulo: string; des
       areaServed: 'ES',
       availableLanguage: 'es',
     },
+    // Horario de Los Majuelos (16-nov-2026); sale también en el pie y en Contacto
+    openingHoursSpecification: horarioTramos.map((t) => ({
+      '@type': 'OpeningHoursSpecification',
+      dayOfWeek: t.diasLd,
+      opens: t.abre.padStart(5, '0'),
+      closes: t.cierra.padStart(5, '0'),
+    })),
     paymentAccepted: 'Tarjeta de crédito, tarjeta de débito, pago con el móvil',
     amenityFeature: [
-      { '@type': 'LocationFeatureSpecification', name: 'Entrada accesible para personas usuarias de silla de ruedas', value: true },
-      { '@type': 'LocationFeatureSpecification', name: 'Aseo accesible para personas usuarias de silla de ruedas', value: true },
+      { '@type': 'LocationFeatureSpecification', name: 'Entrada accesible para personas con movilidad reducida', value: true },
+      { '@type': 'LocationFeatureSpecification', name: 'Aseos accesibles para personas con movilidad reducida', value: true },
       { '@type': 'LocationFeatureSpecification', name: 'Aparcamiento propio', value: false },
     ],
     // La segunda tienda, como parte de la empresa: así su teléfono no se confunde con el principal

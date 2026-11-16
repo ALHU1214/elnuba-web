@@ -353,15 +353,11 @@ a:hover .icono-tile { background: var(--color-tinta); color: var(--color-naranja
 .mapa-portada.mapa-mini, .mapa-marco.mapa-mini { height: 11rem; border-radius: 1.5rem; overflow: hidden; }
 @media (min-width: 768px) { .mapa-portada.mapa-mini, .mapa-marco.mapa-mini { height: 13rem; } }
 
-/* Contacto (13-nov-2026): tarjetas de teléfono y correo que se pulsan enteras (el ::after del enlace las cubre) */
-.tarjeta-enlace::after { content: ""; position: absolute; inset: 0; border-radius: 2rem; }
-.tarjeta-tel { transition: background-color .25s; }
-.tarjeta-tel:hover { background: var(--color-amarillo); }
-.tarjeta-tel .tarjeta-enlace:focus-visible { outline-color: var(--color-tinta); }
-.tarjeta-correo { transition: box-shadow .25s; }
-.tarjeta-correo:hover { box-shadow: 0 2px 6px rgb(19 32 58 / .06), 0 26px 48px -20px rgb(19 32 58 / .3); }
-.tarjeta-flecha { transition: transform .3s cubic-bezier(.22, 1, .36, 1); }
-:is(.tarjeta-tel, .tarjeta-correo):hover .tarjeta-flecha { transform: translate(3px, -3px); }
+/* Contacto (16-nov-2026): teléfono y correo dentro del bloque marino de la cabecera, sin tarjetas. Al pasar por
+   encima, el dato se subraya y la flecha se mueve (al enfocar con el teclado, igual) */
+.contacto-flecha { transition: transform .3s cubic-bezier(.22, 1, .36, 1); }
+.contacto-directo a:is(:hover, :focus-visible) .contacto-flecha { transform: translate(3px, -3px); }
+.contacto-directo a:is(:hover, :focus-visible) .contacto-dato { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: .16em; }
 /* La dirección en letra de revista: la calle grande y el número enorme en naranja, como el de un portal */
 .direccion-grande { font-size: clamp(2.4rem, 4.6vw, 3.4rem); line-height: 1; letter-spacing: -.04em; }
 .direccion-grande > span { display: block; margin-top: .05em; font-size: 2.6em; line-height: .82; letter-spacing: -.06em; }
@@ -555,15 +551,6 @@ a:hover .icono-tile { background: var(--color-tinta); color: var(--color-naranja
 @media (min-width: 1280px) and (min-height: 900px) {
   .cabecera-interior:not(:has(.btn-primario)) h1 { font-size: 4.4rem; line-height: 1; }
   .cabecera-interior:not(:has(.btn-primario)) h1 + p { font-size: 1.25rem; margin-top: 1.5rem; }
-}
-/* Contacto, tarjetas del teléfono y el correo: en las ventanas bajas, más recogidas para que quepa la franja de marcas */
-@media (min-width: 1024px) and (max-height: 760px) {
-  .cabecera-interior .tarjeta-tel { padding: 1.5rem 2rem; gap: 1rem; }
-  .cabecera-interior .tarjeta-correo { padding: 1.5rem 2rem; gap: .7rem; }
-}
-@media (min-width: 1024px) and (max-height: 680px) {
-  .cabecera-interior .tarjeta-tel { padding-block: 1.25rem; }
-  .cabecera-interior .tarjeta-correo { padding-block: 1.25rem; gap: .55rem; }
 }
 /* Estrechas (1024-1279 px): botones en una línea y título algo menor, como en el inicio */
 @media (min-width: 1024px) and (max-width: 1279px) and (max-height: 960px) {

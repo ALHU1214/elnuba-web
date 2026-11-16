@@ -3,6 +3,15 @@
 
 export const PUBLICADA = false; // true cuando se publique en el dominio definitivo (quita el noindex)
 
+// Horario de Los Majuelos (oficinas, almacén y tienda). 16-nov-2026, Álvaro (pregunta 8): de lunes a jueves de 9:00 a
+// 17:00 y los viernes de 9:00 a 14:00 (coincide con su ficha de Google). Los fines de semana no se mencionan: no lo ha dicho.
+// De aquí salen el texto de la web y los datos para Google (openingHoursSpecification en seo.ts).
+export const horarioTramos = [
+  { dias: 'Lunes a jueves', diasLd: ['Monday', 'Tuesday', 'Wednesday', 'Thursday'], abre: '9:00', cierra: '17:00' },
+  { dias: 'Viernes', diasLd: ['Friday'], abre: '9:00', cierra: '14:00' },
+];
+const horarioTexto = horarioTramos.map((t) => `${t.dias}, de ${t.abre} a ${t.cierra}`);
+
 export const negocio = {
   nombre: 'ELNUBA',
   nombreCompleto: 'ELNUBA Distribuciones de Papelería',
@@ -20,7 +29,7 @@ export const negocio = {
     isla: 'Tenerife',
   },
   anios: 35 as number | null, // confirmado el 20-oct (pregunta 1)
-  horario: null as string[] | null, // [PENDIENTE] horario real (pregunta 8)
+  horario: horarioTexto as string[] | null, // 16-nov-2026, Álvaro (pregunta 8)
   instagram: 'https://instagram.com/elnuba.libreria.papeleria',
   facebook: 'https://www.facebook.com/ELNUBALIBRERIAPAPELERIA/',
 };
@@ -31,12 +40,13 @@ export const negocio = {
 // mapa: lo que se busca en Google Maps (11-nov-2026, mapas de Contacto). Comprobado que cae en su ficha de Google:
 // "ELNUBA Distribuciones de Papelería y Librería" y "Librería Papelería Mararía" (no confundir con LER Librerías).
 // 13-nov-2026 (Álvaro): no hay aparcamiento propio (se aparca en la calle): fuera "aparcamiento adaptado", que venía de
-// su ficha de Google. Accesibilidad dicha como recomiendan las guías y la norma: "accesible" (no "adaptado") y "personas
-// usuarias de silla de ruedas".
+// su ficha de Google. Accesibilidad dicha como recomiendan las guías y la norma: "accesible" (no "adaptado").
+// 16-nov-2026 (Álvaro): "personas con movilidad reducida" en vez de "personas usuarias de silla de ruedas", y "aseos".
 // Candelaria: nombre y dirección de su web antigua (papeleriaylibreriaelnuba.es, "frente al Ayuntamiento");
 // teléfono de directorios y del listado de comercios del Ayuntamiento de Candelaria. [PENDIENTE] confirmar teléfono y horario (pregunta 9).
+// Los Majuelos: la tienda está dentro del almacén, así que lleva el mismo horario (16-nov-2026).
 export const tiendas = [
-  { id: 'los-majuelos', nombre: 'Tienda de Los Majuelos', lugar: 'La Laguna', direccion: ['Av. El Paso 43, bajo', 'Polígono Industrial Los Majuelos', '38108 San Cristóbal de La Laguna'], telefono: '922 62 63 69', telefonoE164: '+34922626369', horario: null as string[] | null, nota: 'Dentro de nuestro almacén.', mapa: 'ELNUBA Distribuciones de Papelería, Av. El Paso 43, La Laguna', extras: ['Entrada y aseo accesibles para personas usuarias de silla de ruedas', 'Pago con tarjeta de crédito, débito y con el móvil', 'Recogida de pedidos'] },
+  { id: 'los-majuelos', nombre: 'Tienda de Los Majuelos', lugar: 'La Laguna', direccion: ['Av. El Paso 43, bajo', 'Polígono Industrial Los Majuelos', '38108 San Cristóbal de La Laguna'], telefono: '922 62 63 69', telefonoE164: '+34922626369', horario: horarioTexto as string[] | null, nota: 'Dentro de nuestro almacén.', mapa: 'ELNUBA Distribuciones de Papelería, Av. El Paso 43, La Laguna', extras: ['Entrada y aseos accesibles para personas con movilidad reducida', 'Pago con tarjeta de crédito, débito y con el móvil', 'Recogida de pedidos'] },
   { id: 'candelaria', nombre: 'Librería Mararía', lugar: 'Candelaria', direccion: ['C/ Periodista Ernesto Salcedo, 5', 'Frente al Ayuntamiento', 'Candelaria'], telefono: '922 50 26 65', telefonoE164: '+34922502665', horario: null as string[] | null, nota: 'Librería y papelería para el público, en el centro de Candelaria.', mapa: 'Librería Mararía, Calle Periodista Ernesto Salcedo 5, Candelaria', extras: [] as string[] },
 ];
 

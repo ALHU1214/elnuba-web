@@ -1,6 +1,6 @@
 // Preguntas frecuentes (10-nov-2026, Álvaro: "más FAQ"). Solo con datos confirmados: CLAUDE.md del cliente,
 // negocio.ts y catalogo.ts. Las que dependen de Gonzalo (condiciones y horario) salen solas cuando se rellenen.
-import { negocio, condiciones, tiendas, listaIslas } from './negocio';
+import { negocio, condiciones, tiendas, listaIslas, horarioTramos } from './negocio';
 import { marcas } from './catalogo';
 
 // Temas = los botones de arriba de las preguntas del inicio. tinta: el color del icono y del nombre (contraste AA)
@@ -43,7 +43,8 @@ export const preguntasInicio: Pregunta[] = [
 
   // Tiendas
   { tema: 'tiendas', p: '¿Dónde están?', r: `Nuestro almacén y tienda están en ${d.calle}, ${d.zona}, ${d.cp} ${d.localidad} (Tenerife). Y en Candelaria tenemos una tienda abierta al público, la ${candelaria.nombre}, en ${candelaria.direccion[0]}, ${candelaria.direccion[1].toLowerCase()}.` },
-  ...(negocio.horario ? [{ tema: 'tiendas' as Tema, p: '¿Qué horario tienen?', r: negocio.horario.join(' · ') }] : []),
+  // 16-nov-2026: solo el de Los Majuelos (el de Candelaria sigue pendiente, pregunta 9)
+  ...(negocio.horario ? [{ tema: 'tiendas' as Tema, p: '¿Qué horario tienen?', r: `En Los Majuelos (oficinas, almacén y tienda): ${horarioTramos.map((t, i) => `${i ? 'los viernes' : 'de lunes a jueves'}, de ${t.abre} a ${t.cierra}`).join(', y ')}.` }] : []),
   { tema: 'tiendas', p: '¿Se puede pagar con tarjeta en la tienda?', r: 'Sí. En la tienda de Los Majuelos puedes pagar con tarjeta de crédito, de débito y con el móvil.' },
-  { tema: 'tiendas', p: '¿La tienda es accesible?', r: 'Sí. En la tienda de Los Majuelos, la entrada y el aseo son accesibles para personas usuarias de silla de ruedas. No tiene aparcamiento propio, pero se puede aparcar en la calle.' },
+  { tema: 'tiendas', p: '¿La tienda es accesible?', r: 'Sí. En la tienda de Los Majuelos, la entrada y los aseos son accesibles para personas con movilidad reducida. No tiene aparcamiento propio, pero se puede aparcar en la calle.' },
 ];
