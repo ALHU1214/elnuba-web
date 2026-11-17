@@ -1,7 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
 import Encabezado from '../components/Encabezado.astro';
-import Pendiente from '../components/Pendiente.astro';
 import { negocio, mailSimple, analitica, hayAnalitica } from '../data/negocio';
 
 const d = negocio.direccion;
@@ -12,17 +11,21 @@ const fechaTexto = new Intl.DateTimeFormat('es-ES', { day: 'numeric', month: 'lo
 const ga = analitica.googleAnalytics;
 const cl = analitica.clarity;
 const herramientas = [ga && 'Google Analytics', cl && 'Microsoft Clarity'].filter(Boolean).join(' y ');
-// Cookies de cada herramienta. Google Analytics: nombres y duración de Google (support.google.com/analytics/answer/11397207).
-// Clarity: nombres y finalidad de Microsoft (learn.microsoft.com/clarity, «Clarity Cookies»); Microsoft no publica cuánto
-// duran: al activar Clarity hay que mirarlo en el navegador y rellenar `duracion` (mientras, sale como pendiente)
+// Cookies de cada herramienta (comprobado el 17-nov-2026):
+//  - Google Analytics: nombres y duración de Google (support.google.com/analytics/answer/11397207): 2 años, aunque Chrome
+//    las corta a 400 días (medido en el navegador), por eso «hasta 2 años».
+//  - Clarity: nombres y finalidad de Microsoft (learn.microsoft.com/clarity, «Clarity Cookies»). _clck 1 año y _clsk 1 día
+//    salen del código abierto oficial de Clarity (github.com/microsoft/clarity, clarity-js, Setting.Expire y
+//    SessionExpire). Las de los dominios de Microsoft las pone su servidor y Microsoft no publica su duración: se enlaza
+//    su lista oficial
 const cookies = [
   ...(ga ? [
-    { nombre: '_ga', quien: 'Google', para: 'Distinguir a los usuarios (estadísticas de visitas)', duracion: '2 años' },
-    { nombre: `_ga_${ga.replace(/^G-/, '')}`, quien: 'Google', para: 'Mantener el estado de la sesión', duracion: '2 años' },
+    { nombre: '_ga', quien: 'Google', para: 'Distinguir a los usuarios (estadísticas de visitas)', duracion: 'Hasta 2 años' as string | null },
+    { nombre: `_ga_${ga.replace(/^G-/, '')}`, quien: 'Google', para: 'Mantener el estado de la sesión', duracion: 'Hasta 2 años' as string | null },
   ] : []),
   ...(cl ? [
-    { nombre: '_clck', quien: 'Microsoft (Clarity)', para: 'Guardar el identificador de Clarity del visitante en esta web', duracion: null as string | null },
-    { nombre: '_clsk', quien: 'Microsoft (Clarity)', para: 'Unir en una misma sesión las páginas que ves', duracion: null as string | null },
+    { nombre: '_clck', quien: 'Microsoft (Clarity)', para: 'Guardar el identificador de Clarity del visitante en esta web', duracion: '1 año' as string | null },
+    { nombre: '_clsk', quien: 'Microsoft (Clarity)', para: 'Unir en una misma sesión las páginas que ves', duracion: '1 día' as string | null },
     { nombre: 'CLID, MUID, ANONCHK, MR y SM', quien: 'Microsoft (dominios de Clarity y Bing)', para: 'Reconocer el navegador y funcionamiento interno de Clarity', duracion: null as string | null },
   ] : []),
 ];
@@ -66,10 +69,11 @@ const cookies = [
       <>
         <p>Esta web solo usa cookies de análisis ({herramientas}), y únicamente si las aceptas en el aviso de cookies. Si las rechazas o no contestas, no se instala ninguna y esas herramientas no se cargan. Puedes cambiar de opinión cuando quieras con «Configurar cookies», al pie de cada página: si las retiras, se borran.</p>
         <div class="mt-4 overflow-x-auto">
-          <table class="tabla-cookies">
-            <thead><tr><th scope="col">Cookie</th><th scope="col">De quién</th><th scope="col">Para qué</th><th scope="col">Duración</th></tr></thead>
-            <tbody>
-              {cookies.map((c) => <tr><td><code>{c.nombre}</code></td><td>{c.quien}</td><td>{c.para}</td><td>{c.duracion ?? <Pendiente texto="ver al activar Clarity" />}</td></tr>)}
+          {/* En el móvil cada fila se apila como una ficha (CSS); los role mantienen la tabla para los lectores de pantalla */}
+          <table class="tabla-cookies" role="table">
+            <thead role="rowgroup"><tr role="row"><th scope="col" role="columnheader">Cookie</th><th scope="col" role="columnheader">De quién</th><th scope="col" role="columnheader">Para qué</th><th scope="col" role="columnheader">Duración</th></tr></thead>
+            <tbody role="rowgroup">
+              {cookies.map((c) => <tr role="row"><td role="cell" data-etiqueta="Cookie"><code>{c.nombre}</code></td><td role="cell" data-etiqueta="De quién">{c.quien}</td><td role="cell" data-etiqueta="Para qué">{c.para}</td><td role="cell" data-etiqueta="Duración">{c.duracion ?? <a href="https://learn.microsoft.com/es-es/clarity/setup-and-installation/cookie-list" rel="noopener">La indica Microsoft</a>}</td></tr>)}
             </tbody>
           </table>
         </div>

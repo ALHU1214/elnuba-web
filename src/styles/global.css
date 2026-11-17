@@ -951,3 +951,10 @@ header[data-con-sombra] .barra { box-shadow: 0 2px 6px rgb(19 32 58 / .07), 0 18
 .tabla-cookies th, .tabla-cookies td { padding: .6rem .75rem .6rem 0; border-bottom: 1px solid var(--color-linea); text-align: left; vertical-align: top; }
 .tabla-cookies th { color: var(--color-tinta); font-weight: 700; }
 .tabla-cookies code { font-size: .875rem; color: var(--color-tinta); }
+@media (max-width: 639px) {
+  .tabla-cookies { min-width: 0; }
+  .tabla-cookies thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .tabla-cookies tr { display: block; padding: .75rem 0; border-bottom: 1px solid var(--color-linea); }
+  .tabla-cookies td { display: grid; grid-template-columns: 5.5rem minmax(0, 1fr); gap: .75rem; padding: .15rem 0; border: 0; }
+  .tabla-cookies td::before { content: attr(data-etiqueta); font-weight: 700; color: var(--color-tinta); }
+}

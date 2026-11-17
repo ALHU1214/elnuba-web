@@ -110,11 +110,11 @@ export const nav = [
 //  - sale el aviso de cookies (Consentimiento.astro) con "Rechazar" y "Aceptar" iguales, como pide la AEPD;
 //  - cada herramienta se carga SOLO si el visitante la acepta, y se puede cambiar con "Configurar cookies" del pie;
 //  - la política de privacidad y el aviso legal pasan a explicarlas, con la fecha de `desde`.
-// OJO al activar Clarity: comprobar en el navegador cuánto duran sus cookies y rellenar `duracion` en privacidad.astro
-// (Microsoft no lo publica). En Google Analytics: retención de datos a 14 meses y señales de Google desactivadas.
+// Activado el 17-nov-2026 con las cuentas que creó Álvaro. Duración de las cookies comprobada (ver privacidad.astro).
+// En Google Analytics: retención de datos a 14 meses y señales de Google desactivadas (lo hizo Álvaro al crearla).
 export const analitica = {
-  googleAnalytics: null as string | null, // ID de medición de GA4, "G-XXXXXXXXXX" (Administrar > Flujos de datos)
-  clarity: null as string | null,         // ID del proyecto de Clarity (Settings > Overview), letras y números
-  desde: null as string | null,           // AAAA-MM-DD: el día en que se activan (fecha de los textos legales)
+  googleAnalytics: 'G-2E44PPZFE8' as string | null, // ID de medición de GA4, "G-XXXXXXXXXX" (Administrar > Flujos de datos)
+  clarity: 'zf6zzsrlye' as string | null,         // ID del proyecto de Clarity (Settings > Overview), letras y números
+  desde: '2026-11-17' as string | null,           // AAAA-MM-DD: el día en que se activan (fecha de los textos legales)
 };
 export const hayAnalitica = Boolean(analitica.googleAnalytics || analitica.clarity);
