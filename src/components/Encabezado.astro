@@ -1,4 +1,5 @@
 ---
+import Icono from './Icono.astro';
 import { ruta } from '../lib/ruta';
 // Cabecera de las páginas interiores. Estilo "Escaparate" (9-nov-2026): mosaico con un bloque marino (miga de pan,
 // título, entradilla y botones) y, al lado, una foto grande o lo que se pase en el hueco "lateral".
@@ -27,7 +28,7 @@ const migaJsonld = {
 ---
 {/* 15-nov-2026 (Álvaro): con marcas y algo al lado (Colegios, Empresas, Nosotros), en el ordenador la cabecera mide lo
      que deja la ventana para que lo último que se vea sea la franja de marcas y un poco de fondo. CSS: .cabecera-interior */}
-<section class:list={['mx-auto max-w-7xl px-3 pt-3 sm:px-4 md:px-6 md:pt-5', marcas && conLado && 'cabecera-interior']}>
+<section class:list={['mx-auto max-w-7xl px-4 pt-3 md:px-6 md:pt-5', marcas && conLado && 'cabecera-interior']}>
   <div class:list={['grid gap-3 md:gap-4', conLado && 'lg:grid-cols-12']}>
     <div class:list={['zona-oscura relative overflow-hidden rounded-[2rem] p-7 sm:p-10 lg:p-12', dentro ? 'grid gap-8 sm:gap-10 lg:grid-cols-12 lg:items-center lg:gap-0' : 'flex flex-col justify-center', conLado && 'lg:col-span-7']}>
       <div class:list={['entra', dentro && 'min-w-0 lg:col-span-7 lg:pr-12']}>
@@ -43,11 +44,11 @@ const migaJsonld = {
           <>
             <div class="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">{/* wrap: a 1024-1279 px no caben los dos (13-nov) */}
               <a href={correos[correo]} class="btn-primario">
-                <svg aria-hidden="true" viewBox="0 0 24 24" class="size-5 fill-none stroke-2"><rect x="3" y="5" width="18" height="14" rx="2" /><path d="m3 7 9 6 9-6" /></svg>
+                <Icono nombre="correo" />
                 Pedir presupuesto por correo
               </a>
               <a href={telHref} class="btn-secundario">
-                <svg aria-hidden="true" viewBox="0 0 24 24" class="size-5 fill-none stroke-2"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2" /></svg>
+                <Icono nombre="telefono" />
                 Llamar al {negocio.telefono}
               </a>
             </div>

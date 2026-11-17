@@ -2,13 +2,17 @@
 import { ruta } from '../lib/ruta';
 import Base from '../layouts/Base.astro';
 import Encabezado from '../components/Encabezado.astro';
-import { negocio, mailSimple, telHref } from '../data/negocio';
+import Pendiente from '../components/Pendiente.astro';
+import { negocio, mailSimple, telHref, analitica, hayAnalitica } from '../data/negocio';
 
 const d = negocio.direccion;
 const web = Astro.site?.host;
+// 17-nov-2026: con analítica (negocio.ts), el punto 7 cambia y la fecha pasa a ser la de `analitica.desde`
+const fecha = (hayAnalitica && analitica.desde) || '2026-11-16';
+const fechaTexto = new Intl.DateTimeFormat('es-ES', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' }).format(new Date(fecha));
 ---
-<Base titulo="Aviso legal · ELNUBA" descripcion="Aviso legal de la web de Elnuba Distribuciones de Papelería SL." indexar={false} modificado="2026-10-20">
-  <Encabezado marcas={false} miga="Aviso legal" antetitulo="Información legal" titulo="Aviso legal" entradilla="Última actualización: 20 de octubre de 2026" fecha="2026-10-20" botones={false} />
+<Base titulo="Aviso legal · ELNUBA" descripcion="Aviso legal de la web de Elnuba Distribuciones de Papelería SL." indexar={false} modificado={fecha}>
+  <Encabezado marcas={false} miga="Aviso legal" antetitulo="Información legal" titulo="Aviso legal" entradilla={`Última actualización: ${fechaTexto}`} fecha={fecha} botones={false} />
 
   <article class="legal mx-auto max-w-3xl px-4 py-16 md:px-6 md:py-20">
     <h2>1. Datos identificativos</h2>
@@ -16,6 +20,8 @@ const web = Astro.site?.host;
     <ul>
       <li><strong>Titular:</strong> {negocio.razonSocial}</li>
       <li><strong>CIF:</strong> {negocio.cif}</li>
+      {/* 16-nov-2026 (máster): la LSSI (art. 10.1.b) pide a las sociedades los datos de su inscripción en el Registro Mercantil. Falta pedírselos a Gonzalo */}
+      <li><strong>Datos registrales:</strong> <Pendiente texto="inscripción en el Registro Mercantil: tomo, folio y hoja" /></li>
       <li><strong>Domicilio:</strong> {d.calle}, {d.zona}, {d.cp} {d.localidad}, {d.provincia} (España)</li>
       <li><strong>Teléfono:</strong> <a href={telHref}>{negocio.telefono}</a></li>
       <li><strong>Correo electrónico:</strong> <a href={mailSimple}>{negocio.email}</a></li>
@@ -44,10 +50,11 @@ const web = Astro.site?.host;
     <p>El titular no se responsabiliza de los daños derivados de un uso inadecuado de la web ni de las interrupciones o errores que se produzcan por causas ajenas a su control, incluidas las incidencias del proveedor de alojamiento o de la conexión del usuario.</p>
 
     <h2>6. Enlaces a otros sitios</h2>
-    <p>La web contiene enlaces a redes sociales de terceros (Instagram y Facebook). El titular no controla ni se responsabiliza de los contenidos ni de las políticas de privacidad de esos sitios, que se rigen por sus propias condiciones.</p>
+    {/* 16-nov-2026 (máster): decía "enlaces a redes sociales (Instagram y Facebook)", pero la web no enlaza a ninguna red social. Los únicos enlaces externos son a Google Maps y, en la política de privacidad, a Google y a la AEPD */}
+    <p>La web contiene enlaces a sitios de terceros, como Google Maps. El titular no controla ni se responsabiliza de los contenidos ni de las políticas de privacidad de esos sitios, que se rigen por sus propias condiciones.</p>
 
     <h2>7. Protección de datos y cookies</h2>
-    <p>El tratamiento de los datos personales se explica en la <a href={ruta('/privacidad/')}>política de privacidad</a>. Esta web no utiliza cookies.</p>
+    <p>El tratamiento de los datos personales se explica en la <a href={ruta('/privacidad/')}>política de privacidad</a>. {hayAnalitica ? <>Esta web solo usa cookies de análisis si las aceptas; se explican en la <a href={ruta('/privacidad/#cookies')}>política de privacidad</a>.</> : 'Esta web no utiliza cookies.'}</p>
 
     <h2>8. Legislación aplicable y jurisdicción</h2>
     <p>Este aviso legal se rige por la legislación española. Para resolver cualquier controversia derivada del uso de la web, las partes se someten a los juzgados y tribunales que correspondan conforme a la normativa aplicable, sin perjuicio del fuero que legalmente corresponda al usuario como consumidor.</p>

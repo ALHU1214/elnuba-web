@@ -1,4 +1,5 @@
 ---
+import Icono from './Icono.astro';
 // Preguntas frecuentes: "tarjetas que giran" (11-nov-2026, elegida por Álvaro entre dos opciones probadas en una página
 // de prueba; antes: hoja con rayas, tarjetas blancas y versión editorial, descartadas).
 // Cada pregunta es una tarjeta con el color de su tema (Pedidos naranja, Reparto marino, Material rojo, Tiendas
@@ -29,7 +30,8 @@ const faqJsonld = {
   mainEntity: preguntas.map((q) => ({ '@type': 'Question', name: q.p, acceptedAnswer: { '@type': 'Answer', text: q.r } })),
 };
 ---
-<section class="mx-auto max-w-7xl px-4 py-10 md:px-6 md:py-20" data-gr>
+{/* 16-nov-2026 (máster): sin margen arriba; la sección de antes ya trae el suyo (sumados daban 160 px, el doble que entre los demás bloques) */}
+<section class="mx-auto max-w-7xl px-4 pb-10 md:px-6 md:pb-20" data-gr>
   <div class="gr-marco">
   <div class="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
     <div>
@@ -80,11 +82,13 @@ const faqJsonld = {
     ))}
   </div>
 
+  {/* 17-nov-2026 (aspecto visual; antes, una barra blanca con un texto pequeño): cierre en letra grande con una raya
+      marino encima, sin caja; "tu pregunta", en naranja */}
   <div class="gr-ayuda">
-    <p class="text-lg font-bold">¿No está tu pregunta?</p>
+    <p class="gr-ayuda-pregunta">¿No está <span class="gr-ayuda-marca">tu pregunta</span>?</p>
     <div class="flex flex-col gap-3 sm:flex-row">
       <a href={correos[correo]} class="btn-primario">
-        <svg aria-hidden="true" viewBox="0 0 24 24" class="size-5 fill-none stroke-2"><rect x="3" y="5" width="18" height="14" rx="2" /><path d="m3 7 9 6 9-6" /></svg>
+        <Icono nombre="correo" />
         Escríbenos
       </a>
       <a href={telHref} class="btn-secundario">Llamar al {negocio.telefono}</a>
@@ -106,6 +110,8 @@ const faqJsonld = {
   .gr-tema[aria-selected="true"] { background: #fff; color: var(--color-tinta); box-shadow: 0 1px 2px rgb(19 32 58 / .08), 0 6px 14px -8px rgb(19 32 58 / .3); }
   .gr-tema[aria-selected="true"] svg { color: var(--icono); }
   @media (max-width: 639px) { .gr-tema svg { display: none; } .gr-tema { padding: .6rem .7rem; } }
+  /* 16-nov-2026 (máster): a 320 px el cuarto tema ("Tienda") quedaba cortado; más juntos y con la letra un punto menor, caben los cuatro */
+  @media (max-width: 359px) { .gr-temas { gap: .15rem; } .gr-tema { padding: .55rem .4rem; font-size: .8125rem; } }
   @media (min-width: 1024px) { .gr-temas { align-self: flex-end; } }
   [data-gr]:not([data-gr-listo]) .gr-temas { display: none; }
   .gr-tema-nombre { margin: 1.5rem 0 .75rem; font-size: .75rem; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: var(--color-naranja-oscuro); }
@@ -116,8 +122,13 @@ const faqJsonld = {
   .gr-rejilla { display: grid; gap: 1rem; }
   @media (min-width: 640px) { .gr-rejilla { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
   @media (min-width: 1024px) { .gr-rejilla { grid-template-columns: repeat(var(--cols), minmax(0, 1fr)); gap: 1.25rem; } }
-  /* Entrada: al verse la sección por primera vez y al cambiar de tema, una detrás de otra */
-  :global(.js) [data-gr-listo]:not([data-gr-visto]) .gr-sitio { opacity: 0; }
+  /* Entrada: al verse la sección por primera vez y al cambiar de tema, una detrás de otra.
+     17-nov-2026: el estado "escondida antes de verse" solo con movimiento. Antes también se aplicaba con "reducir
+     movimiento": como ahí no hay animación, las tarjetas seguían invisibles hasta que la sección asomaba (y en una
+     captura de página entera, o al imprimir, la zona salía vacía) */
+  @media (prefers-reduced-motion: no-preference) {
+    :global(.js) [data-gr-listo]:not([data-gr-visto]) .gr-sitio { opacity: 0; }
+  }
   [data-gr-visto] .gr-hoja.activa .gr-sitio { animation: gr-entra .6s cubic-bezier(.22, 1, .36, 1) both; animation-delay: calc(var(--n) * 70ms); }
   @keyframes gr-entra { from { opacity: 0; transform: translateY(18px) rotate(-1.5deg); } }
 
@@ -156,14 +167,16 @@ const faqJsonld = {
     [data-gr-listo] .gr-carta:hover .gr-frente .gr-pista svg { transform: rotate(-90deg); }
   }
   .gr-carta:focus-visible { outline: none; }
-  .gr-carta:focus-visible .gr-cara { outline: 3px solid var(--color-naranja); outline-offset: 3px; }
+  .gr-carta:focus-visible .gr-cara { outline: 3px solid var(--color-tinta); outline-offset: 3px; }
   @media (prefers-reduced-motion: reduce) {
     [data-gr-listo] .gr-cara { transform: none !important; }
     [data-gr-listo] .gr-carta[aria-expanded="true"] .gr-frente, [data-gr-listo] .gr-carta[aria-expanded="false"] .gr-dorso { visibility: hidden; }
   }
 
-  .gr-ayuda { display: flex; flex-direction: column; gap: 1rem; margin-top: 2.5rem; padding: 1.5rem; border-radius: 1.5rem; background: #fff; box-shadow: 0 1px 2px rgb(19 32 58 / .05), 0 12px 30px -22px rgb(19 32 58 / .35); }
-  @media (min-width: 768px) { .gr-ayuda { flex-direction: row; align-items: center; justify-content: space-between; padding: 1.25rem 1.25rem 1.25rem 2rem; } }
+  .gr-ayuda { display: flex; flex-direction: column; gap: 1.25rem; margin-top: 2.5rem; padding-top: 1.75rem; border-top: 2px solid var(--color-tinta); }
+  @media (min-width: 768px) { .gr-ayuda { flex-direction: row; align-items: center; justify-content: space-between; gap: 2rem; margin-top: 3rem; padding-top: 2rem; } }
+  .gr-ayuda-pregunta { font-size: clamp(1.75rem, 1.2rem + 1.6vw, 2.6rem); font-weight: 800; line-height: 1.05; letter-spacing: -.035em; }
+  .gr-ayuda-marca { color: var(--color-naranja-oscuro); }
 </style>
 
 <script>

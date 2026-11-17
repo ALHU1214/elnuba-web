@@ -1,49 +1,174 @@
 ---
+// Nosotros. 16-nov-2026 (Álvaro: "no ponemos mucha más historia; aprovéchala para poner palabras clave… como escaparate
+// para Google"). Sin historia inventada: solo datos confirmados (CLAUDE.md del cliente), escritos para que Google entienda
+// quiénes somos, dónde estamos, qué vendemos y a quién.
+// 16-nov-2026, tarde (Álvaro: "muy bien el texto; secciónalo todo con cosas súper impresionantes, efectos top"). El texto
+// se queda igual; cada sección con su efecto, todos con sentido para una papelería:
+//  1. "Distribuidora de papelería en La Laguna": un +35 enorme que se escribe solo, trazo a trazo como a boli, y se
+//     rellena de naranja (.anios-trazo).
+//  2. "Para quién trabajamos": índice de revista numerado; al pasar el ratón la fila se llena de marino de abajo arriba
+//     (.indice). Cada fila es un enlace a su página (enlazado interno con texto descriptivo).
+//  3. "Papelería, material escolar y de oficina": dos cintas de palabras gigantes que se deslizan en sentidos contrarios
+//     al bajar (.cinta-palabras; decorativas, el texto de verdad va debajo).
+//  4. "Reparto a todas las islas Canarias": bloque marino con el mapa grande; las rutas salen de Tenerife y cada isla
+//     enseña su nombre al llegarle (MapaCanarias con nombres).
+//  5. "Nuestra tienda en Los Majuelos" (con el horario resaltado).
+// Todo se ve quieto y completo sin JavaScript o con "reducir movimiento".
 import { ruta } from '../lib/ruta';
 import Base from '../layouts/Base.astro';
 import Encabezado from '../components/Encabezado.astro';
 import LlamadaFinal from '../components/LlamadaFinal.astro';
-import Pendiente from '../components/Pendiente.astro';
 import Tiendas from '../components/Tiendas.astro';
-import { negocio } from '../data/negocio';
+import MapaCanarias from '../components/MapaCanarias.astro';
+import { negocio, listaIslas } from '../data/negocio';
+import { marcas } from '../data/catalogo';
 
-const d = negocio.direccion;
+const anios = negocio.anios;
+const enMarcas = ['BIC', 'Pilot', 'Oxford', 'Apli', 'Maped', 'Milan', 'Giotto', 'Carioca'].filter((n) => marcas.some((m) => m.nombre === n));
+const listaMarcas = `${enMarcas.slice(0, -1).join(', ')} o ${enMarcas.at(-1)}`;
+
+// Para quién trabajamos: cada fila enlaza a su página con un texto que dice lo que hay (mejor para Google que "ver más")
+const clientes = [
+  { nombre: 'Colegios y centros educativos', texto: 'Material escolar al por mayor y libros de texto para colegios públicos y privados.', href: '/colegios/', enlace: 'Material escolar para colegios' },
+  { nombre: 'Empresas y despachos', texto: 'Material de oficina, tóner, cartuchos y libros jurídicos, con entrega en la oficina.', href: '/empresas-y-organismos/', enlace: 'Material de oficina para empresas' },
+  { nombre: 'Organismos públicos', texto: 'Material de oficina para la administración pública de Canarias.', href: '/empresas-y-organismos/#organismos', enlace: 'Material para organismos públicos' },
+  { nombre: 'Particulares', texto: 'Papelería y material escolar en nuestra tienda de Los Majuelos, abierta al público.', href: '#los-majuelos', enlace: 'Nuestra tienda' },
+];
+// Cintas de palabras: solo productos que están en "Qué distribuimos" (catalogo.ts)
+const cintas = [
+  { dir: -1, hueca: false, palabras: ['Folios', 'Cuadernos', 'Bolígrafos', 'Tóner', 'Cartuchos', 'Carpetas', 'Agendas', 'Rotuladores'] },
+  { dir: 1, hueca: true, palabras: ['Mochilas', 'Estuches', 'Archivadores', 'Fundas', 'Dossiers', 'Libros de texto', 'Grapadoras', 'Etiquetas'] },
+];
+const flecha = 'M5 12h14 M13 6l6 6-6 6';
 ---
 <Base
-  titulo="Quiénes somos · ELNUBA, distribuidor de papelería en Canarias"
-  descripcion="ELNUBA distribuye papelería, material escolar y de oficina desde Los Majuelos (La Laguna) a colegios, empresas y organismos públicos de todas las islas Canarias.">
+  titulo="ELNUBA, distribuidora de papelería en Tenerife · Quiénes somos"
+  descripcion={`${anios ? `Más de ${anios} años distribuyendo` : 'Distribuimos'} papelería, material escolar y de oficina desde Los Majuelos (La Laguna) a colegios, empresas y organismos de toda Canarias.`}
+  tipo="AboutPage">
 
   <Encabezado
     foto="/img/libros.webp"
     fotoAlt="Libros apilados"
     miga="Nosotros"
     antetitulo="Quiénes somos"
-    titulo="Distribuidores de papelería para todas las islas"
-    entradilla="Desde Los Majuelos (La Laguna), para colegios, empresas y organismos públicos de Canarias."
-    botones={false} />
+    titulo={anios ? `Más de ${anios} años distribuyendo papelería en Canarias` : 'Distribuidores de papelería en Canarias'}
+    entradilla="Papelería, material escolar y material de oficina para colegios, empresas y organismos públicos, desde Los Majuelos (La Laguna)."
+    botones={false}
+    marcas={false} />
+  {/* 16-nov-2026 (Álvaro): sin la franja de marcas; las marcas ya salen nombradas en el texto de abajo */}
 
-  <section class="relative mx-auto max-w-7xl px-4 py-12 md:px-6 md:py-20">
-    <div class="grid gap-14 lg:grid-cols-[1.2fr_1fr] lg:items-center">
-      <div class="max-w-[65ch] space-y-5 text-lg leading-relaxed text-gris">
-        <h2 class="text-3xl font-medium tracking-tight text-tinta md:text-4xl">Cerca de nuestros clientes</h2>
-        <p>Llevamos {negocio.anios ? `más de ${negocio.anios} años` : <Pendiente texto="XX años" />} en el sector: sabemos lo que necesita un colegio al empezar el curso y una oficina cada mes.</p>
-        <p>Cuando nos llamas, te atiende alguien que conoce tu pedido.</p>
-        <p><Pendiente texto="algo más de la historia de la empresa, si Gonzalo quiere contarla (pregunta 5)" /></p>
-      </div>
-      <div class="relative">
-        <div class="absolute -bottom-3 -left-3 h-full w-full rounded-2xl ring-1 ring-tinta/15"></div>
-        <img src={ruta('/img/mesa-papeleria.webp')} alt="Sobres, lápices, clips y portarrollos sobre una mesa blanca" width="960" height="640" loading="lazy" decoding="async" class="relative aspect-[3/2] w-full rounded-2xl object-cover" />
+  {/* 1. QUIÉNES SOMOS: el +35 que se escribe solo */}
+  <section class="mx-auto max-w-7xl px-4 py-16 md:px-6 md:py-28">
+    <div class="grid items-center gap-8 lg:grid-cols-12 lg:gap-16">
+      {anios && (
+        <div class="lg:col-span-5" aria-hidden="true">
+          <svg viewBox="0 0 520 290" class="anios-trazo w-full max-w-md lg:max-w-none" data-al-ver="0.55">
+            <text x="4" y="258"><tspan class="anios-mas" dy="-118">+</tspan><tspan dy="118">{anios}</tspan></text>
+          </svg>
+          <p class="anios-pie">años en el sector</p>
+        </div>
+      )}
+      <div class="max-w-[65ch] space-y-5 text-lg leading-relaxed text-gris lg:col-span-7">
+        <h2 class="text-3xl font-medium tracking-tight text-tinta md:text-4xl">Distribuidora de papelería en La Laguna</h2>
+        <p><strong class="font-semibold text-tinta">{negocio.nombreCompleto}</strong>{anios && <> lleva más de {anios} años en el sector</>}. Desde nuestro almacén del Polígono Industrial de Los Majuelos, en San Cristóbal de La Laguna (Tenerife), servimos material escolar y material de oficina a colegios, empresas y organismos públicos de todas las islas Canarias.</p>
+        <p>Vendemos al por mayor y al detalle. A los centros y a las oficinas les preparamos el presupuesto con su lista de material; en nuestra tienda atendemos también al público.</p>
+        <p class="text-tinta">Cuando nos llamas, te atiende alguien que conoce tu pedido.</p>
       </div>
     </div>
   </section>
 
-  {/* 9-nov-2026: fuera "Qué hacemos" (repetía el inicio y la entradilla) */}
+  {/* 2. PARA QUIÉN TRABAJAMOS: índice de revista */}
+  <section class="mx-auto max-w-7xl px-4 pb-16 md:px-6 md:pb-28">
+    <p class="antetitulo text-xs font-bold tracking-[.2em] text-naranja-oscuro uppercase">Para quién trabajamos</p>
+    <h2 class="mt-3 max-w-3xl text-4xl md:text-5xl">Material escolar y de oficina para cada cliente</h2>
+    <ol class="indice mt-10 md:mt-14" data-revelar-hijos>
+      {clientes.map((c, n) => (
+        <li>
+          <a href={c.href.startsWith('#') ? c.href : ruta(c.href)} class="indice-fila">
+            <span class="indice-num" aria-hidden="true">{String(n + 1).padStart(2, '0')}</span>
+            <span class="indice-nombre">{c.nombre}</span>
+            <span class="indice-texto">{c.texto}</span>
+            <span class="indice-enlace">
+              {c.enlace}
+              <svg aria-hidden="true" viewBox="0 0 24 24" class="indice-flecha size-5 fill-none stroke-current stroke-2"><path d={flecha} /></svg>
+            </span>
+          </a>
+        </li>
+      ))}
+    </ol>
+  </section>
 
-  <section class="relative mx-auto max-w-7xl px-4 py-12 md:px-6 md:py-20">
-    <h2 class="text-4xl font-medium tracking-tight md:text-5xl">Nuestras tiendas</h2>
-    <p class="mt-5 max-w-2xl text-lg leading-relaxed text-gris">También vendemos al público.</p>
+  {/* 3. QUÉ VENDEMOS: cintas de palabras gigantes (decorativas) y, debajo, el texto */}
+  <section class="overflow-hidden pb-16 md:pb-28">
+    <div class="cinta-palabras" aria-hidden="true" data-cinta>
+      {cintas.map((c) => (
+        <div class:list={['cinta-fila', c.hueca && 'cinta-hueca']} data-dir={c.dir}>
+          {[...c.palabras, ...c.palabras, ...c.palabras].map((p) => <span>{p}</span>)}
+        </div>
+      ))}
+    </div>
+    <div class="mx-auto mt-12 grid max-w-7xl gap-6 px-4 md:mt-16 md:px-6 lg:grid-cols-12 lg:gap-16">
+      <h2 class="text-3xl md:text-4xl lg:col-span-5">Papelería, material escolar y de oficina</h2>
+      <div class="lg:col-span-7">
+        <p class="text-lg leading-relaxed text-gris">Todo el material de papelería, escolar y de oficina: folios y papel, cuadernos y agendas, escritura, archivo, tóner y cartuchos, mochilas y estuches, y libros de texto. Trabajamos con marcas como {listaMarcas}.</p>
+        <a href={ruta('/#material')} class="group mt-4 inline-flex items-center gap-2 font-bold text-naranja-oscuro hover:underline">
+          Todo lo que distribuimos
+          <svg aria-hidden="true" viewBox="0 0 24 24" class="size-4 fill-none stroke-current stroke-2 transition-transform group-hover:translate-x-0.5"><path d={flecha} /></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  {/* 4. REPARTO: el mapa grande; cada isla enseña su nombre al llegarle la ruta */}
+  <section class="mx-auto max-w-7xl px-4 pb-16 md:px-6 md:pb-24">
+    <div class="zona-oscura mapa-oscuro reparto-grande overflow-hidden rounded-[2rem] p-7 sm:p-10 lg:p-14" data-al-ver="0.55">
+      <div class="grid items-center gap-10 lg:grid-cols-12 lg:gap-12">
+        <div class="lg:col-span-5">
+          <p class="antetitulo text-xs font-bold tracking-[.2em] uppercase">Toda Canarias</p>
+          <h2 class="mt-4 text-[clamp(2rem,3.6vw,3rem)] leading-[1.05]">Reparto a todas las islas Canarias</h2>
+          <p class="mt-5 text-lg leading-relaxed text-tinta/75">Repartimos a {listaIslas}. Te lo llevamos a tu centro u oficina, o lo recoges en nuestro almacén de Los Majuelos.</p>
+        </div>
+        <div class="lg:col-span-7">
+          <MapaCanarias nombres class="w-full" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {/* 5. LA TIENDA */}
+  <section class="relative mx-auto max-w-7xl px-4 pb-12 md:px-6 md:pb-20">
+    {/* 16-nov-2026 (Álvaro): solo la tienda de Los Majuelos */}
+    <h2 class="text-4xl font-medium tracking-tight md:text-5xl">Nuestra tienda en Los Majuelos</h2>
+    <p class="mt-5 max-w-2xl text-lg leading-relaxed text-gris">También vendemos al público, dentro de nuestro almacén de La Laguna.</p>
     <div class="mt-10"><Tiendas /></div>
   </section>
 
   <LlamadaFinal />
 </Base>
+
+<script>
+  const reducir = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // El +35 y el mapa se animan cuando se ve más de la mitad: data-al-ver="0.55" (Efectos.astro)
+
+  // Cintas de palabras: se deslizan al bajar, cada fila en un sentido. Solo se calculan mientras se ven.
+  if (!reducir) document.querySelectorAll<HTMLElement>('[data-cinta]').forEach((cinta) => {
+    const filas = [...cinta.querySelectorAll<HTMLElement>('.cinta-fila')];
+    let visible = false, pedido = false;
+    const mover = () => {
+      pedido = false;
+      const r = cinta.getBoundingClientRect();
+      const p = (innerHeight - r.top) / (innerHeight + r.height); // 0 al entrar por abajo, 1 al salir por arriba
+      filas.forEach((f) => {
+        const centro = -(f.scrollWidth - innerWidth) / 2;
+        const x = centro + Number(f.dataset.dir) * (p - 0.5) * Math.min(innerWidth * 0.5, 520);
+        f.style.transform = `translate3d(${x.toFixed(1)}px, 0, 0)`;
+      });
+    };
+    const pedir = () => { if (visible && !pedido) { pedido = true; requestAnimationFrame(mover); } };
+    new IntersectionObserver(([e]) => { visible = e.isIntersecting; pedir(); }).observe(cinta);
+    addEventListener('scroll', pedir, { passive: true });
+    addEventListener('resize', pedir);
+    mover();
+  });
+</script>

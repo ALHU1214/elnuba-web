@@ -1,7 +1,7 @@
 ---
 import { ruta } from '../lib/ruta';
 // Banner de marcas (9-nov-2026, CRO): la prueba de que tienen lo que el cliente ya usa. Va justo después de la portada
-// del inicio y de la cabecera de Colegios, Empresas, Nosotros y (desde el 15-nov-2026) Contacto. Franja blanca de lado a lado (Álvaro: "falta
+// del inicio y de la cabecera de Colegios y Empresas (16-nov-2026: en Nosotros y en Contacto ya no va). Franja blanca de lado a lado (Álvaro: "falta
 // el banner con las marcas" cuando quedó como un bloque redondeado más). Logos a color que pasan solos; se paran al
 // pasar el ratón y con "reducir movimiento".
 import { marcas } from '../data/catalogo';
@@ -13,7 +13,7 @@ import { marcas } from '../data/catalogo';
     <ul class="marcas-cinta flex w-max items-center gap-12 group-hover:[animation-play-state:paused] md:gap-16">
       {[...marcas, ...marcas].map((m, i) => (
         <li aria-hidden={i >= marcas.length ? 'true' : undefined}>
-          <img src={ruta(`/marcas/${m.archivo}`)} alt={m.nombre} loading="lazy" decoding="async" style={`--alto:${m.alto}px`} class="marca-logo w-auto object-contain" />
+          <img src={ruta(`/marcas/${m.archivo}`)} alt={m.nombre} width={m.ancho} height={m.alto} loading="lazy" decoding="async" style={`--alto:${m.alto}px`} class="marca-logo w-auto object-contain" />
         </li>
       ))}
     </ul>

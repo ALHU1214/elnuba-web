@@ -2,25 +2,45 @@
 import { ruta } from '../lib/ruta';
 // Página de error (9-nov-2026, CRO): si alguien llega por un enlace roto, en vez de irse tiene a mano
 // el inicio, las secciones y el botón de pedir presupuesto. GitHub Pages la sirve sola como 404.html.
+// 17-nov-2026 (aspecto visual; antes, el bloque marino con la mitad derecha vacía): "el avión perdido". A la derecha,
+// un 404 enorme de contorno (como los números de "Cómo pedir") y el avión de papel de esa sección, que se ha perdido:
+// su estela de puntos da una vuelta alrededor del 0 y sale por arriba. La estela se dibuja al cargar y el avión aparece
+// al final; sin animaciones, todo dibujado. Decorativo (aria-hidden). CSS: .error… en global.css.
 import Base from '../layouts/Base.astro';
 import { nav } from '../data/negocio';
+const estela = 'M18 282C112 270 150 150 236 128S328 214 268 226 202 150 296 82 430 40 472 58';
 ---
 <Base
   titulo="Página no encontrada · ELNUBA"
   descripcion="Esta página no existe. Vuelve al inicio o pide tu presupuesto de papelería y material de oficina."
-  indexar={false}>
+  indexar={false}
+  sinCanonica>
 
   <section class="mx-auto max-w-7xl px-4 py-3 md:px-6 md:py-5">
-    <div class="zona-oscura relative overflow-hidden rounded-[2rem] p-8 sm:p-12 md:p-16">
-      <div class="entra">
+    <div class="zona-oscura error relative overflow-hidden rounded-[2rem] p-8 sm:p-12 md:p-16">
+      <div class="entra relative z-10">
         <p class="antetitulo text-xs font-bold tracking-[.2em] uppercase">Error 404</p>
         <h1 class="mt-6 max-w-2xl text-5xl leading-[1.04] md:text-6xl">Esta página no existe</h1>
         <p class="mt-6 max-w-xl text-lg leading-relaxed text-tinta/75">Puede que el enlace esté mal o que la página ya no exista. Sigue por aquí:</p>
-        <ul class="mt-8 flex flex-wrap gap-3">
+        <ul class="mt-8 flex max-w-2xl flex-wrap gap-3">
           <li><a href={ruta('/')} class="btn-primario">Ir al inicio</a></li>
           {nav.map((n) => <li><a href={ruta(n.href)} class="btn-secundario">{n.label}</a></li>)}
         </ul>
       </div>
+      <svg viewBox="0 0 520 300" class="error-dibujo" aria-hidden="true" focusable="false">
+        <defs>
+          <mask id="error-mascara" maskUnits="userSpaceOnUse" x="-20" y="-20" width="560" height="340">
+            <path d={estela} pathLength="1" class="error-revela" />
+          </mask>
+        </defs>
+        <text x="8" y="246" class="error-cifras">404</text>
+        <path d={estela} class="error-estela" mask="url(#error-mascara)" />
+        <g class="error-avion" transform="translate(478 62) rotate(22) scale(2.1)">
+          <path d="M17 0-14-11-6 0z" fill="#ffffff" />
+          <path d="M17 0-14 11-6 0z" fill="#d5dce8" />
+          <path d="M17 0-6 0-10 5z" fill="#a9b4c7" />
+        </g>
+      </svg>
     </div>
   </section>
 </Base>

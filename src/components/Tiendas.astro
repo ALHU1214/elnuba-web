@@ -1,45 +1,54 @@
 ---
-// Las dos tiendas abiertas al público.
-// 11-nov-2026 (Álvaro): en Contacto (mapas={true}), cada ficha lleva arriba su mapa, pequeño y discreto. Hasta que se
-// pulsa "Ver en el mapa" solo hay un mapa dibujado con CSS y no se conecta con Google (ni cookies): así la web sigue
-// cumpliendo su política de privacidad, que lo explica. Al pulsar, el mapa de Google se carga en el mismo hueco.
-// Sin JavaScript, el botón abre Google Maps en otra pestaña. "Cómo llegar" abre la ruta en Google Maps.
-// 13-nov-2026: Contacto ya no usa este componente (tiene su propio diseño: Los Majuelos destacado y Candelaria como
-// extra). El mapa está en MapaGoogle.astro.
-import { tiendas } from '../data/negocio';
-import Pendiente from './Pendiente.astro';
-import MapaGoogle from './MapaGoogle.astro';
+// Nuestra tienda (Nosotros). 16-nov-2026 (Álvaro): solo la de Los Majuelos. Antes eran dos fichas, una por tienda.
+// 17-nov-2026 (aspecto visual; antes: los datos a la izquierda y tres puntos sueltos en un hueco vacío a la derecha).
+// "El cartel de la puerta": como el horario rotulado en el cristal de una tienda. A la izquierda, dónde está y el
+// teléfono; a la derecha, el horario en letra grande (lo que más se busca de una tienda; Álvaro, 16-nov: "que no haya
+// duda y sea fácil de encontrar"). Abajo, a lo ancho, lo que ofrece la tienda con su icono, separado por rayas.
+// Los datos salen de negocio.ts (filasHorario y tiendas). CSS: .tienda… en global.css.
+import { tiendas, filasHorario } from '../data/negocio';
 
-interface Props { mapas?: boolean }
-const { mapas = false } = Astro.props;
-const comoLlegar = (t: string) => `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(t)}`;
+const [t] = tiendas;
+// Iconos de línea sueltos (sin círculo), en el orden de t.extras: entrada accesible, pago con tarjeta, recogida
+const iconos = [
+  'M5 21V4h9l1 2h4v15 M9 12h.01 M3 21h18',
+  'M3 6h18v12H3z M3 10h18 M7 15h4',
+  'M3 8l9-5 9 5-9 5z M3 8v8l9 5 9-5V8 M12 13v8',
+];
 ---
-<div class="grid gap-5 md:grid-cols-2">
-  {tiendas.map((t) => (
-    <article id={t.id} class="scroll-mt-28 overflow-hidden rounded-2xl bg-white ring-1 ring-linea">
-      {mapas && <MapaGoogle consulta={t.mapa} titulo={`Mapa: ${t.nombre}`} />}
-      <div class="p-7">
-        <p class="antetitulo text-xs font-bold tracking-[.24em] text-naranja-oscuro uppercase">{t.lugar}</p>
-        <h3 class="mt-2 text-2xl font-semibold">{t.nombre}</h3>
-        <p class="mt-1 text-gris">{t.nota}</p>
-        <p class="mt-4 leading-relaxed">{t.direccion.map((l) => <>{l}<br /></>)}</p>
-        {mapas && (
-          <p class="mt-2">
-            <a href={comoLlegar(t.mapa)} target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 text-sm font-bold text-naranja-oscuro hover:underline">
-              Cómo llegar
-              <svg aria-hidden="true" viewBox="0 0 24 24" class="size-4 fill-none stroke-current stroke-2"><path d="M7 17 17 7 M9 7h8v8" /></svg>
-              <span class="sr-only">(abre Google Maps en otra pestaña)</span>
-            </a>
-          </p>
-        )}
-        <p class="mt-4"><a href={`tel:${t.telefonoE164}`} class="font-bold text-naranja-oscuro hover:underline">{t.telefono}</a></p>
-        <p class="mt-3 text-gris">{t.horario ? t.horario.map((h) => <span class="block">{h}</span>) : <>Horario: <Pendiente /></>}</p>
-        {t.extras.length > 0 && (
-          <ul class="mt-5 space-y-2 border-t border-linea pt-5 text-gris">
-            {t.extras.map((e) => <li class="flex gap-2.5"><span aria-hidden="true" class="mt-2 size-2 shrink-0 rounded-full bg-naranja"></span>{e}</li>)}
-          </ul>
-        )}
-      </div>
-    </article>
-  ))}
-</div>
+{/* 16-nov-2026 (máster): es un .bloque como los demás (misma esquina y misma sombra) */}
+<article id={t.id} class="bloque tienda scroll-mt-2 overflow-hidden">
+  <div class="tienda-arriba">
+    <div class="tienda-datos">
+      <p class="antetitulo text-xs font-bold tracking-[.2em] text-naranja-oscuro uppercase">{t.lugar}</p>
+      <h3 class="mt-4 text-[1.75rem] leading-tight">{t.nombre}</h3>
+      <p class="mt-1 text-gris">{t.nota}</p>
+      <p class="mt-5 text-lg leading-relaxed">{t.direccion.map((l) => <>{l}<br /></>)}</p>
+      <p class="mt-4"><a href={`tel:${t.telefonoE164}`} class="text-xl font-extrabold text-naranja-oscuro tabular-nums hover:underline">{t.telefono}</a></p>
+    </div>
+    <div class="tienda-horario">
+      <p class="horario-etiqueta">
+        <svg aria-hidden="true" viewBox="0 0 24 24" class="size-4 fill-none stroke-current stroke-2 [stroke-linecap:round]"><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3.5 2" /></svg>
+        Horario
+      </p>
+      <dl class="tienda-horas">
+        {filasHorario.map((f) => (
+          <div class="tienda-tramo">
+            <dt>{f.dias}</dt>
+            {/* el guion entre las dos horas, en naranja */}
+            <dd>{f.horas.split(/\s–\s/).map((h, i) => <>{i > 0 && <span class="tienda-guion">&nbsp;–&nbsp;</span>}{h}</>)}</dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+  </div>
+  {t.extras.length > 0 && (
+    <ul class="tienda-extras">
+      {t.extras.map((e, i) => (
+        <li>
+          <svg aria-hidden="true" viewBox="0 0 24 24" class="tienda-icono"><path d={iconos[i] ?? iconos[2]} /></svg>
+          {e}
+        </li>
+      ))}
+    </ul>
+  )}
+</article>

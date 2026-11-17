@@ -3,14 +3,27 @@
 
 export const PUBLICADA = false; // true cuando se publique en el dominio definitivo (quita el noindex)
 
-// Horario de Los Majuelos (oficinas, almacén y tienda). 16-nov-2026, Álvaro (pregunta 8): de lunes a jueves de 9:00 a
-// 17:00 y los viernes de 9:00 a 14:00 (coincide con su ficha de Google). Los fines de semana no se mencionan: no lo ha dicho.
-// De aquí salen el texto de la web y los datos para Google (openingHoursSpecification en seo.ts).
-export const horarioTramos = [
-  { dias: 'Lunes a jueves', diasLd: ['Monday', 'Tuesday', 'Wednesday', 'Thursday'], abre: '9:00', cierra: '17:00' },
-  { dias: 'Viernes', diasLd: ['Friday'], abre: '9:00', cierra: '14:00' },
+// Horarios (16-nov-2026, los dos los pasó Álvaro). De aquí salen el texto de la web (una línea por tramo), la frase de la
+// pregunta frecuente y los datos para Google (openingHoursSpecification en seo.ts). horas vacío = cerrado.
+type Tramo = { dias: string; frase: string; diasLd: string[]; horas: [string, string][] };
+const lunesAJueves = ['Monday', 'Tuesday', 'Wednesday', 'Thursday'];
+const horas = (t: Tramo, e = ' ') => (t.horas.length ? t.horas.map(([a, c]) => `de${e}${a}${e}a${e}${c}`).join(' y ') : 'cerrado');
+// En la web, cada franja ("de 16:30 a 19:00") va entera: espacios que no se parten (si no, quedaba "a / 19:00")
+const textoHorario = (tramos: Tramo[]) => tramos.map((t) => `${t.dias}, ${horas(t, ' ')}`);
+// "de lunes a jueves, de 9:00 a 17:00, y los viernes, de 9:00 a 14:00" (los días cerrados no se nombran)
+export const fraseHorario = (tramos: Tramo[]) => tramos.filter((t) => t.horas.length).map((t) => `${t.frase}, ${horas(t)}`).join(', y ');
+export const horarioLd = (tramos: Tramo[]) => tramos.flatMap((t) => t.horas.map(([a, c]) => ({
+  '@type': 'OpeningHoursSpecification', dayOfWeek: t.diasLd, opens: a.padStart(5, '0'), closes: c.padStart(5, '0'),
+})));
+
+// Los Majuelos (oficinas, almacén y tienda), pregunta 8: coincide con su ficha de Google. Fines de semana: no lo ha dicho.
+export const horarioTramos: Tramo[] = [
+  { dias: 'Lunes a jueves', frase: 'de lunes a jueves', diasLd: lunesAJueves, horas: [['9:00', '17:00']] },
+  { dias: 'Viernes', frase: 'los viernes', diasLd: ['Friday'], horas: [['9:00', '14:00']] },
 ];
-const horarioTexto = horarioTramos.map((t) => `${t.dias}, de ${t.abre} a ${t.cierra}`);
+const horarioTexto = textoHorario(horarioTramos);
+// Filas de la tabla de horario resaltada (Horario.astro, 16-nov-2026): "Lunes a jueves" · "9:00 – 17:00"
+export const filasHorario = horarioTramos.map((t) => ({ dias: t.dias, horas: t.horas.length ? t.horas.map(([a, c]) => `${a} – ${c}`).join(' y ') : 'Cerrado' }));
 
 export const negocio = {
   nombre: 'ELNUBA',
@@ -34,21 +47,19 @@ export const negocio = {
   facebook: 'https://www.facebook.com/ELNUBALIBRERIAPAPELERIA/',
 };
 
-// Tiendas abiertas al público (20-oct: Álvaro pide nombrar las dos).
-// 11-nov-2026 (Álvaro): la de Los Majuelos está dentro del almacén, así que allí sí se recogen pedidos. La de Candelaria
-// es una tienda aparte, solo para el público que va a comprar: se nombra, pero sin decir que allí se pide o se recoge.
+// Tienda abierta al público: solo la de Los Majuelos.
+// 16-nov-2026 (Álvaro): la Librería Mararía (Candelaria) no sale en ninguna parte de la web: no es ELNUBA y confundía.
+// 11-nov-2026 (Álvaro): la de Los Majuelos está dentro del almacén, así que allí sí se recogen pedidos.
 // mapa: lo que se busca en Google Maps (11-nov-2026, mapas de Contacto). Comprobado que cae en su ficha de Google:
-// "ELNUBA Distribuciones de Papelería y Librería" y "Librería Papelería Mararía" (no confundir con LER Librerías).
+// "ELNUBA Distribuciones de Papelería y Librería".
 // 13-nov-2026 (Álvaro): no hay aparcamiento propio (se aparca en la calle): fuera "aparcamiento adaptado", que venía de
 // su ficha de Google. Accesibilidad dicha como recomiendan las guías y la norma: "accesible" (no "adaptado").
 // 16-nov-2026 (Álvaro): "personas con movilidad reducida" en vez de "personas usuarias de silla de ruedas", y "aseos".
-// Candelaria: nombre y dirección de su web antigua (papeleriaylibreriaelnuba.es, "frente al Ayuntamiento");
-// teléfono de directorios y del listado de comercios del Ayuntamiento de Candelaria. [PENDIENTE] confirmar teléfono y horario (pregunta 9).
 // Los Majuelos: la tienda está dentro del almacén, así que lleva el mismo horario (16-nov-2026).
 export const tiendas = [
   { id: 'los-majuelos', nombre: 'Tienda de Los Majuelos', lugar: 'La Laguna', direccion: ['Av. El Paso 43, bajo', 'Polígono Industrial Los Majuelos', '38108 San Cristóbal de La Laguna'], telefono: '922 62 63 69', telefonoE164: '+34922626369', horario: horarioTexto as string[] | null, nota: 'Dentro de nuestro almacén.', mapa: 'ELNUBA Distribuciones de Papelería, Av. El Paso 43, La Laguna', extras: ['Entrada y aseos accesibles para personas con movilidad reducida', 'Pago con tarjeta de crédito, débito y con el móvil', 'Recogida de pedidos'] },
-  { id: 'candelaria', nombre: 'Librería Mararía', lugar: 'Candelaria', direccion: ['C/ Periodista Ernesto Salcedo, 5', 'Frente al Ayuntamiento', 'Candelaria'], telefono: '922 50 26 65', telefonoE164: '+34922502665', horario: null as string[] | null, nota: 'Librería y papelería para el público, en el centro de Candelaria.', mapa: 'Librería Mararía, Calle Periodista Ernesto Salcedo 5, Candelaria', extras: [] as string[] },
 ];
+
 
 // Reparto (13-nov-2026, Álvaro): a las 8 islas Canarias. La web no se limita a Tenerife: solo dice que estamos en
 // Tenerife cuando se da la dirección. Se escribe "todas las islas" (y, en las preguntas, la lista), nunca "8 islas"
@@ -92,3 +103,18 @@ export const nav = [
   { href: '/nosotros/', label: 'Nosotros' },
   { href: '/contacto/', label: 'Contacto' },
 ];
+
+// Analítica (17-nov-2026, Álvaro: "le voy a poner Google Analytics y Clarity, así que tendrá que haber cookies").
+// Mientras los dos estén a null no se carga nada, no sale el aviso de cookies y los textos legales siguen diciendo que
+// la web no usa cookies (es lo que pasa de verdad). Al rellenarlos:
+//  - sale el aviso de cookies (Consentimiento.astro) con "Rechazar" y "Aceptar" iguales, como pide la AEPD;
+//  - cada herramienta se carga SOLO si el visitante la acepta, y se puede cambiar con "Configurar cookies" del pie;
+//  - la política de privacidad y el aviso legal pasan a explicarlas, con la fecha de `desde`.
+// OJO al activar Clarity: comprobar en el navegador cuánto duran sus cookies y rellenar `duracion` en privacidad.astro
+// (Microsoft no lo publica). En Google Analytics: retención de datos a 14 meses y señales de Google desactivadas.
+export const analitica = {
+  googleAnalytics: null as string | null, // ID de medición de GA4, "G-XXXXXXXXXX" (Administrar > Flujos de datos)
+  clarity: null as string | null,         // ID del proyecto de Clarity (Settings > Overview), letras y números
+  desde: null as string | null,           // AAAA-MM-DD: el día en que se activan (fecha de los textos legales)
+};
+export const hayAnalitica = Boolean(analitica.googleAnalytics || analitica.clarity);

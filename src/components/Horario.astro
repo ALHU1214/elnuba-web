@@ -1,0 +1,19 @@
+---
+// Horario resaltado (16-nov-2026, Álvaro: "que no haya duda y sea fácil de encontrar"). Una etiqueta con reloj y una
+// tabla corta: los días a la izquierda y las horas en negrita a la derecha. Sobre fondo claro va en un recuadro
+// melocotón; dentro de un bloque marino (tono="oscuro"), en blanco suave con la etiqueta en amarillo.
+// Sale en Contacto (debajo del teléfono y en "Dónde estamos") y en la tienda de Nosotros. Los datos, en negocio.ts.
+import { filasHorario } from '../data/negocio';
+
+interface Props { tono?: 'claro' | 'oscuro'; class?: string }
+const { tono = 'claro', class: clase = '' } = Astro.props;
+---
+<div class:list={['horario', tono === 'oscuro' && 'horario-oscuro', clase]}>
+  <p class="horario-etiqueta">
+    <svg aria-hidden="true" viewBox="0 0 24 24" class="size-4 fill-none stroke-current stroke-2 [stroke-linecap:round]"><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3.5 2" /></svg>
+    Horario
+  </p>
+  <dl class="horario-filas">
+    {filasHorario.map((f) => <><dt>{f.dias}</dt><dd>{f.horas}</dd></>)}
+  </dl>
+</div>

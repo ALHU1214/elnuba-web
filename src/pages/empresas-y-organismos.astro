@@ -1,20 +1,39 @@
 ---
-import { ruta } from '../lib/ruta';
+import Icono from '../components/Icono.astro';
 import Base from '../layouts/Base.astro';
 import Encabezado from '../components/Encabezado.astro';
 import Familias from '../components/Familias.astro';
 import Preguntas from '../components/Preguntas.astro';
 import LlamadaFinal from '../components/LlamadaFinal.astro';
 import Pendiente from '../components/Pendiente.astro';
-import { negocio, listaIslas } from '../data/negocio';
+import { negocio, listaIslas, correos, telHref } from '../data/negocio';
+import MapaCanarias from '../components/MapaCanarias.astro';
+import CajaPedido from '../components/CajaPedido.astro';
 import { servicios } from '../data/seo';
 
-const ventajas = [
-  { titulo: 'Un solo proveedor', texto: 'Todo en un mismo pedido.' },
-  { titulo: 'Entrega en tu oficina', texto: 'O recogida en Los Majuelos.' },
-  { titulo: 'Toda Canarias', texto: 'Reparto a todas las islas.' },
-  { titulo: 'Trato directo', texto: 'Te atiende quien conoce tu pedido.' },
+// 16-nov-2026, tarde (Álvaro: "Un proveedor para toda tu oficina no me gustó nada"; "Trabajamos con" sí en contenido,
+// no en la forma; "algo que dé profesionalidad, moderno, que se vea como un trabajo bien hecho"). Estilo "comercial pulido":
+//  - Por qué: mosaico. Grande blanco (titular, frase, +35 años y botón), marino con el mapa de las islas (las rutas se
+//    dibujan al verlo), y dos pequeños: entrega (naranja) y trato directo con el teléfono.
+//    17-nov-2026 (aspecto visual): el bloque blanco tenía un hueco vacío en medio. Ahora lleva "todo en un pedido": una
+//    caja de reparto en la que caen el archivador, los folios, los lápices y el cartucho (CajaPedido.astro).
+//  - Trabajamos con: 17-nov-2026 (aspecto visual; antes, dos fichas blancas iguales con marcas de verificación, con
+//    aspecto de tabla de precios). Ahora son dos carpetas de archivo: la de las empresas, naranja, y la de la
+//    administración, marino, cada una con su pestaña (en lados distintos, como en un archivador) y una hoja que asoma.
+//    Al verse, las hojas se meten en su carpeta; al pasar el ratón, la hoja sale un poco. CSS: .carpeta… en global.css.
+// Antes (16-nov, mañana): frases grandes con subrayador y un bloque marino con dos columnas de texto (no gustó).
+// Solo datos confirmados (CLAUDE.md del cliente).
+const sectores = [
+  {
+    id: 'empresas', sector: 'Sector privado', num: '01', titulo: 'Empresas y despachos', texto: 'Para el día a día de tu oficina.',
+    lista: ['Papel, archivo y escritura', 'Tóner y cartuchos', 'Libros jurídicos', 'Entrega en tu oficina'],
+  },
+  {
+    id: 'organismos', sector: 'Sector público', num: '02', titulo: 'Organismos públicos', texto: 'Material de oficina para la administración pública de Canarias.',
+    lista: ['Papel, archivo y escritura', 'Tóner y cartuchos', 'Entrega en tus oficinas'],
+  },
 ];
+const flecha = 'M5 12h14 M13 6l6 6-6 6';
 
 // 10-nov-2026: tres más (Álvaro: "más FAQ"), solo con datos confirmados
 const preguntas = [
@@ -28,9 +47,10 @@ const preguntas = [
 ];
 ---
 <Base
-  titulo="Material de oficina para empresas y organismos públicos de Canarias · ELNUBA"
-  descripcion="Material de oficina, archivo, tóner y cartuchos para empresas, despachos y organismos públicos de todas las islas Canarias. Entrega en tu oficina. Pide presupuesto."
-  servicio={servicios.empresas}>
+  titulo="Material de oficina para empresas y organismos de Canarias · ELNUBA"
+  descripcion="Material de oficina, tóner y cartuchos para empresas, despachos y organismos públicos de Canarias. Te lo llevamos a la oficina. Pide presupuesto."
+  servicio={servicios.empresas}
+  correo="empresa">
 
   <Encabezado
     foto="/img/oficina-material.webp"
@@ -38,43 +58,85 @@ const preguntas = [
     correo="empresa"
     miga="Empresas y organismos"
     antetitulo="Empresas, despachos y organismos públicos"
-    titulo="Material de oficina para empresas y organismos públicos en todas las islas"
-    entradilla="Papel, archivo, tóner y cartuchos. Te lo llevamos a la oficina." />
+    titulo="Material de oficina para empresas y organismos públicos"
+    entradilla="Papel, archivo, tóner y cartuchos para oficinas de todas las islas Canarias. Te lo llevamos a la oficina." />
 
-  {/* POR QUÉ */}
-  <section class="relative mx-auto max-w-7xl px-4 py-12 md:px-6 md:py-20">
-    <h2 class="max-w-2xl text-4xl font-medium tracking-tight md:text-5xl">Todo el material de tu oficina en un solo pedido</h2>
-    <ul class="mt-12 grid gap-x-10 gap-y-9 sm:grid-cols-2 lg:grid-cols-4">
-      {ventajas.map((v) => (
-        <li class="border-t border-tinta/20 pt-6">
-          <h3 class="text-lg font-semibold">{v.titulo}</h3>
-          <p class="mt-2 leading-relaxed text-gris">{v.texto}</p>
-        </li>
-      ))}
-    </ul>
+  {/* POR QUÉ: mosaico (16-nov-2026, tarde) */}
+  <section class="mx-auto max-w-7xl px-4 py-10 md:px-6 md:py-20">
+    <div class="grid gap-3 md:gap-4 lg:grid-cols-12">
+      <div class="bloque flex flex-col p-7 sm:p-10 lg:col-span-7 lg:p-12" data-al-ver="0.45">
+        <p class="antetitulo self-start text-xs font-bold tracking-[.2em] text-naranja-oscuro uppercase">Por qué ELNUBA</p>
+        <h2 class="mt-5 max-w-xl text-[clamp(2.3rem,4.4vw,3.7rem)] leading-[1.02] tracking-[-.04em]">Un proveedor para toda tu oficina</h2>
+        <p class="mt-5 max-w-lg text-lg leading-relaxed text-gris">Papel, tóner y cartuchos, archivo y escritura: lo pides todo en un solo pedido y te llega todo junto.</p>
+        <CajaPedido class="porque-caja" />
+        <div class="flex flex-wrap items-end justify-between gap-6 border-t border-linea pt-7">
+          {negocio.anios && (
+            <p class="flex items-end gap-3">
+              <span class="text-6xl leading-[.8] font-extrabold tracking-[-.05em] text-naranja-vivo md:text-7xl"><span class="sr-only">Más de {negocio.anios}</span><span aria-hidden="true" class="mas">+</span><span aria-hidden="true" data-contar={negocio.anios} class="tabular-nums">{negocio.anios}</span></span>
+              <span class="leading-tight font-bold">años en<br />el sector</span>
+            </p>
+          )}
+          <a href={correos.empresa} class="btn-primario">
+            <Icono nombre="correo" />
+            Pedir presupuesto
+          </a>
+        </div>
+      </div>
+
+      <div class="grid gap-3 md:gap-4 lg:col-span-5">
+        <div class="zona-oscura mapa-oscuro flex flex-col justify-between gap-6 rounded-[2rem] p-7 sm:p-8" data-al-ver>
+          <p class="text-xs font-bold tracking-[.2em] uppercase">Toda Canarias</p>
+          <MapaCanarias class="mx-auto max-w-sm" />
+          <p>
+            <span class="block text-2xl leading-tight font-bold">Reparto a todas las islas</span>
+            <span class="mt-1 block text-sm text-tinta/70">Desde Los Majuelos (La&nbsp;Laguna)</span>
+          </p>
+        </div>
+        <div class="grid gap-3 sm:grid-cols-2 md:gap-4">
+          <div class="flex flex-col justify-between gap-8 rounded-[2rem] bg-naranja p-7 text-[#13203a]">
+            <p class="text-xs font-bold tracking-[.2em] uppercase">Entrega</p>
+            <p><span class="block text-2xl leading-tight font-bold">En tu oficina</span><span class="mt-1 block text-sm">O recogida en Los Majuelos</span></p>
+          </div>
+          <div class="bloque flex flex-col justify-between gap-8 p-7">
+            <p class="text-xs font-bold tracking-[.2em] text-naranja-oscuro uppercase">Trato directo</p>
+            <p><span class="block leading-snug font-bold">Te atiende quien conoce tu pedido</span><a href={telHref} class="mt-2 inline-block font-bold text-naranja-oscuro tabular-nums hover:underline">{negocio.telefono}</a></p>
+          </div>
+        </div>
+      </div>
+    </div>
   </section>
 
-  {/* EMPRESAS Y ORGANISMOS */}
-  <section class="mx-auto grid max-w-7xl gap-6 px-4 pb-12 md:grid-cols-2 md:px-6 md:pb-28">
-    <article id="empresas" class="scroll-mt-28 overflow-hidden rounded-2xl bg-white ring-1 ring-linea">
-      <img src={ruta('/img/subrayadores.webp')} alt="Rotuladores fluorescentes de colores" width="960" height="640" loading="lazy" decoding="async" class="aspect-[2/1] w-full object-cover" />
-      <div class="p-7 md:p-9">
-        <h2 class="text-2xl font-medium">Empresas y despachos</h2>
-        <p class="mt-3 leading-relaxed text-gris">Material del día a día, tóner y cartuchos, y libros jurídicos.</p>
-      </div>
-    </article>
-    <article id="organismos" class="scroll-mt-28 overflow-hidden rounded-2xl bg-white ring-1 ring-linea">
-      <img src={ruta('/img/archivadores.webp')} alt="Dos archivadores rojos" width="960" height="640" loading="lazy" decoding="async" class="aspect-[2/1] w-full object-cover" />
-      <div class="p-7 md:p-9">
-        <h2 class="text-2xl font-medium">Organismos públicos</h2>
-        <p class="mt-3 leading-relaxed text-gris">Material de oficina para la administración pública en Canarias.</p>
-        <p class="mt-3 text-gris"><Pendiente texto="¿facturación electrónica a la administración? (pregunta 13)" /></p>
-      </div>
-    </article>
+  {/* TRABAJAMOS CON: dos carpetas de archivo (17-nov-2026). Los id se mantienen (el inicio enlaza a #organismos).
+      La pestaña es la etiqueta de la carpeta ("01 · Sector privado"); la hoja que asoma es decorativa */}
+  <section class="mx-auto max-w-7xl px-4 pb-10 md:px-6 md:pb-20">
+    <p class="antetitulo text-xs font-bold tracking-[.2em] text-naranja-oscuro uppercase">Trabajamos con</p>
+    <h2 class="mt-3 max-w-3xl text-4xl md:text-5xl">Empresas, despachos y administración pública</h2>
+    <div class="carpetas mt-10 md:mt-14" data-al-ver="0.3">
+      {sectores.map((x, i) => (
+        <article id={x.id} class:list={['carpeta scroll-mt-2', i === 0 ? 'carpeta-privada' : 'carpeta-publica']} style={`--n:${i}`}>
+          <div class="carpeta-cabeza">
+            <p class="carpeta-pestana"><span aria-hidden="true" class="tabular-nums">{x.num}</span>{x.sector}</p>
+            <span class="carpeta-hoja" aria-hidden="true"></span>
+          </div>
+          <div class="carpeta-tapa">
+            <h3 class="carpeta-titulo">{x.titulo}</h3>
+            <p class="carpeta-texto">{x.texto}</p>
+            <ul class="carpeta-lista">
+              {x.lista.map((l) => <li>{l}</li>)}
+              {x.id === 'organismos' && <li><Pendiente texto="¿facturación electrónica a la administración? (pregunta 13)" /></li>}
+            </ul>
+            <a href={correos.empresa} class="carpeta-enlace group">
+              Pedir presupuesto
+              <svg aria-hidden="true" viewBox="0 0 24 24" class="size-4 fill-none stroke-current stroke-2 transition-transform group-hover:translate-x-1"><path d={flecha} /></svg>
+            </a>
+          </div>
+        </article>
+      ))}
+    </div>
   </section>
 
   {/* QUÉ SUMINISTRAMOS */}
-  <section class="mx-auto max-w-7xl px-4 py-12 md:px-6 md:py-20">
+  <section class="mx-auto max-w-7xl px-4 pb-10 md:px-6 md:pb-20">
     <Familias para="empresas" antetitulo="Para la oficina" titulo="Qué suministramos" />
   </section>
 
@@ -82,3 +144,5 @@ const preguntas = [
 
   <LlamadaFinal correo="empresa" titulo="¿Qué necesita tu oficina?" texto="Cuéntanos lo que necesitas y te preparamos el presupuesto." />
 </Base>
+{/* Las rutas del mapa se dibujan cuando el mapa se ve: data-al-ver (Efectos.astro). Mientras, la animación espera parada
+     (global.css, .mapa-oscuro); sin JavaScript o con "reducir movimiento", el mapa sale ya dibujado */}

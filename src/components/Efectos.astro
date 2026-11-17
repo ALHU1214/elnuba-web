@@ -65,7 +65,22 @@
     vc.observe(el);
   });
 
-  // 3. La cabecera coge sombra al bajar
+  // 3. Lo que se dibuja o se marca cuando se ve (subrayador y casillas de Colegios, mapas, el +35 de Nosotros, las
+  //    familias de "Qué distribuimos"): se le pone .visto una sola vez. 16-nov-2026 (máster): antes cada página y
+  //    Familias.astro repetían este mismo código. Sin valor, salta cuando el elemento asoma un 18 % por encima del borde
+  //    de abajo; con data-al-ver="0.55", cuando se ve esa parte de él (el +35: si no, se dibujaba asomando y nadie lo veía).
+  //    El estado "antes de verse" solo existe con JavaScript y sin "reducir movimiento" (global.css).
+  document.querySelectorAll<HTMLElement>('[data-al-ver]').forEach((el) => {
+    const parte = parseFloat(el.dataset.alVer || '');
+    const v = new IntersectionObserver(([e]) => {
+      if (!e.isIntersecting) return;
+      el.classList.add('visto');
+      v.disconnect();
+    }, parte ? { threshold: parte } : { rootMargin: '0px 0px -18% 0px' });
+    v.observe(el);
+  });
+
+  // 4. La cabecera coge sombra al bajar
   const cab = document.querySelector('header');
   const sombra = () => cab?.toggleAttribute('data-con-sombra', scrollY > 8);
   addEventListener('scroll', sombra, { passive: true });

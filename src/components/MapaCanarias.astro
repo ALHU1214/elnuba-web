@@ -5,8 +5,19 @@
 // Es decorativo (aria-hidden): el texto de al lado ya lo dice. Sin JavaScript se ve entero y quieto.
 import { vistaIslas, tenerife, origen, islas } from '../data/mapa-islas';
 
-interface Props { class?: string }
-const { class: clase = '' } = Astro.props;
+// nombres (16-nov-2026, Nosotros): el nombre de cada isla aparece cuando le llega su ruta. Posición respecto a su punto:
+// [x, y, alineación]; los del este van a la izquierda para no salirse del dibujo.
+interface Props { class?: string; nombres?: boolean }
+const { class: clase = '', nombres = false } = Astro.props;
+const posNombre: Record<string, [number, number, 'start' | 'middle' | 'end']> = {
+  'La Gomera': [0, 17, 'middle'],
+  'Gran Canaria': [21, 15, 'start'],
+  'La Palma': [13, 3, 'start'],
+  'El Hierro': [12, 4, 'start'],
+  'Fuerteventura': [-11, 4, 'end'],
+  'Lanzarote': [-11, 4, 'end'],
+  'La Graciosa': [-10, 5, 'end'],
+};
 ---
 <svg viewBox={vistaIslas} aria-hidden="true" focusable="false" class:list={['mapa-reparto', clase]}>
   <defs>
@@ -23,4 +34,14 @@ const { class: clase = '' } = Astro.props;
   {islas.map((i, n) => <circle cx={i.fin[0]} cy={i.fin[1]} r="4.2" class="destino" style={`--r:${n}`} />)}
   <circle cx={origen[0]} cy={origen[1]} r="11" class="origen-onda" />
   <circle cx={origen[0]} cy={origen[1]} r="5.4" class="origen" />
+  {nombres && (
+    <g class="nombres-islas">
+      {/* Debajo de la isla: arriba lo cruzaban las rutas */}
+      <text x={origen[0] - 20} y={origen[1] + 56} text-anchor="middle" class="isla-nombre isla-nombre-origen">Tenerife</text>
+      {islas.map((i, n) => {
+        const [dx, dy, ancla] = posNombre[i.nombre] ?? [8, 4, 'start'];
+        return <text x={i.fin[0] + dx} y={i.fin[1] + dy} text-anchor={ancla} class="isla-nombre" data-isla={i.nombre} style={`--r:${n}`}>{i.nombre}</text>;
+      })}
+    </g>
+  )}
 </svg>

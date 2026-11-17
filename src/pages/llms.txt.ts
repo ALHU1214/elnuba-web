@@ -3,7 +3,7 @@
 // Todo sale de los mismos datos que la web (negocio.ts, catalogo.ts, preguntas.ts): nunca dice nada que no esté en ella.
 import type { APIRoute } from 'astro';
 import { ruta } from '../lib/ruta';
-import { negocio, tiendas } from '../data/negocio';
+import { negocio, horarioTramos, fraseHorario } from '../data/negocio';
 import { familiasPara, marcas } from '../data/catalogo';
 import { preguntasInicio } from '../data/preguntas';
 import { paginas, descripcionNegocio } from '../data/seo';
@@ -24,14 +24,15 @@ export const GET: APIRoute = ({ site }) => {
     `- Teléfono: ${negocio.telefono}`,
     `- Correo: ${negocio.email}`,
     `- Almacén y tienda: ${d.calle}, ${d.zona}, ${d.cp} ${d.localidad} (Tenerife). Aquí se recogen los pedidos.`,
-    ...tiendas.filter((t) => t.id !== 'los-majuelos').map((t) => `- ${t.nombre} (${t.lugar}): ${t.direccion.join(', ')}. Tienda abierta al público.`),
-    ...(negocio.horario ? [`- Horario: ${negocio.horario.join(' · ')}`] : []),
+    ...(negocio.horario ? [`- Horario de Los Majuelos: ${fraseHorario(horarioTramos)}.`] : []),
     '',
     '## Páginas',
     '',
     ...paginas.map((p) => `- [${p.nombre}](${url(p.ruta)}): ${p.resumen}`),
     '',
     '## Qué distribuimos',
+    '',
+    'Todo el material de papelería, escolar y de oficina. Algunos ejemplos por familia:',
     '',
     ...familiasPara().map((f) => `- ${f.nombre}: ${f.productos.join(', ').toLowerCase()}.`),
     '',

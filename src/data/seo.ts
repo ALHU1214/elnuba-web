@@ -2,7 +2,7 @@
 // Mismo criterio que aimanganell.com: un grafo con la empresa, la web y cada página, unido por @id,
 // y la ficha de la empresa entera en todas las páginas. Solo datos reales que también se ven en la web.
 // Lo que falta (horario, condiciones) se añade solo cuando se rellene en negocio.ts.
-import { negocio, tiendas, islas, horarioTramos } from './negocio';
+import { negocio, tiendas, islas, horarioTramos, horarioLd } from './negocio';
 import { familiasPara } from './catalogo';
 
 // Páginas que se ofrecen a Google y a las IA (sitemap.xml y llms.txt). Las legales y la 404 no: llevan noindex.
@@ -10,7 +10,7 @@ export const paginas = [
   { ruta: '/', nombre: 'Inicio', resumen: 'Qué distribuye ELNUBA, para quién, cómo se pide y preguntas frecuentes.' },
   { ruta: '/colegios/', nombre: 'Colegios', resumen: 'Material escolar, libros de texto y material de dibujo y pintura para colegios y centros educativos.' },
   { ruta: '/empresas-y-organismos/', nombre: 'Empresas y organismos', resumen: 'Material de oficina, archivo, tóner y cartuchos para empresas, despachos y organismos públicos.' },
-  { ruta: '/nosotros/', nombre: 'Nosotros', resumen: 'Quiénes somos y nuestras dos tiendas abiertas al público.' },
+  { ruta: '/nosotros/', nombre: 'Nosotros', resumen: 'Quiénes somos: más de 35 años distribuyendo papelería desde Los Majuelos (La Laguna), para quién trabajamos, qué vendemos y nuestra tienda.' },
   { ruta: '/contacto/', nombre: 'Contacto', resumen: 'Teléfono, correo, dirección y cómo llegar.' },
 ];
 
@@ -26,12 +26,11 @@ export const servicios = {
 };
 export type Servicio = (typeof servicios)[keyof typeof servicios];
 
-export function grafo(o: { inicio: string; canonica: string; titulo: string; descripcion: string; logo: string; imagen: string; url: (r: string) => string; modificado?: string; servicio?: Servicio }) {
+export function grafo(o: { inicio: string; canonica: string; titulo: string; descripcion: string; logo: string; imagen: string; url: (r: string) => string; modificado?: string; servicio?: Servicio; tipo?: string }) {
   const d = negocio.direccion;
   const idNegocio = `${o.inicio}#negocio`;
   const idWeb = `${o.inicio}#web`;
   const majuelos = tiendas[0];
-  const mararia = tiendas[1];
 
   const negocioLd = {
     '@type': 'Store',
@@ -65,33 +64,13 @@ export function grafo(o: { inicio: string; canonica: string; titulo: string; des
       availableLanguage: 'es',
     },
     // Horario de Los Majuelos (16-nov-2026); sale también en el pie y en Contacto
-    openingHoursSpecification: horarioTramos.map((t) => ({
-      '@type': 'OpeningHoursSpecification',
-      dayOfWeek: t.diasLd,
-      opens: t.abre.padStart(5, '0'),
-      closes: t.cierra.padStart(5, '0'),
-    })),
+    openingHoursSpecification: horarioLd(horarioTramos),
     paymentAccepted: 'Tarjeta de crédito, tarjeta de débito, pago con el móvil',
     amenityFeature: [
       { '@type': 'LocationFeatureSpecification', name: 'Entrada accesible para personas con movilidad reducida', value: true },
       { '@type': 'LocationFeatureSpecification', name: 'Aseos accesibles para personas con movilidad reducida', value: true },
       { '@type': 'LocationFeatureSpecification', name: 'Aparcamiento propio', value: false },
     ],
-    // La segunda tienda, como parte de la empresa: así su teléfono no se confunde con el principal
-    department: {
-      '@type': 'BookStore',
-      name: mararia.nombre,
-      description: mararia.nota,
-      telephone: mararia.telefonoE164,
-      address: {
-        '@type': 'PostalAddress',
-        streetAddress: mararia.direccion[0],
-        addressLocality: 'Candelaria',
-        addressRegion: d.provincia,
-        addressCountry: 'ES',
-      },
-      hasMap: mapa(mararia.mapa),
-    },
     makesOffer: [
       { '@type': 'Offer', itemOffered: { '@type': 'Service', '@id': `${o.url('/colegios/')}#servicio`, name: servicios.colegios.nombre, url: o.url('/colegios/') } },
       { '@type': 'Offer', itemOffered: { '@type': 'Service', '@id': `${o.url('/empresas-y-organismos/')}#servicio`, name: servicios.empresas.nombre, url: o.url('/empresas-y-organismos/') } },
@@ -122,7 +101,7 @@ export function grafo(o: { inicio: string; canonica: string; titulo: string; des
   };
 
   const paginaLd: Record<string, unknown> = {
-    '@type': 'WebPage',
+    '@type': o.tipo ?? 'WebPage',
     '@id': `${o.canonica}#pagina`,
     url: o.canonica,
     name: o.titulo,

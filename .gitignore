@@ -7,3 +7,10 @@ proyecto/
 CLAUDE.md
 *-INTERNA*
 .env*
+# Contexto de la skill de diseño (impeccable): notas internas, no se publican
+PRODUCT.md
+DESIGN.md
+.impeccable/
+
+# Páginas de prueba (solo para verlas en local): no se suben ni se publican
+src/pages/prueba-*.astro

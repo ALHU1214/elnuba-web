@@ -5,7 +5,8 @@ import Cabecera from '../components/Cabecera.astro';
 import Pie from '../components/Pie.astro';
 import BarraContacto from '../components/BarraContacto.astro';
 import Efectos from '../components/Efectos.astro';
-import { negocio, PUBLICADA } from '../data/negocio';
+import Consentimiento from '../components/Consentimiento.astro';
+import { negocio, PUBLICADA, hayAnalitica, type TipoCorreo } from '../data/negocio';
 import { grafo, type Servicio } from '../data/seo';
 // La tipografía se pide lo primero (9-nov-2026): si llegan tarde, el texto se recoloca y la página "salta" en el móvil
 import fuenteTexto from '@fontsource-variable/plus-jakarta-sans/files/plus-jakarta-sans-latin-wght-normal.woff2?url';
@@ -13,14 +14,19 @@ import fuenteTexto from '@fontsource-variable/plus-jakarta-sans/files/plus-jakar
 // indexar: false en las legales y la 404 (como en aimanganell.com): no compiten en Google, pero sus enlaces sí cuentan.
 // modificado: fecha AAAA-MM-DD de la última actualización, si la página la enseña (legales).
 // servicio: el servicio principal de la página (Colegios, Empresas), de servicios en src/data/seo.ts
-interface Props { titulo: string; descripcion: string; indexar?: boolean; modificado?: string; servicio?: Servicio; }
-const { titulo, descripcion, indexar = true, modificado, servicio } = Astro.props;
+// tipo (16-nov-2026): AboutPage en Nosotros y ContactPage en Contacto; el resto, WebPage
+// correo (16-nov-2026, máster): el correo ya escrito de la página (colegio, empresa…) para "Pedir presupuesto" de la barra
+// de arriba y "Escribir" de la barra del móvil; antes abrían siempre el general, aunque la página fuera la de Colegios.
+// sinCanonica (16-nov-2026, máster): la 404 no tiene dirección propia (se sirve en cualquier ruta que no exista), así que
+// no lleva canónica ni og:url; antes apuntaban a /404/, una dirección que no existe.
+interface Props { titulo: string; descripcion: string; indexar?: boolean; modificado?: string; servicio?: Servicio; tipo?: 'WebPage' | 'AboutPage' | 'ContactPage'; sinCanonica?: boolean; correo?: TipoCorreo; }
+const { titulo, descripcion, indexar = true, modificado, servicio, tipo = 'WebPage', sinCanonica = false, correo = 'general' } = Astro.props;
 const canonica = new URL(Astro.url.pathname, Astro.site);
 const absoluta = (r: string) => new URL(ruta(r), Astro.site).href;
 const imagen = absoluta('/og-elnuba.jpg');
 
 // Datos estructurados (13-nov-2026): grafo empresa + web + página, en src/data/seo.ts
-const jsonld = grafo({ inicio: absoluta('/'), canonica: canonica.href, titulo, descripcion, logo: absoluta('/logo-elnuba.png'), imagen, url: absoluta, modificado, servicio });
+const jsonld = grafo({ inicio: absoluta('/'), canonica: canonica.href, titulo, descripcion, logo: absoluta('/logo-elnuba.png'), imagen, url: absoluta, modificado, servicio, tipo });
 const robots = !PUBLICADA ? 'noindex, nofollow' : indexar ? null : 'noindex, follow';
 ---
 <!doctype html>
@@ -30,7 +36,7 @@ const robots = !PUBLICADA ? 'noindex, nofollow' : indexar ? null : 'noindex, fol
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{titulo}</title>
     <meta name="description" content={descripcion} />
-    <link rel="canonical" href={canonica} />
+    {!sinCanonica && <link rel="canonical" href={canonica} />}
     {robots && <meta name="robots" content={robots} />}
     <link rel="preload" href={fuenteTexto} as="font" type="font/woff2" crossorigin />
     {/* Iconos (13-nov-2026): Google pide un múltiplo de 48 px; el .ico lo piden solos los navegadores; el de Apple, con fondo */}
@@ -44,7 +50,7 @@ const robots = !PUBLICADA ? 'noindex, nofollow' : indexar ? null : 'noindex, fol
     <meta property="og:site_name" content={negocio.nombre} />
     <meta property="og:title" content={titulo} />
     <meta property="og:description" content={descripcion} />
-    <meta property="og:url" content={canonica} />
+    {!sinCanonica && <meta property="og:url" content={canonica} />}
     <meta property="og:image" content={imagen} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
@@ -57,10 +63,12 @@ const robots = !PUBLICADA ? 'noindex, nofollow' : indexar ? null : 'noindex, fol
   </head>
   <body class="pb-16 md:pb-0">
     <a href="#contenido" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-white focus:px-4 focus:py-2">Saltar al contenido</a>
-    <Cabecera />
+    <Cabecera correo={correo} />
     <main id="contenido"><slot /></main>
     <Pie />
-    <BarraContacto />
+    <BarraContacto correo={correo} />
+    {/* 17-nov-2026: aviso de cookies, solo si hay analítica puesta en negocio.ts (si no, no hay cookies que avisar) */}
+    {hayAnalitica && <Consentimiento />}
     <Efectos />
   </body>
 </html>

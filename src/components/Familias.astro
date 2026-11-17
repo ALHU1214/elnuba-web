@@ -1,30 +1,28 @@
 ---
 // Lo que distribuyen, dentro del cuaderno de anillas (10-nov-2026). Sin enlaces, porque no hay catálogo (9-nov-2026).
-// 15-nov-2026 (Álvaro: "mejóralo, tanto visual como el contenido", "verificar que se vende eso" y "repartirlo de mejor
-// manera, no tan al azar"): cada familia con su nombre en grande y sus productos concretos en renglones, como el índice
-// de un cuaderno. Al verse la sección, las rayas se trazan de izquierda a derecha y los iconos se dibujan solos, como a
-// boli. Iconos sueltos, sin círculos. Sin JavaScript o con "reducir movimiento", todo dibujado desde el principio.
-// Antes: columnas por grupo (Papelería · Oficina · Librería · Arte y regalo) con iconos en círculos.
-// Los datos (solo lo comprobado) están en catalogo.ts. Al final, "¿Buscas algo concreto?" con correo y llamar.
+// 17-nov-2026: "el directorio" (Álvaro eligió la propuesta A entre tres, tras el máster). Una fila por familia: el
+// nombre con su icono a la izquierda y sus artículos seguidos a la derecha, como el directorio de planta de unos grandes
+// almacenes. Todo a la vista, sin pulsar nada. Al verse, las filas entran una detrás de otra y los iconos se dibujan
+// solos (data-al-ver, Efectos.astro); sin JavaScript o con "reducir movimiento", todo dibujado desde el principio.
+// Cada página lleva sus familias y en su orden (catalogo.ts): Colegios, lo escolar delante; Empresas, papel y tóner.
+// Antes: tres columnas con los artículos en renglones (15 y 16-nov); antes aún, columnas por grupo con iconos en círculos.
+// Al final, "¿No ves lo que buscas?" (BuscasAlgo.astro): deja claro que es solo una muestra.
 // Lleva su propio bloque, así sale igual en el inicio, en Colegios y en Empresas.
 import { familiasPara } from '../data/catalogo';
-import { correos, telHref, negocio } from '../data/negocio';
 import IconoFamilia from './IconoFamilia.astro';
+import BuscasAlgo from './BuscasAlgo.astro';
 
 interface Props { antetitulo: string; titulo: string; para?: 'colegios' | 'empresas'; }
 const { antetitulo, titulo, para } = Astro.props;
 const lista = familiasPara(para);
-// 6 familias: tres columnas en el ordenador; 4 (Empresas): dos columnas, cada una con sus productos en dos
-const columnas = lista.length % 3 === 0 ? 3 : 2;
 ---
 <div class="bloque cuaderno px-6 pb-6 sm:px-8 sm:pb-8 md:px-12 md:pb-12">
-  {/* 15-nov-2026 (Álvaro): sin la frase de al lado del título ("Lo que te podemos servir, ordenado por familias.") */}
   <div>
     <p class="antetitulo text-xs font-bold tracking-[.2em] text-naranja-oscuro uppercase">{antetitulo}</p>
     <h2 class="mt-3 text-4xl md:text-5xl">{titulo}</h2>
   </div>
 
-  <ul class="familias mt-10 md:mt-14" data-cols={columnas}>
+  <ul class="familias mt-9 md:mt-12" data-al-ver>
     {lista.map((f, n) => (
       <li class="familia" style={`--n:${n}`}>
         <h3 class="familia-cabeza">
@@ -32,43 +30,12 @@ const columnas = lista.length % 3 === 0 ? 3 : 2;
           {f.nombre}
         </h3>
         <ul class="familia-productos">
-          {f.productos.map((nombre, k) => <li style={`--k:${k}`}><span>{nombre}</span></li>)}
+          {f.productos.map((nombre) => <li>{nombre}</li>)}
         </ul>
       </li>
     ))}
   </ul>
 
-  <div class="mt-10 flex flex-col gap-5 rounded-3xl bg-papel p-5 sm:p-6 md:mt-14 lg:flex-row lg:items-center lg:justify-between">
-    <div class="flex items-start gap-4">
-      <span class="grid size-12 shrink-0 place-items-center rounded-full bg-white text-naranja-oscuro">
-        <svg aria-hidden="true" viewBox="0 0 24 24" class="size-6 fill-none stroke-current stroke-2 [stroke-linecap:round]"><circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" /></svg>
-      </span>
-      <div>
-        <p class="text-lg font-bold md:text-xl">¿Buscas algo concreto?</p>
-        <p class="mt-0.5 text-gris">Pregúntanos y te decimos si lo tenemos.</p>
-      </div>
-    </div>
-    <div class="flex flex-col gap-3 sm:flex-row lg:shrink-0">
-      <a href={correos.articulo} class="btn-primario">
-        <svg aria-hidden="true" viewBox="0 0 24 24" class="size-5 fill-none stroke-2"><rect x="3" y="5" width="18" height="14" rx="2" /><path d="m3 7 9 6 9-6" /></svg>
-        Preguntar por correo
-      </a>
-      <a href={telHref} class="btn-secundario">
-        <svg aria-hidden="true" viewBox="0 0 24 24" class="size-5 fill-none stroke-2"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2" /></svg>
-        Llamar al {negocio.telefono}
-      </a>
-    </div>
-  </div>
+  {/* 17-nov-2026: pegado al directorio, como su última fila */}
+  <BuscasAlgo />
 </div>
-
-<script>
-  // Las rayas y los iconos se dibujan cuando la lista entra en pantalla (una sola vez)
-  document.querySelectorAll<HTMLElement>('.familias').forEach((el) => {
-    const vigia = new IntersectionObserver(([e]) => {
-      if (!e.isIntersecting) return;
-      el.classList.add('visto');
-      vigia.disconnect();
-    }, { rootMargin: '0px 0px -12% 0px' });
-    vigia.observe(el);
-  });
-</script>

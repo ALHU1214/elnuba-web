@@ -20,7 +20,10 @@ const q = encodeURIComponent(consulta);
     {etiqueta && <span class="mapa-etiqueta">{etiqueta}</span>}
   </span>
   <span class="mapa-boton">Ver en el mapa</span>
-  <span class="mapa-aviso">Se carga Google Maps al pulsar</span>
+  {/* 17-nov-2026 (revisión legal): el aviso dice ya que Google puede usar cookies. La LSSI (art. 22.2) pide informar
+      antes de instalarlas; pulsar "Ver en el mapa" después de leerlo es la aceptación. Detalle en la política de
+      privacidad (puntos 5 y 6) */}
+  <span class="mapa-aviso">Al pulsar se carga Google Maps, que puede usar cookies</span>
 </a>
 
 <script>

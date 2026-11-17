@@ -1,12 +1,34 @@
 ---
 import Base from '../layouts/Base.astro';
 import Encabezado from '../components/Encabezado.astro';
-import { negocio, mailSimple } from '../data/negocio';
+import Pendiente from '../components/Pendiente.astro';
+import { negocio, mailSimple, analitica, hayAnalitica } from '../data/negocio';
 
 const d = negocio.direccion;
+// 17-nov-2026: si hay analítica (negocio.ts), la política explica Google Analytics y Clarity y su fecha pasa a ser la de
+// `analitica.desde`. Sin analítica, el texto es el de siempre (16-nov-2026): no hay cookies salvo el mapa al pulsar.
+const fecha = (hayAnalitica && analitica.desde) || '2026-11-16';
+const fechaTexto = new Intl.DateTimeFormat('es-ES', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' }).format(new Date(fecha));
+const ga = analitica.googleAnalytics;
+const cl = analitica.clarity;
+const herramientas = [ga && 'Google Analytics', cl && 'Microsoft Clarity'].filter(Boolean).join(' y ');
+// Cookies de cada herramienta. Google Analytics: nombres y duración de Google (support.google.com/analytics/answer/11397207).
+// Clarity: nombres y finalidad de Microsoft (learn.microsoft.com/clarity, «Clarity Cookies»); Microsoft no publica cuánto
+// duran: al activar Clarity hay que mirarlo en el navegador y rellenar `duracion` (mientras, sale como pendiente)
+const cookies = [
+  ...(ga ? [
+    { nombre: '_ga', quien: 'Google', para: 'Distinguir a los usuarios (estadísticas de visitas)', duracion: '2 años' },
+    { nombre: `_ga_${ga.replace(/^G-/, '')}`, quien: 'Google', para: 'Mantener el estado de la sesión', duracion: '2 años' },
+  ] : []),
+  ...(cl ? [
+    { nombre: '_clck', quien: 'Microsoft (Clarity)', para: 'Guardar el identificador de Clarity del visitante en esta web', duracion: null as string | null },
+    { nombre: '_clsk', quien: 'Microsoft (Clarity)', para: 'Unir en una misma sesión las páginas que ves', duracion: null as string | null },
+    { nombre: 'CLID, MUID, ANONCHK, MR y SM', quien: 'Microsoft (dominios de Clarity y Bing)', para: 'Reconocer el navegador y funcionamiento interno de Clarity', duracion: null as string | null },
+  ] : []),
+];
 ---
-<Base titulo="Política de privacidad · ELNUBA" descripcion="Cómo trata Elnuba Distribuciones de Papelería SL los datos personales de quienes la contactan." indexar={false} modificado="2026-11-11">
-  <Encabezado marcas={false} miga="Privacidad" antetitulo="Información legal" titulo="Política de privacidad" entradilla="Última actualización: 11 de noviembre de 2026" fecha="2026-11-11" botones={false} />
+<Base titulo="Política de privacidad · ELNUBA" descripcion="Cómo trata Elnuba Distribuciones de Papelería SL los datos personales de quienes la contactan." indexar={false} modificado={fecha}>
+  <Encabezado marcas={false} miga="Privacidad" antetitulo="Información legal" titulo="Política de privacidad" entradilla={`Última actualización: ${fechaTexto}`} fecha={fecha} botones={false} />
 
   <article class="legal mx-auto max-w-3xl px-4 py-16 md:px-6 md:py-20">
     <h2>1. Responsable del tratamiento</h2>
@@ -19,25 +41,47 @@ const d = negocio.direccion;
 
     <h2>2. Qué datos tratamos</h2>
     <p>Esta web no tiene formularios ni registro de usuarios. Solo tratamos los datos que nos facilitas tú cuando nos llamas o nos escribes un correo: tu nombre, el de tu centro o empresa, tus datos de contacto y lo que nos cuentes en el mensaje.</p>
+    {hayAnalitica && <p>Si aceptas las cookies de análisis, {herramientas} recogen además datos de tu visita: las páginas que ves, el tipo de dispositivo y navegador, tu ubicación aproximada (ciudad o región){cl && ' y, con Clarity, cómo te mueves por la página: clics, desplazamientos y grabaciones de la navegación, sin lo que escribas'}. No sabemos quién eres con estos datos.</p>}
 
     <h2>3. Para qué los usamos y con qué base legal</h2>
     <ul>
       <li>Para responder a tus consultas y prepararte presupuestos. Base legal: la aplicación de medidas precontractuales a petición tuya (art. 6.1.b del RGPD).</li>
       <li>Para gestionar los pedidos, las entregas y la facturación si llegas a ser cliente. Base legal: la ejecución del contrato y el cumplimiento de obligaciones legales (art. 6.1.b y 6.1.c del RGPD).</li>
+      {hayAnalitica && <li>Para saber cómo se usa la web y mejorarla, con {herramientas}, solo si aceptas las cookies de análisis. Base legal: tu consentimiento (art. 6.1.a del RGPD), que puedes retirar cuando quieras desde «Configurar cookies», al pie de cada página.</li>}
     </ul>
     <p>No usamos tus datos para enviarte publicidad sin tu consentimiento ni tomamos decisiones automatizadas con ellos.</p>
 
     <h2>4. Cuánto tiempo los conservamos</h2>
     <p>Mientras dure la relación y, después, durante los plazos que exige la ley (por ejemplo, la normativa fiscal y mercantil). Las consultas que no terminan en pedido se borran cuando ya no son necesarias.</p>
+    {hayAnalitica && <p>Los datos de análisis se guardan {[ga && '14 meses en Google Analytics', cl && '30 días las grabaciones y 13 meses los mapas de clics en Microsoft Clarity'].filter(Boolean).join(', y ')}.</p>}
 
     <h2>5. A quién se comunican</h2>
     <p>No cedemos tus datos a terceros, salvo obligación legal (por ejemplo, a la Agencia Tributaria) o cuando hace falta para entregarte un pedido (la agencia de transporte que lo lleva a otra isla).</p>
     <p>La web está alojada en GitHub Pages (GitHub, Inc.), que, como cualquier servidor, registra datos técnicos de las visitas, como la dirección IP, por motivos de seguridad. GitHub está adherido al Marco de Privacidad de Datos UE-EE. UU.</p>
-    <p>En la página de Contacto puedes ver nuestras tiendas en un mapa de Google Maps. El mapa solo se carga si pulsas «Ver en el mapa»; en ese momento tu navegador se conecta con Google, que recibe datos técnicos como tu dirección IP y los trata según su propia <a href="https://policies.google.com/privacy" rel="noopener">política de privacidad</a>. Si no lo pulsas, no se envía nada a Google.</p>
+    {hayAnalitica && <p>Si aceptas las cookies de análisis, los datos de tu visita los trata {[ga && 'Google (Google Ireland Limited)', cl && 'Microsoft (Microsoft Ireland Operations Limited)'].filter(Boolean).join(' y ')} por cuenta nuestra. Pueden llegar a {[ga && 'Google LLC', cl && 'Microsoft Corporation'].filter(Boolean).join(' y ')}, en Estados Unidos, {ga && cl ? 'empresas adheridas' : 'empresa adherida'} al Marco de Privacidad de Datos UE-EE. UU.</p>}
+    <p>En la página de Contacto puedes ver dónde estamos en un mapa de Google Maps. El mapa solo se carga si pulsas «Ver en el mapa»; en ese momento tu navegador se conecta con Google, que recibe datos técnicos como tu dirección IP y los trata según su propia <a href="https://policies.google.com/privacy" rel="noopener">política de privacidad</a>. Si no lo pulsas, no se envía nada a Google.</p>
 
-    <h2>6. Cookies</h2>
-    <p>Esta web no utiliza cookies propias ni herramientas de analítica o publicidad. Las fuentes tipográficas se sirven desde la propia web, sin conexiones a terceros.</p>
-    <p>La única excepción son los mapas de la página de Contacto: si pulsas «Ver en el mapa», Google Maps puede instalar sus propias cookies en tu navegador. Antes de pulsar se te avisa, y si no lo haces, no se carga nada de Google. Puedes borrar esas cookies cuando quieras desde la configuración de tu navegador.</p>
+    <h2 id="cookies">6. Cookies</h2>
+    {hayAnalitica ? (
+      <>
+        <p>Esta web solo usa cookies de análisis ({herramientas}), y únicamente si las aceptas en el aviso de cookies. Si las rechazas o no contestas, no se instala ninguna y esas herramientas no se cargan. Puedes cambiar de opinión cuando quieras con «Configurar cookies», al pie de cada página: si las retiras, se borran.</p>
+        <div class="mt-4 overflow-x-auto">
+          <table class="tabla-cookies">
+            <thead><tr><th scope="col">Cookie</th><th scope="col">De quién</th><th scope="col">Para qué</th><th scope="col">Duración</th></tr></thead>
+            <tbody>
+              {cookies.map((c) => <tr><td><code>{c.nombre}</code></td><td>{c.quien}</td><td>{c.para}</td><td>{c.duracion ?? <Pendiente texto="ver al activar Clarity" />}</td></tr>)}
+            </tbody>
+          </table>
+        </div>
+        <p>Tu elección se guarda en tu propio navegador (no es una cookie) durante 12 meses; después te lo volvemos a preguntar. Las fuentes tipográficas se sirven desde la propia web, sin conexiones a terceros.</p>
+        <p>Además, si en la página de Contacto pulsas «Ver en el mapa», Google Maps puede instalar sus propias cookies en tu navegador. Antes de pulsar se te avisa, y si no lo haces, no se carga nada de Google. También puedes borrar las cookies cuando quieras desde la configuración de tu navegador.</p>
+      </>
+    ) : (
+      <>
+        <p>Esta web no utiliza cookies propias ni herramientas de analítica o publicidad. Las fuentes tipográficas se sirven desde la propia web, sin conexiones a terceros.</p>
+        <p>La única excepción es el mapa de la página de Contacto: si pulsas «Ver en el mapa», Google Maps puede instalar sus propias cookies en tu navegador. Antes de pulsar se te avisa, y si no lo haces, no se carga nada de Google. Puedes borrar esas cookies cuando quieras desde la configuración de tu navegador.</p>
+      </>
+    )}
 
     <h2>7. Tus derechos</h2>
     <p>Puedes pedir el acceso, la rectificación o la supresión de tus datos, oponerte a su tratamiento, pedir que se limite o solicitar su portabilidad. Escríbenos a <a href={mailSimple}>{negocio.email}</a> o por correo postal a la dirección de arriba, indicando qué derecho quieres ejercer.</p>

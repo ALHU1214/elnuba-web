@@ -1,9 +1,12 @@
 ---
+import Icono from './Icono.astro';
 import { ruta } from '../lib/ruta';
 // Cabecera (9-nov-2026): barra blanca flotante y redondeada, como los bloques del estilo "Escaparate".
 // Menú con la página actual marcada, teléfono con su etiqueta y el botón principal "Pedir presupuesto".
 // En el móvil: logo y botón de menú (llamar y escribir ya están en la barra fija de abajo).
-import { nav, negocio, telHref, correos } from '../data/negocio';
+import { nav, negocio, telHref, correos, type TipoCorreo } from '../data/negocio';
+interface Props { correo?: TipoCorreo }
+const { correo = 'general' } = Astro.props;
 const actual = Astro.url.pathname;
 ---
 <header class="sticky top-0 z-40 pt-2.5 md:pt-3">
@@ -33,21 +36,22 @@ const actual = Astro.url.pathname;
     <div class="flex items-center gap-2">
       <a href={telHref} class="btn-llamar hidden sm:inline-flex">
         <span class="btn-llamar-icono">
-          <svg aria-hidden="true" viewBox="0 0 24 24" class="size-[18px] fill-none stroke-[#13203a] stroke-2 md:size-5"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2" /></svg>
+          <Icono nombre="telefono" class="size-[18px] fill-none stroke-[#13203a] stroke-2 md:size-5" />
         </span>
         <span class="leading-tight lg:max-[1179px]:sr-only">
-          <span class="block text-[11px] font-bold tracking-[.14em] text-[#ff9a4d] uppercase">Llámanos</span>
+          <span class="block text-[11px] font-bold tracking-[.14em] text-[#ff9a4d] uppercase">Llámanos </span>
           <span class="block text-[15px] font-bold whitespace-nowrap">{negocio.telefono}</span>
         </span>
       </a>
-      <a href={correos.general} class="btn-primario btn-cabecera hidden md:inline-flex">
-        <svg aria-hidden="true" viewBox="0 0 24 24" class="size-5 fill-none stroke-2 lg:max-[1179px]:hidden"><rect x="3" y="5" width="18" height="14" rx="2" /><path d="m3 7 9 6 9-6" /></svg>
+      <a href={correos[correo]} class="btn-primario btn-cabecera hidden md:inline-flex">
+        <Icono nombre="correo" class="size-5 fill-none stroke-2 lg:max-[1179px]:hidden" />
         Pedir presupuesto
       </a>
       <button id="menu-boton" type="button" aria-expanded="false" aria-controls="menu-movil"
               class="inline-flex size-12 items-center justify-center rounded-full bg-papel transition-colors hover:bg-melocoton md:size-14 lg:hidden">
-        <span class="sr-only">Abrir menú</span>
-        <svg aria-hidden="true" viewBox="0 0 24 24" class="size-5 fill-none stroke-tinta stroke-2"><path d="M4 7h16M4 12h16M4 17h16" /></svg>
+        {/* 16-nov-2026 (máster): abierto, el botón enseña una X y dice "Cerrar menú" (antes seguían las tres rayas) */}
+        <span class="sr-only" data-menu-texto>Abrir menú</span>
+        <svg aria-hidden="true" viewBox="0 0 24 24" class="size-5 fill-none stroke-tinta stroke-2 [stroke-linecap:round]"><path class="menu-rayas" d="M4 7h16M4 12h16M4 17h16" /><path class="menu-equis" d="M6 6l12 12M18 6 6 18" /></svg>
       </button>
     </div>
   </div>
@@ -61,17 +65,21 @@ const actual = Astro.url.pathname;
       ))}
     </ul>
     <div class="mt-2 grid gap-2 sm:grid-cols-2">
-      <a href={correos.general} class="btn-primario">Pedir presupuesto por correo</a>
+      <a href={correos[correo]} class="btn-primario">Pedir presupuesto por correo</a>
       <a href={telHref} class="btn-secundario">Llamar al {negocio.telefono}</a>
     </div>
   </nav>
   </div>
 </header>
 
+{/* Sin JavaScript el botón no puede abrir el menú: se enseña abierto y el botón se quita (16-nov-2026, máster) */}
+<noscript><style>#menu-movil[hidden] { display: block; } #menu-boton { display: none; } @media (min-width: 1024px) { #menu-movil[hidden] { display: none; } }</style></noscript>
+
 <script>
   const boton = document.getElementById('menu-boton')!;
   const menu = document.getElementById('menu-movil')!;
-  const poner = (abrir: boolean) => { boton.setAttribute('aria-expanded', String(abrir)); menu.hidden = !abrir; };
+  const texto = boton.querySelector('[data-menu-texto]')!;
+  const poner = (abrir: boolean) => { boton.setAttribute('aria-expanded', String(abrir)); menu.hidden = !abrir; texto.textContent = abrir ? 'Cerrar menú' : 'Abrir menú'; };
   boton.addEventListener('click', () => poner(boton.getAttribute('aria-expanded') !== 'true'));
   // Se cierra con Escape y al pulsar fuera
   addEventListener('keydown', (e) => { if (e.key === 'Escape' && !menu.hidden) { poner(false); boton.focus(); } });

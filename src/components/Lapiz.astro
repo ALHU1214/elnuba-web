@@ -1,0 +1,22 @@
+---
+// El lápiz del logo de ELNUBA, tumbado (17-nov-2026): cuerpo con las tres franjas amarillo, naranja y rojo a lo largo,
+// la pintura acabada en ondas sobre la madera, como en el logo, y la mina naranja. La punta está en el borde izquierdo,
+// a media altura (x = 0, y = 10), para poder girarlo desde ahí con CSS (transform-origin: 0 50%).
+// Dibujo plano con los colores del logo, sin trazos a mano. Decorativo: lo usa el bloque final (LlamadaFinal.astro).
+interface Props { class?: string }
+const { class: clase = '' } = Astro.props;
+---
+<svg viewBox="0 0 150 20" aria-hidden="true" focusable="false" class:list={['lapiz-logo', clase]}>
+  {/* Madera (la mitad de abajo, en sombra) */}
+  <polygon points="9.5,6.4 41,0 41,20 9.5,13.6" fill="#f4c882" />
+  <polygon points="9.5,10 41,10 41,20 9.5,13.6" fill="#e0ad66" />
+  {/* Mina, con la punta un tono más oscura */}
+  <polygon points="0,10 9.5,6.4 9.5,13.6" fill="#f78a37" />
+  <polygon points="0,10 3.4,8.7 3.4,11.3" fill="#c2410c" />
+  {/* Cuerpo: tres franjas a lo largo; cada una acaba en una onda sobre la madera y el extremo va redondeado */}
+  <path d="M41 0H144Q150 0 150 6V6.67H41A3.33 3.33 0 0 1 41 0Z" fill="#fce265" />
+  <path d="M41 6.67H150V13.33H41A3.33 3.33 0 0 1 41 6.67Z" fill="#f78a37" />
+  <path d="M41 13.33H150V14Q150 20 144 20H41A3.33 3.33 0 0 1 41 13.33Z" fill="#e84343" />
+  {/* Brillo suave a lo largo, para que tenga volumen */}
+  <rect x="46" y="1.6" width="96" height="1.5" rx=".75" fill="#fff" fill-opacity=".4" />
+</svg>

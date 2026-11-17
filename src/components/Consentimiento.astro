@@ -1,0 +1,138 @@
+---
+// Aviso de cookies (17-nov-2026). Solo se pinta si hay alguna herramienta de analítica en negocio.ts (`analitica`).
+// Lo que pide la AEPD (Guía de cookies, julio de 2023) y la LSSI (art. 22.2):
+//  - nada se carga antes de que el visitante elija: ni Google Analytics ni Clarity (ni siquiera en modo "sin cookies");
+//  - "Rechazar" y "Aceptar" en la primera capa, con el mismo tamaño, color y letra (no se empuja a aceptar);
+//  - "Configurar" para elegir herramienta por herramienta y enlace a la información (política de privacidad, #cookies);
+//  - se puede cambiar de opinión cuando se quiera ("Configurar cookies", en el pie) y entonces se borran sus cookies;
+//  - no bloquea la web (no es un muro): se puede navegar sin contestar, y sin contestar no se carga nada.
+// La elección se guarda en el navegador (localStorage, no es una cookie) durante 12 meses; después se vuelve a preguntar.
+// Google Analytics va con el modo de consentimiento de Google (todo denegado por defecto) y Clarity con su consentv2
+// (obligatorio para visitas europeas desde el 31-oct-2025). Sin JavaScript no sale nada y no se carga nada.
+import { analitica } from '../data/negocio';
+import { ruta } from '../lib/ruta';
+
+const ga = analitica.googleAnalytics;
+const cl = analitica.clarity;
+const herramientas = [ga && 'Google Analytics', cl && 'Microsoft Clarity'].filter(Boolean).join(' y ');
+---
+<section id="cookies-aviso" class="cookies" aria-label="Aviso de cookies" hidden data-ga={ga ?? ''} data-clarity={cl ?? ''}>
+  <p class="cookies-titulo">Cookies de análisis</p>
+  <p class="cookies-texto">
+    Usamos {herramientas} para saber cómo se usa la web y mejorarla. Solo se activan si las aceptas.{' '}
+    <a href={ruta('/privacidad/#cookies')}>Más información</a>
+  </p>
+  <fieldset class="cookies-opciones" hidden>
+    <legend class="sr-only">Elige qué herramientas aceptas</legend>
+    {ga && <label><input type="checkbox" name="ga" /> <span><strong>Google Analytics</strong>: cuántas visitas hay y qué páginas se ven</span></label>}
+    {cl && <label><input type="checkbox" name="clarity" /> <span><strong>Microsoft Clarity</strong>: mapas de clics y grabaciones de cómo se navega por la web</span></label>}
+  </fieldset>
+  <div class="cookies-botones">
+    <button type="button" class="cookies-boton" data-cookies="rechazar">Rechazar</button>
+    <button type="button" class="cookies-boton" data-cookies="aceptar">Aceptar</button>
+    <button type="button" class="cookies-boton" data-cookies="guardar" hidden>Guardar mi elección</button>
+    <button type="button" class="cookies-configurar" data-cookies="configurar" aria-expanded="false">Configurar</button>
+  </div>
+</section>
+
+<script>
+  type Eleccion = { ga: boolean; clarity: boolean; fecha: number };
+  const CLAVE = 'elnuba-cookies';
+  const VIGENCIA = 365 * 24 * 3600 * 1000; // 12 meses
+  const aviso = document.getElementById('cookies-aviso') as HTMLElement | null;
+
+  if (aviso) {
+    const idGa = aviso.dataset.ga || '';
+    const idClarity = aviso.dataset.clarity || '';
+    const opciones = aviso.querySelector<HTMLFieldSetElement>('.cookies-opciones')!;
+    const casilla = (n: string) => aviso.querySelector<HTMLInputElement>(`input[name="${n}"]`);
+    const boton = (n: string) => aviso.querySelector<HTMLButtonElement>(`[data-cookies="${n}"]`)!;
+    const w = window as any;
+
+    const leer = (): Eleccion | null => {
+      try {
+        const e = JSON.parse(localStorage.getItem(CLAVE) || 'null');
+        return e && Date.now() - e.fecha < VIGENCIA ? e : null;
+      } catch { return null; }
+    };
+    const guardar = (e: Eleccion) => { try { localStorage.setItem(CLAVE, JSON.stringify(e)); } catch { /* sin almacenamiento: se volverá a preguntar */ } };
+
+    // Carga de cada herramienta (solo se llama con el consentimiento dado)
+    const cargarGa = () => {
+      if (!idGa || w.__gaCargado) return;
+      w.__gaCargado = true;
+      w.dataLayer = w.dataLayer || [];
+      w.gtag = function () { w.dataLayer.push(arguments); };
+      w.gtag('consent', 'default', { ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied', analytics_storage: 'denied' });
+      w.gtag('consent', 'update', { analytics_storage: 'granted' });
+      w.gtag('js', new Date());
+      w.gtag('config', idGa);
+      const s = document.createElement('script');
+      s.async = true;
+      s.src = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(idGa)}`;
+      document.head.append(s);
+    };
+    const cargarClarity = () => {
+      if (!idClarity || w.__clarityCargado) return;
+      w.__clarityCargado = true;
+      w.clarity = w.clarity || function () { (w.clarity.q = w.clarity.q || []).push(arguments); };
+      const s = document.createElement('script');
+      s.async = true;
+      s.src = `https://www.clarity.ms/tag/${encodeURIComponent(idClarity)}`;
+      document.head.append(s);
+      // Solo analítica: Clarity no se usa para publicidad
+      w.clarity('consentv2', { ad_Storage: 'denied', analytics_Storage: 'granted' });
+    };
+    // Al retirar el consentimiento: se avisa a cada herramienta, se borran sus cookies y se recarga para descargarlas
+    const borrarCookies = (empiezan: string[]) => {
+      const host = location.hostname;
+      const dominios = ['', host, `.${host}`, `.${host.split('.').slice(-2).join('.')}`];
+      document.cookie.split(';').map((c) => c.split('=')[0].trim()).filter((n) => empiezan.some((p) => n.startsWith(p))).forEach((n) => {
+        dominios.forEach((d) => { document.cookie = `${n}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/${d ? `; domain=${d}` : ''}`; });
+      });
+    };
+    const aplicar = (e: Eleccion, antes: Eleccion | null) => {
+      let recargar = false;
+      if (antes?.ga && !e.ga) {
+        w.gtag?.('consent', 'update', { analytics_storage: 'denied' });
+        borrarCookies(['_ga']);
+        recargar = true;
+      }
+      if (antes?.clarity && !e.clarity) {
+        w.clarity?.('consentv2', { ad_Storage: 'denied', analytics_Storage: 'denied' });
+        borrarCookies(['_clck', '_clsk']);
+        recargar = true;
+      }
+      if (recargar) { location.reload(); return; }
+      if (e.ga) cargarGa();
+      if (e.clarity) cargarClarity();
+    };
+
+    const mostrar = (conOpciones: boolean) => {
+      const e = leer();
+      ['ga', 'clarity'].forEach((n) => { const c = casilla(n); if (c) c.checked = Boolean(e?.[n as 'ga' | 'clarity']); });
+      opciones.hidden = !conOpciones;
+      boton('guardar').hidden = !conOpciones;
+      boton('configurar').setAttribute('aria-expanded', String(conOpciones));
+      aviso.hidden = false;
+    };
+    const decidir = (ga: boolean, clarity: boolean) => {
+      const antes = leer();
+      const e = { ga: ga && Boolean(idGa), clarity: clarity && Boolean(idClarity), fecha: Date.now() };
+      guardar(e);
+      aviso.hidden = true;
+      aplicar(e, antes);
+    };
+
+    boton('aceptar').addEventListener('click', () => decidir(true, true));
+    boton('rechazar').addEventListener('click', () => decidir(false, false));
+    boton('guardar').addEventListener('click', () => decidir(Boolean(casilla('ga')?.checked), Boolean(casilla('clarity')?.checked)));
+    boton('configurar').addEventListener('click', () => mostrar(opciones.hidden));
+    // "Configurar cookies" del pie: vuelve a abrir el aviso con las opciones
+    document.querySelectorAll('[data-cookies-abrir]').forEach((b) => b.addEventListener('click', () => { mostrar(true); boton('guardar').focus(); }));
+
+    const e = leer();
+    if (e) aplicar(e, null);
+    else mostrar(false);
+  }
+</script>

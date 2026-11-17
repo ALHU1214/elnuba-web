@@ -1,9 +1,17 @@
 ---
+import Icono from './Icono.astro';
 // Bloque del final de cada página: pedir presupuesto.
-// Acción principal igual en toda la web: pedir presupuesto por correo (ya escrito según la página); llamar va al lado;
-// debajo, la dirección con botón de copiar. Estilo "Escaparate" (9-nov-2026): bloque marino con el lápiz del logo dibujado.
+// Acción principal igual en toda la web: pedir presupuesto por correo (ya escrito según la página); debajo, la dirección
+// con botón de copiar. Llamar va al lado.
+// 17-nov-2026 (aspecto visual; antes: texto a la izquierda, la mitad derecha vacía y una barra de colores cortada en la
+// esquina). "Apunta nuestro número": a la derecha, el teléfono en grande (es el enlace para llamar, sustituye al botón
+// "Llamar al…") y el lápiz del logo escribe la raya de debajo, como en el logo de ELNUBA, donde el lápiz traza la raya
+// de debajo del nombre. El lápiz se dibuja en Lapiz.astro.
+// Al verse (data-al-ver, Efectos.astro), el lápiz se posa al principio del número y lo subraya de izquierda a derecha.
+// Sin JavaScript o con "reducir movimiento", la raya ya está escrita y el lápiz, al final. CSS: .final… en global.css.
 import { negocio, telHref, correos, type TipoCorreo } from '../data/negocio';
 import CopiarCorreo from './CopiarCorreo.astro';
+import Lapiz from './Lapiz.astro';
 
 interface Props { titulo?: string; texto?: string; correo?: TipoCorreo; }
 const {
@@ -11,23 +19,37 @@ const {
   texto = 'Mándanos tu lista de material y te preparamos el presupuesto.',
   correo = 'general',
 } = Astro.props;
+const flecha = 'M7 17 17 7 M9 7h8v8';
 ---
-<section class="mx-auto max-w-7xl px-3 pb-10 sm:px-4 md:px-6 md:pb-20">
-  <div data-revelar-bloque class="zona-oscura relative isolate overflow-hidden rounded-[2rem] p-8 sm:p-10 md:p-14">
-    {/* El lápiz del logo como dibujo: tres franjas en diagonal */}
-    <div aria-hidden="true" class="franjas pointer-events-none absolute -right-28 -bottom-8 -z-10 hidden h-20 w-[30rem] -rotate-[20deg] rounded-full opacity-90 md:block"></div>
-    <div class="max-w-2xl">
-      <p class="antetitulo text-xs font-bold tracking-[.2em] uppercase">Contacto</p>
-      <h2 class="mt-4 text-4xl md:text-5xl">{titulo}</h2>
-      <p class="mt-4 text-lg text-tinta/75">{texto}</p>
-      <div class="mt-8 flex flex-col gap-3 sm:flex-row">
-        <a href={correos[correo]} class="btn-primario">
-          <svg aria-hidden="true" viewBox="0 0 24 24" class="size-5 fill-none stroke-2"><rect x="3" y="5" width="18" height="14" rx="2" /><path d="m3 7 9 6 9-6" /></svg>
+<section class="mx-auto max-w-7xl px-4 pb-10 md:px-6 md:pb-20">
+  {/* Sin la clase "grid": Efectos.astro haría aparecer las dos columnas con el fundido genérico, y aquí la entrada es el lápiz */}
+  <div class="zona-oscura final relative isolate overflow-hidden rounded-[2rem] p-6 min-[360px]:p-8 sm:p-10 md:p-14">
+    <div class="final-reparto">
+      <div class="max-w-2xl">
+        <p class="antetitulo text-xs font-bold tracking-[.2em] uppercase">Contacto</p>
+        <h2 class="final-titulo mt-5">{titulo}</h2>
+        <p class="mt-5 text-lg leading-relaxed text-tinta/75">{texto}</p>
+        <a href={correos[correo]} class="btn-primario mt-8">
+          <Icono nombre="correo" />
           Pedir presupuesto por correo
         </a>
-        <a href={telHref} class="btn-secundario">Llamar al {negocio.telefono}</a>
+        <CopiarCorreo class="mt-4" />
       </div>
-      <CopiarCorreo class="mt-4" />
+
+      <a href={telHref} class="final-llamar group" data-al-ver="0.6">
+        <span class="final-etiqueta">
+          Llámanos
+          <svg aria-hidden="true" viewBox="0 0 24 24" class="final-flecha size-4 fill-none stroke-current stroke-2"><path d={flecha} /></svg>
+        </span>
+        <span class="final-numero">
+          <span class="final-cifras">{negocio.telefono}</span>
+          {/* La raya y el lápiz que la escribe (decorativos) */}
+          <span class="final-trazo" aria-hidden="true">
+            <span class="final-raya"></span>
+            <span class="final-carro"><span class="final-lapiz"><Lapiz /></span></span>
+          </span>
+        </span>
+      </a>
     </div>
   </div>
 </section>
