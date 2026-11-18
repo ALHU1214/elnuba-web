@@ -31,7 +31,7 @@ const posNombre: Record<string, [number, number, 'start' | 'middle' | 'end']> = 
     {conRuta.map((i) => <path d={i.ruta} class="ruta" />)}
   </g>
   <path d={tenerife} class="isla-origen" />
-  {conRuta.map((i, n) => <circle cx={i.fin[0]} cy={i.fin[1]} r="4.2" class="destino" style={`--r:${n}`} />)}
+  {conRuta.map((i, n) => <circle cx={i.fin[0]} cy={i.fin[1]} r={4.2 * ("punto" in i ? i.punto : 1)} class="destino" style={`--r:${n}`} />)}
   <circle cx={origen[0]} cy={origen[1]} r="11" class="origen-onda" />
   <circle cx={origen[0]} cy={origen[1]} r="5.4" class="origen" />
   {nombres && (

@@ -17,19 +17,17 @@ import { servicios } from '../data/seo';
 //    dibujan al verlo), y dos pequeños: entrega (naranja) y trato directo con el teléfono.
 //    17-nov-2026 (aspecto visual): el bloque blanco tenía un hueco vacío en medio. Ahora lleva "todo en un pedido": una
 //    caja de reparto en la que caen el archivador, los folios, los lápices y el cartucho (CajaPedido.astro).
-//  - Trabajamos con: 17-nov-2026 (aspecto visual; antes, dos fichas blancas iguales con marcas de verificación, con
-//    aspecto de tabla de precios). Ahora son dos carpetas de archivo: la de las empresas, naranja, y la de la
-//    administración, marino, cada una con su pestaña (en lados distintos, como en un archivador) y una hoja que asoma.
-//    Al verse, las hojas se meten en su carpeta; al pasar el ratón, la hoja sale un poco. CSS: .carpeta… en global.css.
+//  - Trabajamos con: 18-nov-2026, filas como el índice de Nosotros (Álvaro eligió esta opción). Antes: carpetas naranja
+//    y marino (17-nov) y un recuadro blanco partido en dos (18-nov, mañana); no gustaron. CSS: .indice… en global.css.
 // Antes (16-nov, mañana): frases grandes con subrayador y un bloque marino con dos columnas de texto (no gustó).
 // Solo datos confirmados (CLAUDE.md del cliente).
 const sectores = [
   {
-    id: 'empresas', sector: 'Sector privado', num: '01', titulo: 'Empresas y despachos', texto: 'Para el día a día de tu oficina.',
+    id: 'empresas', sector: 'Sector privado', num: '01', icono: 'M3 8h18v12H3z M8 8V5h8v3 M3 13h18 M11 13v2h2v-2', titulo: 'Empresas y despachos', texto: 'Para el día a día de tu oficina.',
     lista: ['Papel, archivo y escritura', 'Tóner y cartuchos', 'Libros jurídicos', 'Entrega en tu oficina'],
   },
   {
-    id: 'organismos', sector: 'Sector público', num: '02', titulo: 'Organismos públicos', texto: 'Material de oficina para la administración pública de Canarias.',
+    id: 'organismos', sector: 'Sector público', num: '02', icono: 'M3 21h18 M5 21v-9 M9.5 21v-9 M14.5 21v-9 M19 21v-9 M2.5 10 12 4l9.5 6z', titulo: 'Organismos públicos', texto: 'Material de oficina para la administración pública de Canarias.',
     lista: ['Papel, archivo y escritura', 'Tóner y cartuchos', 'Entrega en tus oficinas'],
   },
 ];
@@ -54,7 +52,7 @@ const preguntas = [
 
   <Encabezado
     foto="/img/oficina-material.webp"
-    fotoAlt="Bandejas de documentos, papel blanco y una grapadora metálica"
+    fotoAlt="Grapadoras, portarrollos de celo, chinchetas y lapiceros sobre una mesa blanca"
     correo="empresa"
     miga="Empresas y organismos"
     antetitulo="Empresas, despachos y organismos públicos"
@@ -106,33 +104,31 @@ const preguntas = [
     </div>
   </section>
 
-  {/* TRABAJAMOS CON: dos carpetas de archivo (17-nov-2026). Los id se mantienen (el inicio enlaza a #organismos).
-      La pestaña es la etiqueta de la carpeta ("01 · Sector privado"); la hoja que asoma es decorativa */}
+  {/* TRABAJAMOS CON (18-nov-2026). Álvaro eligió "filas como en Nosotros": el mismo índice de revista (.indice), con el
+      número, el nombre grande, su frase y "Pedir presupuesto" (correo de empresa), y debajo lo que se les suministra
+      separado por puntos naranjas, como el directorio de material. Al pasar el ratón la fila se aclara, igual que en
+      Nosotros. Antes: dos carpetas naranja y marino (17-nov) y un recuadro blanco partido en dos (18-nov, mañana); no
+      gustaron. Los id se mantienen (el inicio enlaza a #organismos). CSS: .indice… y .indice-lista en global.css */}
   <section class="mx-auto max-w-7xl px-4 pb-10 md:px-6 md:pb-20">
     <p class="antetitulo text-xs font-bold tracking-[.2em] text-naranja-oscuro uppercase">Trabajamos con</p>
     <h2 class="mt-3 max-w-3xl text-4xl md:text-5xl">Empresas, despachos y administración pública</h2>
-    <div class="carpetas mt-10 md:mt-14" data-al-ver="0.3">
-      {sectores.map((x, i) => (
-        <article id={x.id} class:list={['carpeta scroll-mt-2', i === 0 ? 'carpeta-privada' : 'carpeta-publica']} style={`--n:${i}`}>
-          <div class="carpeta-cabeza">
-            <p class="carpeta-pestana"><span aria-hidden="true" class="tabular-nums">{x.num}</span>{x.sector}</p>
-            <span class="carpeta-hoja" aria-hidden="true"></span>
-          </div>
-          <div class="carpeta-tapa">
-            <h3 class="carpeta-titulo">{x.titulo}</h3>
-            <p class="carpeta-texto">{x.texto}</p>
-            <ul class="carpeta-lista">
-              {x.lista.map((l) => <li>{l}</li>)}
-              {x.id === 'organismos' && <li><Pendiente texto="¿facturación electrónica a la administración? (pregunta 13)" /></li>}
-            </ul>
-            <a href={correos.empresa} class="carpeta-enlace group">
+    <ol class="indice mt-8 md:mt-12">
+      {sectores.map((x) => (
+        <li id={x.id} class="scroll-mt-2">
+          <a href={correos.empresa} class="indice-fila">
+            <span class="indice-num" aria-hidden="true">{x.num}</span>
+            <span class="indice-nombre">{x.titulo}</span>
+            <span class="indice-texto">{x.texto}</span>
+            <span class="indice-enlace">
               Pedir presupuesto
-              <svg aria-hidden="true" viewBox="0 0 24 24" class="size-4 fill-none stroke-current stroke-2 transition-transform group-hover:translate-x-1"><path d={flecha} /></svg>
-            </a>
-          </div>
-        </article>
+              <svg aria-hidden="true" viewBox="0 0 24 24" class="indice-flecha size-5 fill-none stroke-current stroke-2"><path d={flecha} /></svg>
+            </span>
+            <span class="indice-lista">{x.lista.map((l) => <span>{l}</span>)}</span>
+          </a>
+          {x.id === 'organismos' && <p class="indice-pendiente"><Pendiente texto="¿facturación electrónica a la administración? (pregunta 13)" /></p>}
+        </li>
       ))}
-    </div>
+    </ol>
   </section>
 
   {/* QUÉ SUMINISTRAMOS */}

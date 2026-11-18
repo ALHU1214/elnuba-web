@@ -8,8 +8,8 @@
 //     rellena de naranja (.anios-trazo).
 //  2. "Para quién trabajamos": índice de revista numerado; al pasar el ratón la fila se llena de marino de abajo arriba
 //     (.indice). Cada fila es un enlace a su página (enlazado interno con texto descriptivo).
-//  3. "Papelería, material escolar y de oficina": dos cintas de palabras gigantes que se deslizan en sentidos contrarios
-//     al bajar (.cinta-palabras; decorativas, el texto de verdad va debajo).
+//  3. "Papelería, material escolar y de oficina": título y texto. (Las cintas de palabras gigantes que se movían al
+//     bajar se quitaron el 18-nov-2026: a Álvaro no le gustaron.)
 //  4. "Reparto a todas las islas Canarias": bloque marino con el mapa grande; las rutas salen de Tenerife y cada isla
 //     enseña su nombre al llegarle (MapaCanarias con nombres).
 //  5. "Nuestra tienda en Los Majuelos" (con el horario resaltado).
@@ -53,11 +53,6 @@ const clientes = [
   { nombre: 'Organismos públicos', texto: 'Material de oficina para la administración pública de Canarias.', href: '/empresas-y-organismos/#organismos', enlace: 'Material para organismos públicos' },
   { nombre: 'Particulares', texto: 'Papelería y material escolar en nuestra tienda de Los Majuelos, abierta al público.', href: '#los-majuelos', enlace: 'Nuestra tienda' },
 ];
-// Cintas de palabras: solo productos que están en "Qué distribuimos" (catalogo.ts)
-const cintas = [
-  { dir: -1, hueca: false, palabras: ['Folios', 'Cuadernos', 'Bolígrafos', 'Tóner', 'Cartuchos', 'Carpetas', 'Agendas', 'Rotuladores'] },
-  { dir: 1, hueca: true, palabras: ['Mochilas', 'Estuches', 'Archivadores', 'Fundas', 'Dossiers', 'Libros de texto', 'Grapadoras', 'Etiquetas'] },
-];
 const flecha = 'M5 12h14 M13 6l6 6-6 6';
 ---
 <Base
@@ -67,7 +62,7 @@ const flecha = 'M5 12h14 M13 6l6 6-6 6';
 
   <Encabezado
     foto="/img/libros.webp"
-    fotoAlt="Detalle de los lomos y las hojas de varios cuadernos"
+    fotoAlt="Libros apilados"
     miga="Nosotros"
     antetitulo="Quiénes somos"
     titulo={anios ? `Más de ${anios} años distribuyendo papelería en Canarias` : 'Distribuidores de papelería en Canarias'}
@@ -117,16 +112,10 @@ const flecha = 'M5 12h14 M13 6l6 6-6 6';
     </ol>
   </section>
 
-  {/* 3. QUÉ VENDEMOS: cintas de palabras gigantes (decorativas) y, debajo, el texto */}
-  <section class="overflow-hidden pb-16 md:pb-28">
-    <div class="cinta-palabras" aria-hidden="true" data-cinta>
-      {cintas.map((c) => (
-        <div class:list={['cinta-fila', c.hueca && 'cinta-hueca']} data-dir={c.dir}>
-          {[...c.palabras, ...c.palabras, ...c.palabras].map((p) => <span>{p}</span>)}
-        </div>
-      ))}
-    </div>
-    <div class="mx-auto mt-12 grid max-w-7xl gap-6 px-4 md:mt-16 md:px-6 lg:grid-cols-12 lg:gap-16">
+  {/* 3. QUÉ VENDEMOS. 18-nov-2026 (Álvaro: "no me gusta"): fuera las cintas de palabras gigantes que se movían al
+      bajar ("Bolígrafos · Tóner · Cartuchos…"); queda el título y el texto */}
+  <section class="pb-16 md:pb-28">
+    <div class="mx-auto grid max-w-7xl gap-6 px-4 md:px-6 lg:grid-cols-12 lg:gap-16">
       <h2 class="text-3xl md:text-4xl lg:col-span-5">Papelería, material escolar y de oficina</h2>
       <div class="lg:col-span-7">
         <p class="text-lg leading-relaxed text-gris">Todo el material de papelería, escolar y de oficina: folios y papel, cuadernos y agendas, escritura, archivo, tóner y cartuchos, mochilas y estuches, y libros de texto. Trabajamos con marcas como {listaMarcas}.</p>
@@ -165,29 +154,3 @@ const flecha = 'M5 12h14 M13 6l6 6-6 6';
   <LlamadaFinal />
 </Base>
 
-<script>
-  const reducir = matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  // El +35 y el mapa se animan cuando se ve más de la mitad: data-al-ver="0.55" (Efectos.astro)
-
-  // Cintas de palabras: se deslizan al bajar, cada fila en un sentido. Solo se calculan mientras se ven.
-  if (!reducir) document.querySelectorAll<HTMLElement>('[data-cinta]').forEach((cinta) => {
-    const filas = [...cinta.querySelectorAll<HTMLElement>('.cinta-fila')];
-    let visible = false, pedido = false;
-    const mover = () => {
-      pedido = false;
-      const r = cinta.getBoundingClientRect();
-      const p = (innerHeight - r.top) / (innerHeight + r.height); // 0 al entrar por abajo, 1 al salir por arriba
-      filas.forEach((f) => {
-        const centro = -(f.scrollWidth - innerWidth) / 2;
-        const x = centro + Number(f.dataset.dir) * (p - 0.5) * Math.min(innerWidth * 0.5, 520);
-        f.style.transform = `translate3d(${x.toFixed(1)}px, 0, 0)`;
-      });
-    };
-    const pedir = () => { if (visible && !pedido) { pedido = true; requestAnimationFrame(mover); } };
-    new IntersectionObserver(([e]) => { visible = e.isIntersecting; pedir(); }).observe(cinta);
-    addEventListener('scroll', pedir, { passive: true });
-    addEventListener('resize', pedir);
-    mover();
-  });
-</script>

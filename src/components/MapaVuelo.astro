@@ -21,7 +21,7 @@ import { vistaIslas, tenerife, origen, islas, conRuta } from '../data/mapa-islas
   <path d={tenerife} class="vuelo-tf-silueta" />
   <path d={tenerife} fill="url(#vuelo-puntos-tf)" />
   <g mask="url(#vuelo-rutas)">{conRuta.map((i) => <path d={i.ruta} class="vuelo-ruta" />)}</g>
-  {conRuta.map((i, n) => <circle cx={i.fin[0]} cy={i.fin[1]} r="3.2" class="vuelo-destino" style={`--r:${n}`} />)}
+  {conRuta.map((i, n) => <circle cx={i.fin[0]} cy={i.fin[1]} r={3.2 * ("punto" in i ? i.punto : 1)} class="vuelo-destino" style={`--r:${n}`} />)}
   <circle cx={origen[0]} cy={origen[1]} r="5" class="vuelo-onda" />
   <circle cx={origen[0]} cy={origen[1]} r="4.4" class="vuelo-origen" data-destino />
 </svg>

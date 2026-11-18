@@ -61,7 +61,7 @@ const migaJsonld = {
     {lateral && <div class="entra-tarde lg:col-span-5"><slot name="lateral" /></div>}
     {foto && (
       <figure class="entra-tarde relative aspect-[16/10] overflow-hidden rounded-[2rem] lg:col-span-5 lg:aspect-auto lg:min-h-[22rem]">
-        <img src={ruta(foto)} alt={fotoAlt} width="960" height="960" loading="eager" decoding="async" class="absolute inset-0 size-full object-cover object-[50%_85%]" />
+        <img src={ruta(foto)} alt={fotoAlt} width="960" height="720" loading="eager" decoding="async" class="absolute inset-0 size-full object-cover" />
       </figure>
     )}
   </div>

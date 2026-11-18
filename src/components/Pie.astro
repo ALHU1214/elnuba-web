@@ -20,7 +20,7 @@ const d = negocio.direccion;
         <div>
           <h2 class="pie-rotulo">Contacto</h2>
           {/* 16-nov-2026 (máster): los enlaces del pie llevan algo de alto para acertar con el dedo en el móvil */}
-          <a href={telHref} class="pie-telefono hover:underline">{negocio.telefono}</a>
+          <a href={telHref} class="pie-telefono">{negocio.telefono}</a>
           <a href={mailHref} class="pie-correo hover:underline">{negocio.email}</a>
           <p class="pie-direccion">{d.calle}<br />{d.zona}<br />{d.cp} {d.localidad}</p>
         </div>
