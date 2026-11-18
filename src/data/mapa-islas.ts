@@ -13,5 +13,10 @@ export const islas: { nombre: string; d: string; ruta: string; fin: [number, num
   { nombre: 'El Hierro', d: 'M19.7 137.6L21.2 137.8L22.7 138.7L24 139.9L24.3 141.2L20.3 148.1L20.3 149.9L17 153.5L16.7 156.5L15.8 157.7L14.6 157.7L12.7 156.7L9.7 153L3.3 152.2L0.6 150.1L0 146.7L2.4 145.5L9.4 146.8L13.9 142.6L14.9 140.4Z', ruta: 'M158.2 79.7Q72.2 84.7 13.5 147.6', fin: [13.5, 147.6] },
   { nombre: 'Fuerteventura', d: 'M353.3 53L356.6 51.6L359.7 51.3L362.4 52.2L364.8 55L365.7 58.2L366 62.4L365.4 70.7L363 77.6L363 81.8L364.2 84.4L362.1 87.3L361.5 90.1L359.4 93.6L358.5 96.9L356.6 100.1L353.9 101.5L344.8 103L341.2 104.3L338.1 106.2L334.8 107L333.3 108L325.7 116.9L322.1 118.5L319.9 118.5L315.1 116.6L308.4 116.6L309.3 113.7L314.5 113.8L322.4 110.6L328.4 106.6L332.1 102.5L333.6 99.1L334.2 94.3L336.6 89.7L338.7 83L348.1 67.1L349.1 62.4L350.3 59.5L350.6 56.1L351.2 54.8Z', ruta: 'M158.2 79.7Q254.1 44 348.1 84.3', fin: [348.1, 84.3] },
   { nombre: 'Lanzarote', d: 'M394.5 4.7L396.1 4.4L400 7.6L398.5 12.5L396.7 13.6L396.4 15L397.3 19.4L396.1 22.2L396.1 25.4L394.8 27.7L389.7 31.4L385.7 32.3L384.2 34.1L375.4 35.9L373.3 37.5L370 43L368.8 41.7L363 41.1L362.4 40.6L361.5 38.3L362.7 37.5L364.2 35.3L365.1 27.7L368.2 23.1L370.6 20.5L377.3 18.9L381.8 15.5L390 14.4L392.1 11Z', ruta: 'M158.2 79.7Q258.8 7.8 381.2 25.2', fin: [381.2, 25.2] },
-  { nombre: 'La Graciosa', d: 'M394.2 0.5L395.1 2.1L393.9 4.4L391.8 6L389.7 5.7L392.4 0Z', ruta: 'M158.2 79.7Q255 -22 393.2 2.4', fin: [393.2, 2.4] },
+  { nombre: 'La Graciosa', d: 'M394.2 0.5L395.1 2.1L393.9 4.4L391.8 6L389.7 5.7L392.4 0Z', ruta: 'M381.2 25.2Q392.5 17 393.2 2.4', fin: [393.2, 2.4], sinRuta: true },
 ];
+
+// 18-nov-2026 (Álvaro): a la derecha solo un punto, el del centro de Lanzarote. Se probó un salto corto con su punto
+// hasta La Graciosa y no lo quiere ("solo deja el más central"). La Graciosa sigue dibujada (y con su nombre en
+// Nosotros), sin línea ni punto: `conRuta` son las islas que llevan línea y punto; `islas`, todas.
+export const conRuta = islas.filter((i) => !('sinRuta' in i && i.sinRuta));

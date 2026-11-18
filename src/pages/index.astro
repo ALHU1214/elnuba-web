@@ -19,9 +19,9 @@ import { preguntasInicio as preguntas } from '../data/preguntas';
 const garantias = [condiciones.sinCompromiso && 'Presupuesto sin compromiso', condiciones.plazoPresupuesto && `Te lo enviamos ${condiciones.plazoPresupuesto}`].filter(Boolean);
 
 const clientes = [
-  { img: '/img/ceras.webp', alt: 'Ceras de colores vistas de cerca', titulo: 'Colegios y centros educativos', texto: 'Material escolar, libros de texto, dibujo y pintura.', href: '/colegios/', enlace: 'Material para colegios' },
-  { img: '/img/rotuladores.webp', alt: 'Rotuladores azules, naranjas y negros', titulo: 'Empresas y despachos', texto: 'Papel, archivo, tóner y cartuchos.', href: '/empresas-y-organismos/', enlace: 'Material para empresas' },
-  { img: '/img/archivadores.webp', alt: 'Dos archivadores rojos', titulo: 'Organismos públicos', texto: 'Material de oficina para la administración.', href: '/empresas-y-organismos/#organismos', enlace: 'Material para organismos' },
+  { img: '/img/ceras.webp', alto: 1050, alt: 'Pasteles de colores y un trazo azul sobre papel blanco', titulo: 'Colegios y centros educativos', texto: 'Material escolar, libros de texto, dibujo y pintura.', href: '/colegios/', enlace: 'Material para colegios' },
+  { img: '/img/rotuladores.webp', alto: 640, alt: 'Rotuladores de punta fina sobre un cuaderno punteado', titulo: 'Empresas y despachos', texto: 'Papel, archivo, tóner y cartuchos.', href: '/empresas-y-organismos/', enlace: 'Material para empresas' },
+  { img: '/img/archivadores.webp', alto: 1200, alt: 'Fila de archivadores azul marino y naranja', titulo: 'Organismos públicos', texto: 'Material de oficina para la administración.', href: '/empresas-y-organismos/#organismos', enlace: 'Material para organismos' },
 ];
 
 const pasos = [
@@ -71,7 +71,12 @@ const pasos = [
       </div>
 
       <figure class="entra-tarde relative col-span-2 aspect-[16/10] overflow-hidden rounded-[2rem] lg:col-span-5 lg:aspect-auto lg:min-h-[16rem]">
-        <img src={ruta('/img/lapices-abanico.webp')} alt="Lápices de colores colocados en círculo sobre fondo blanco" width="960" height="720" loading="eager" fetchpriority="high" decoding="async" class="absolute inset-0 size-full object-cover" />
+        {/* El recuadro del mosaico cambia de proporción con el alto de la ventana. */}
+        <picture>
+          <source media="(min-width: 1024px) and (max-height: 760px), (min-width: 1280px) and (max-height: 820px)" srcset={ruta('/img/lapices-portada-panoramica.webp')} width="1200" height="404" />
+          <source media="(min-width: 1024px) and (max-width: 1279px) and (min-height: 961px), (min-width: 1024px) and (min-height: 1080px)" srcset={ruta('/img/lapices-portada-vertical.webp')} width="960" height="1280" />
+          <img src={ruta('/img/lapices-abanico.webp')} alt="Cuadernos azul marino y naranja con un lápiz a juego" width="1120" height="700" loading="eager" fetchpriority="high" decoding="async" class="foto-portada absolute inset-0 size-full object-cover" />
+        </picture>
       </figure>
 
       {/* Los años: lo que más quiere destacar Gonzalo. "+35" (Álvaro, 11-nov-2026); el + no cuenta, solo el número.
@@ -114,7 +119,7 @@ const pasos = [
     <div class="mt-8 grid gap-3 md:mt-10 md:grid-cols-3 md:gap-4">
       {clientes.map((c) => (
         <a href={ruta(c.href)} class="caso group foto-velo relative isolate block aspect-[4/3] overflow-hidden rounded-[2rem] sm:aspect-[16/10] md:aspect-[4/5]">
-          <img src={ruta(c.img)} alt={c.alt} width="960" height="640" loading="lazy" decoding="async" class="caso-foto absolute inset-0 -z-10 size-full object-cover" />
+          <img src={ruta(c.img)} alt={c.alt} width="960" height={c.alto} loading="lazy" decoding="async" class="caso-foto absolute inset-0 -z-10 size-full object-cover" />
           <div class="absolute inset-x-0 bottom-0 z-10 p-6 text-white md:p-8">
             <h3 class="text-2xl text-white md:text-[1.65rem]"><span class="caso-marca">{c.titulo}</span></h3>
             <p class="mt-2 text-white/80">{c.texto}</p>
@@ -347,3 +352,9 @@ const pasos = [
     }, { rootMargin: '100% 0px' }).observe(ruta);
   }
 </script>
+
+<style>
+  @media (min-width: 1024px) and (max-height: 760px), (min-width: 1280px) and (max-height: 820px) {
+    .foto-portada { object-position: left center; }
+  }
+</style>

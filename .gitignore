@@ -14,3 +14,6 @@ DESIGN.md
 
 # Páginas de prueba (solo para verlas en local): no se suben ni se publican
 src/pages/prueba-*.astro
+
+# Caché que deja PowerShell al ejecutarse desde esta carpeta (no es de la web)
+Microsoft/

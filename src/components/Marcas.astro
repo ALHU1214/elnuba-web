@@ -4,6 +4,11 @@ import { ruta } from '../lib/ruta';
 // del inicio y de la cabecera de Colegios y Empresas (16-nov-2026: en Nosotros y en Contacto ya no va). Franja blanca de lado a lado (Álvaro: "falta
 // el banner con las marcas" cuando quedó como un bloque redondeado más). Logos a color que pasan solos; se paran al
 // pasar el ratón y con "reducir movimiento".
+// 18-nov-2026 (Álvaro: "si paso el ratón por la derecha del banner, que se acelere, y que el ratón indique que acelera").
+// Con ratón: en el último 30 % de la franja (a la derecha) los logos van más deprisa cuanto más a la derecha está el
+// ratón (hasta 6 veces) y el cursor es una flecha doble naranja (»); en el resto de la franja se paran poco a poco, como
+// antes, para poder mirar un logo; al salir, vuelven a su ritmo. El cambio de velocidad es suave (no a saltos).
+// Sin ratón (móvil), con "reducir movimiento" o sin JavaScript, todo como antes. Estilos: .marcas-pista.acelerando.
 import { marcas } from '../data/catalogo';
 ---
 {marcas.length > 0 && (
@@ -20,3 +25,31 @@ import { marcas } from '../data/catalogo';
   </div>
 </section>
 )}
+
+<script>
+  // Acelerar la cinta de marcas con el ratón a la derecha (ver el comentario de arriba)
+  const pista = document.querySelector<HTMLElement>('.marcas-pista');
+  const cinta = pista?.querySelector<HTMLElement>('.marcas-cinta');
+  const animacion = cinta?.getAnimations()[0];
+  if (pista && animacion && matchMedia('(hover: hover) and (pointer: fine)').matches && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    pista.classList.add('cinta-controlada'); // ya no se para con el CSS: lo hace este script
+    const ZONA = 0.7; // desde el 70 % del ancho, acelera
+    let objetivo = 1, actual = 1, cuadro = 0;
+    const paso = () => {
+      actual += (objetivo - actual) * 0.12;
+      if (Math.abs(objetivo - actual) < 0.01) actual = objetivo;
+      animacion.playbackRate = actual; // conserva la posición: solo cambia la velocidad
+      cuadro = actual === objetivo ? 0 : requestAnimationFrame(paso);
+    };
+    const ir = (v: number) => { objetivo = v; if (!cuadro) cuadro = requestAnimationFrame(paso); };
+    pista.addEventListener('pointermove', (e) => {
+      if (e.pointerType !== 'mouse') return;
+      const r = pista.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width;
+      const acelera = x > ZONA;
+      pista.classList.toggle('acelerando', acelera);
+      ir(acelera ? 1 + ((x - ZONA) / (1 - ZONA)) * 5 : 0);
+    });
+    pista.addEventListener('pointerleave', () => { pista.classList.remove('acelerando'); ir(1); });
+  }
+</script>

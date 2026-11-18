@@ -246,12 +246,16 @@ li:nth-child(3n) .icono-tile { background: #ffdcdc; color: #b42323; }
 /* ===== Nosotros (16-nov-2026, tarde; Álvaro: "secciónalo con cosas súper impresionantes") ===== */
 /* 1. El +35 que se escribe solo: primero el contorno, trazo a trazo como a boli, y luego se rellena de naranja */
 .anios-trazo { display: block; overflow: visible; }
-.anios-trazo text { font-size: 300px; font-weight: 800; letter-spacing: -.05em; fill: var(--color-naranja-vivo); stroke: var(--color-naranja-vivo); stroke-width: 3; stroke-linejoin: round; }
-.anios-trazo .anios-mas { font-size: 150px; }
+.anios-trazo path { fill: var(--color-naranja-vivo); stroke: var(--color-naranja-vivo); stroke-linejoin: round; stroke-linecap: round; }
 .anios-pie { margin-top: .25rem; font-size: clamp(1.4rem, 2.2vw, 1.9rem); font-weight: 800; letter-spacing: -.03em; line-height: 1.1; color: var(--color-tinta); }
 @media (prefers-reduced-motion: no-preference) {
-  .js .anios-trazo text { fill-opacity: 0; stroke-dasharray: 1700; stroke-dashoffset: 1700; /* más largo que el contorno más largo (el 5): si no, le faltaba un trozo */ transition: stroke-dashoffset 2.4s cubic-bezier(.65, 0, .35, 1), fill-opacity .9s ease 1.9s; }
-  .js .anios-trazo.visto text { stroke-dashoffset: 0; fill-opacity: 1; }
+  /* 17-nov-2026: cada signo con su silueta limpia (pathLength 1, así todos tardan lo mismo) y en orden: el +, el 3 y
+     el 5, uno detrás de otro; cada uno se rellena en cuanto acaba su trazo */
+  .js .anios-trazo path {
+    fill-opacity: 0; stroke-dasharray: 1; stroke-dashoffset: 1;
+    transition: stroke-dashoffset 1.05s cubic-bezier(.55, 0, .35, 1) calc(var(--n) * .6s), fill-opacity .6s ease calc(var(--n) * .6s + .95s);
+  }
+  .js .anios-trazo.visto path { stroke-dashoffset: 0; fill-opacity: 1; }
 }
 
 /* 2. Índice de revista: filas grandes numeradas; al pasar el ratón la fila se llena de marino de abajo arriba */
@@ -671,9 +675,13 @@ li:nth-child(3n) .icono-tile { background: #ffdcdc; color: #b42323; }
 
 /* Cinta de logos de marcas, a color: se desplaza sola (la lista va duplicada para que no se corte) */
 @keyframes cinta { to { transform: translateX(-50%); } }
-.marcas-cinta { animation: cinta 40s linear infinite; }
+.marcas-cinta { animation: cinta 60s linear infinite; } /* 17-nov-2026: de 14 a 21 logos; 40 s → 60 s para que pasen a la misma velocidad */
 .marca-logo { height: calc(var(--alto) * .8); }
 @media (min-width: 768px) { .marca-logo { height: var(--alto); } }
+/* 18-nov-2026: con ratón la velocidad la lleva el script de Marcas.astro (a la derecha acelera; en el resto se para), así
+   que se anula la pausa del CSS. En la zona que acelera, el cursor es un círculo naranja con una flecha doble (») */
+.cinta-controlada .marcas-cinta { animation-play-state: running !important; }
+.marcas-pista.acelerando { cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14' fill='%23f78a37' stroke='%23fff' stroke-width='2'/%3E%3Cpath d='M10 10l6 6-6 6M16 10l6 6-6 6' fill='none' stroke='%2313203a' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") 16 16, e-resize; }
 @media (prefers-reduced-motion: reduce) { .marcas-cinta { flex-wrap: wrap; justify-content: center; width: auto; } .marcas-cinta > [aria-hidden] { display: none; } }
 
 /* ===== Efectos ===== */
@@ -906,7 +914,8 @@ header[data-con-sombra] .barra { box-shadow: 0 2px 6px rgb(19 32 58 / .07), 0 18
   transition: background-color .3s, color .3s, box-shadow .3s;
 }
 .caso-flecha { transition: transform .35s cubic-bezier(.22, 1, .36, 1); }
-.caso:is(:hover, :focus-visible, .marcado) .caso-marca { background-size: 100% .22em; }
+/* 17-nov-2026 (Álvaro): fuera el subrayado amarillo del título al elegir el caso; el resto (enlace naranja y foto que se
+   acerca) se queda. La clase .caso-marca se deja sin efecto, por si se quiere recuperar */
 .caso:is(:hover, :focus-visible, .marcado) .caso-enlace { background: var(--color-naranja); color: #13203a; box-shadow: none; }
 .caso:is(:hover, :focus-visible, .marcado) .caso-flecha { transform: translateX(3px); }
 .caso:is(:hover, :focus-visible, .marcado) .caso-foto { transform: scale(1.05); }

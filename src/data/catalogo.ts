@@ -64,6 +64,11 @@ export const familiasPara = (para?: Para) =>
 
 // Marcas con las que trabaja ELNUBA, para la franja de logos del inicio.
 // 9-nov-2026: lista que pasó Álvaro (14 marcas). Cada logo va en public/marcas/<archivo>.
+// 17-nov-2026: +7 marcas del cartel de su fachada (foto que pasó Álvaro: proyecto/material-cliente/cartel-marcas-fachada.png).
+// Logos oficiales: Stabilo (su web), Staedtler (su web; el azul #00448c es el de su cabecera), DAS, Lyra y FILA (web del
+// grupo F.I.L.A. y fila.it; a FILA se le quitó el lema pequeño), Finocam (web de Cabero Group: el logo lleva "CABERO GROUP",
+// así cubre Finocam y Cabero) e Iberpapel (su web; el logo actual del grupo, el del cartel es uno antiguo de su papel).
+// En el cartel salen también Bunker y Multifin y 5 logos que no se leen bien en la foto: pendientes de que Álvaro diga cuáles son.
 // Origen: web oficial (Apli, Giotto, Totto, Milan, Maped: recortado sin el eslogan), Wikimedia Commons (Bic, Pilot, Pritt, Post-it)
 // y seeklogo (Carioca, Oxford, Tipp-Ex; fondo blanco quitado).
 // Alpino: web oficial alpino.eu (logo 2025). Plastidecor: imagen de la marca en su ficha de Amazon.es, fondo blanco quitado.
@@ -77,15 +82,22 @@ export const marcas: Marca[] = [
   { archivo: 'apli.svg', nombre: 'Apli', alto: 30, ancho: 105 },
   { archivo: 'giotto.svg', nombre: 'Giotto', alto: 32, ancho: 146 },
   { archivo: 'bic.svg', nombre: 'BIC', alto: 38, ancho: 100 },
+  { archivo: 'staedtler.svg', nombre: 'Staedtler', alto: 46, ancho: 46 },
   { archivo: 'pilot.svg', nombre: 'Pilot', alto: 34, ancho: 126 },
   { archivo: 'pritt.svg', nombre: 'Pritt', alto: 50, ancho: 54 },
   { archivo: 'carioca.webp', nombre: 'Carioca', alto: 34, ancho: 123 },
+  { archivo: 'stabilo.svg', nombre: 'Stabilo', alto: 30, ancho: 120 },
   { archivo: 'maped.webp', nombre: 'Maped', alto: 48, ancho: 71 },
   { archivo: 'alpino.svg', nombre: 'Alpino', alto: 28, ancho: 156 },
   { archivo: 'plastidecor.webp', nombre: 'Plastidecor', alto: 26, ancho: 212 },
+  { archivo: 'lyra.webp', nombre: 'Lyra', alto: 32, ancho: 121 },
   { archivo: 'totto.svg', nombre: 'Totto', alto: 38, ancho: 112 },
   { archivo: 'tipp-ex.webp', nombre: 'Tipp-Ex', alto: 32, ancho: 112 },
+  { archivo: 'fila.webp', nombre: 'FILA', alto: 30, ancho: 111 },
   { archivo: 'oxford.webp', nombre: 'Oxford', alto: 32, ancho: 137 },
   { archivo: 'post-it.svg', nombre: 'Post-it', alto: 48, ancho: 76 },
+  { archivo: 'das.webp', nombre: 'DAS', alto: 36, ancho: 90 },
   { archivo: 'milan.svg', nombre: 'Milan', alto: 30, ancho: 123 },
+  { archivo: 'finocam.webp', nombre: 'Finocam', alto: 46, ancho: 48 },
+  { archivo: 'iberpapel.webp', nombre: 'Iberpapel', alto: 40, ancho: 78 },
 ];

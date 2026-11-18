@@ -22,8 +22,27 @@ import Tiendas from '../components/Tiendas.astro';
 import MapaCanarias from '../components/MapaCanarias.astro';
 import { negocio, listaIslas } from '../data/negocio';
 import { marcas } from '../data/catalogo';
+import { cifras, unidadesEm } from '../data/cifras-trazo';
 
 const anios = negocio.anios;
+// El +35 que se escribe solo (17-nov-2026, Álvaro: "las líneas, cuando se dibujan antes de que salga el color, tienen que
+// estar bien hechas"). Antes era texto con contorno y, al trazarlo, salían rayas por dentro del 3 y del 5 (la letra
+// guarda cada cifra en trozos que se pisan) y el + acababa mucho antes que las cifras. Ahora cada signo es su silueta
+// limpia (cifras-trazo.ts) y se escriben en orden, como a boli: el +, el 3 y el 5, cada uno relleno al acabar su trazo.
+// Misma medida que antes: el + a 150 y las cifras a 300 (unidades del dibujo), con el mismo apretado entre letras.
+const trazosAnios = (() => {
+  if (!anios) return [];
+  const apretado = -15, grosor = 3;
+  let x = 4;
+  const signos: { c: string; tam: number; base: number }[] = [{ c: '+', tam: 150, base: 140 }, ...String(anios).split('').map((c) => ({ c, tam: 300, base: 258 }))];
+  return signos.map(({ c, tam, base }, n) => {
+    const g = cifras[c];
+    const s = tam / unidadesEm;
+    const trazo = { d: g.d, n, transform: `translate(${x.toFixed(1)} ${base}) scale(${s})`, grosor: (grosor / s).toFixed(2) };
+    x += g.ancho * s + apretado;
+    return trazo;
+  });
+})();
 const enMarcas = ['BIC', 'Pilot', 'Oxford', 'Apli', 'Maped', 'Milan', 'Giotto', 'Carioca'].filter((n) => marcas.some((m) => m.nombre === n));
 const listaMarcas = `${enMarcas.slice(0, -1).join(', ')} o ${enMarcas.at(-1)}`;
 
@@ -48,7 +67,7 @@ const flecha = 'M5 12h14 M13 6l6 6-6 6';
 
   <Encabezado
     foto="/img/libros.webp"
-    fotoAlt="Libros apilados"
+    fotoAlt="Detalle de los lomos y las hojas de varios cuadernos"
     miga="Nosotros"
     antetitulo="Quiénes somos"
     titulo={anios ? `Más de ${anios} años distribuyendo papelería en Canarias` : 'Distribuidores de papelería en Canarias'}
@@ -63,7 +82,7 @@ const flecha = 'M5 12h14 M13 6l6 6-6 6';
       {anios && (
         <div class="lg:col-span-5" aria-hidden="true">
           <svg viewBox="0 0 520 290" class="anios-trazo w-full max-w-md lg:max-w-none" data-al-ver="0.55">
-            <text x="4" y="258"><tspan class="anios-mas" dy="-118">+</tspan><tspan dy="118">{anios}</tspan></text>
+            {trazosAnios.map((t) => <path d={t.d} transform={t.transform} stroke-width={t.grosor} pathLength="1" style={`--n:${t.n}`} />)}
           </svg>
           <p class="anios-pie">años en el sector</p>
         </div>

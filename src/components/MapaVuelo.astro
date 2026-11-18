@@ -6,22 +6,22 @@
 // enciende al llegarle la suya. Es el mismo dibujo que el mapa del reparto de la portada (src/data/mapa-islas.ts).
 // Solo en el ordenador (en el móvil no hay hueco y el avión sale por la izquierda). Decorativo: aria-hidden.
 // Sin JavaScript o con "reducir movimiento", las rutas se ven ya dibujadas. Estilos: .viaje-mapa en global.css.
-import { vistaIslas, tenerife, origen, islas } from '../data/mapa-islas';
+import { vistaIslas, tenerife, origen, islas, conRuta } from '../data/mapa-islas';
 ---
 <svg viewBox={vistaIslas} class="viaje-mapa" aria-hidden="true" focusable="false">
   <defs>
     <pattern id="vuelo-puntos" width="4.6" height="4.6" patternUnits="userSpaceOnUse"><circle cx="2.3" cy="2.3" r="1.2" fill="#fff" /></pattern>
     <pattern id="vuelo-puntos-tf" width="4.6" height="4.6" patternUnits="userSpaceOnUse"><circle cx="2.3" cy="2.3" r="1.35" fill="#f78a37" /></pattern>
     <mask id="vuelo-rutas" maskUnits="userSpaceOnUse" x="-8" y="-30" width="416" height="196">
-      {islas.map((i, n) => <path d={i.ruta} pathLength="1" class="vuelo-trazo" style={`--r:${n}`} />)}
+      {conRuta.map((i, n) => <path d={i.ruta} pathLength="1" class="vuelo-trazo" style={`--r:${n}`} />)}
     </mask>
   </defs>
   <g class="vuelo-siluetas">{islas.map((i) => <path d={i.d} />)}</g>
   <g class="vuelo-puntos">{islas.map((i, n) => <path d={i.d} fill="url(#vuelo-puntos)" style={`--r:${n}`} />)}</g>
   <path d={tenerife} class="vuelo-tf-silueta" />
   <path d={tenerife} fill="url(#vuelo-puntos-tf)" />
-  <g mask="url(#vuelo-rutas)">{islas.map((i) => <path d={i.ruta} class="vuelo-ruta" />)}</g>
-  {islas.map((i, n) => <circle cx={i.fin[0]} cy={i.fin[1]} r="3.2" class="vuelo-destino" style={`--r:${n}`} />)}
+  <g mask="url(#vuelo-rutas)">{conRuta.map((i) => <path d={i.ruta} class="vuelo-ruta" />)}</g>
+  {conRuta.map((i, n) => <circle cx={i.fin[0]} cy={i.fin[1]} r="3.2" class="vuelo-destino" style={`--r:${n}`} />)}
   <circle cx={origen[0]} cy={origen[1]} r="5" class="vuelo-onda" />
   <circle cx={origen[0]} cy={origen[1]} r="4.4" class="vuelo-origen" data-destino />
 </svg>
