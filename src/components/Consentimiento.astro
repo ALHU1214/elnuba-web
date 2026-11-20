@@ -127,7 +127,7 @@ const herramientas = [ga && 'Google Analytics', cl && 'Microsoft Clarity'].filte
     boton('aceptar').addEventListener('click', () => decidir(true, true));
     boton('rechazar').addEventListener('click', () => decidir(false, false));
     boton('guardar').addEventListener('click', () => decidir(Boolean(casilla('ga')?.checked), Boolean(casilla('clarity')?.checked)));
-    boton('configurar').addEventListener('click', () => mostrar(opciones.hidden));
+    boton('configurar').addEventListener('click', () => mostrar(opciones.hidden !== false));
     // "Configurar cookies" del pie: vuelve a abrir el aviso con las opciones
     document.querySelectorAll('[data-cookies-abrir]').forEach((b) => b.addEventListener('click', () => { mostrar(true); boton('guardar').focus(); }));
 

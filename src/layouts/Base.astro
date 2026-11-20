@@ -26,7 +26,7 @@ const absoluta = (r: string) => new URL(ruta(r), Astro.site).href;
 const imagen = absoluta('/og-elnuba.jpg');
 
 // Datos estructurados (13-nov-2026): grafo empresa + web + página, en src/data/seo.ts
-const jsonld = grafo({ inicio: absoluta('/'), canonica: canonica.href, titulo, descripcion, logo: absoluta('/logo-elnuba.png'), imagen, url: absoluta, modificado, servicio, tipo });
+const jsonld = grafo({ inicio: absoluta('/'), canonica: sinCanonica ? undefined : canonica.href, titulo, descripcion, logo: absoluta('/logo-elnuba.png'), imagen, url: absoluta, modificado, servicio, tipo });
 const robots = !PUBLICADA ? 'noindex, nofollow' : indexar ? null : 'noindex, follow';
 ---
 <!doctype html>

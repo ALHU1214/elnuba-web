@@ -26,7 +26,8 @@ export const servicios = {
 };
 export type Servicio = (typeof servicios)[keyof typeof servicios];
 
-export function grafo(o: { inicio: string; canonica: string; titulo: string; descripcion: string; logo: string; imagen: string; url: (r: string) => string; modificado?: string; servicio?: Servicio; tipo?: string }) {
+// canonica vacía (la 404, 20-nov-2026): sin nodo de página, que apuntaba a /404/, una dirección que no existe
+export function grafo(o: { inicio: string; canonica?: string; titulo: string; descripcion: string; logo: string; imagen: string; url: (r: string) => string; modificado?: string; servicio?: Servicio; tipo?: string }) {
   const d = negocio.direccion;
   const idNegocio = `${o.inicio}#negocio`;
   const idWeb = `${o.inicio}#web`;
@@ -78,13 +79,15 @@ export function grafo(o: { inicio: string; canonica: string; titulo: string; des
       { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Reparto a todas las islas Canarias' } },
       { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Recogida de pedidos en el almacén de Los Majuelos' } },
     ],
+    // 20-nov-2026: cada familia con sus artículos en el texto, no como Product. Un Product sin precio ni valoraciones
+    // da error en Google ("Fragmentos de productos: debe especificarse offers, review o aggregateRating"): eran 30 errores.
     hasOfferCatalog: {
       '@type': 'OfferCatalog',
       name: 'Qué distribuimos',
       itemListElement: familiasPara().map((f) => ({
         '@type': 'OfferCatalog',
         name: f.nombre,
-        itemListElement: f.productos.map((name) => ({ '@type': 'Offer', itemOffered: { '@type': 'Product', name } })),
+        description: f.productos.map((x, n) => (n ? x.charAt(0).toLowerCase() + x.slice(1) : x)).join(', ') + '.',
       })),
     },
     sameAs: [negocio.instagram, negocio.facebook],
@@ -115,6 +118,7 @@ export function grafo(o: { inicio: string; canonica: string; titulo: string; des
   };
   if (o.modificado) paginaLd.dateModified = o.modificado;
 
+  if (!o.canonica) return { '@context': 'https://schema.org', '@graph': [negocioLd, webLd] };
   const nodos: Record<string, unknown>[] = [negocioLd, webLd, paginaLd];
   if (o.servicio) {
     const idServicio = `${o.canonica}#servicio`;
