@@ -44,7 +44,7 @@
   /* Foco con el teclado. 16-nov-2026 (máster): el aro era naranja y sobre blanco o piedra casi no se veía (2:1; las
      pautas piden 3:1). Ahora toma el color del texto: marino sobre lo claro y blanco dentro de los bloques marino */
   :focus-visible { outline: 3px solid var(--color-tinta); outline-offset: 3px; border-radius: 4px; }
-  footer :focus-visible, nav[aria-label="Contacto rápido"] :focus-visible { outline-color: #fff; }
+  footer :focus-visible { outline-color: #fff; } /* 24-nov-2026: la barra de contacto del móvil ya es blanca: foco marino, como el resto */
   @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } * { transition: none !important; animation: none !important; } }
 }
 
@@ -792,7 +792,7 @@ header[data-con-sombra] .barra { box-shadow: 0 2px 6px rgb(19 32 58 / .07), 0 18
    abajo, que no tapa la web ni la bloquea: abajo a la izquierda en el ordenador y encima de la barra de "Llamar /
    Escribir" en el móvil. "Rechazar" y "Aceptar" iguales (mismo tamaño, color y letra), como pide la AEPD */
 .cookies {
-  position: fixed; z-index: 50; left: .75rem; right: .75rem; bottom: calc(4rem + .75rem);
+  position: fixed; z-index: 50; left: .75rem; right: .75rem; bottom: calc(4.5rem + .75rem); /* encima de la pastilla de contacto del móvil */
   padding: 1.15rem 1.25rem 1.25rem; border-radius: 1.25rem; background: #fff; color: var(--color-tinta);
   box-shadow: 0 2px 6px rgb(19 32 58 / .1), 0 22px 44px -18px rgb(19 32 58 / .45);
 }
@@ -972,4 +972,71 @@ header[data-con-sombra] .barra { box-shadow: 0 2px 6px rgb(19 32 58 / .07), 0 18
 @media (max-width: 1023px) {
   .cabecera-movil { transition: transform .35s cubic-bezier(.22, 1, .36, 1); }
   .cabecera-movil.escondida:not(:focus-within) { transform: translateY(-115%); }
+}
+
+/* ===== Móvil compacto (24-nov-2026, Álvaro: "resume la página en móvil", "los bloques son muy grandes para móvil,
+   compáctalo"). Medido a 390 × 664: el Inicio pasaba de 13 pantallas. Se pliega lo que es lista (catálogo y preguntas,
+   NN/g recomienda acordeones para páginas largas en el móvil y Google lee igual lo plegado) y se aprieta lo demás.
+   En la tableta y el ordenador no cambia nada. Antes y después: proyecto/movil-INTERNA.md ===== */
+
+/* Contacto rápido (BarraContacto.astro): pastilla blanca flotante como la cabecera, con "Pedir presupuesto" en naranja
+   y un botón redondo marino para llamar. Escondida mientras se ve el botón principal de la portada */
+.barra-contacto {
+  position: fixed; z-index: 40; left: .75rem; right: .75rem; bottom: calc(.75rem + env(safe-area-inset-bottom, 0px));
+  display: flex; gap: .4rem; padding: .35rem; border-radius: 999px; background: #fff;
+  box-shadow: 0 2px 6px rgb(19 32 58 / .1), 0 18px 38px -16px rgb(19 32 58 / .5);
+  transition: transform .35s cubic-bezier(.22, 1, .36, 1), opacity .25s, visibility 0s;
+}
+.barra-contacto.barra-oculta { transform: translateY(calc(100% + 1.5rem)); opacity: 0; visibility: hidden; transition: transform .35s cubic-bezier(.22, 1, .36, 1), opacity .25s, visibility 0s .35s; }
+.barra-contacto-correo {
+  flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: .55rem; min-height: 3.25rem;
+  border-radius: 999px; background: var(--color-naranja); color: #13203a; font-weight: 700; white-space: nowrap;
+}
+.barra-contacto-llamar {
+  display: grid; place-items: center; flex-shrink: 0; width: 3.25rem; height: 3.25rem; border-radius: 999px;
+  background: #13203a; color: var(--color-amarillo);
+}
+.barra-contacto-correo:active, .barra-contacto-llamar:active { transform: scale(.97); }
+@media (min-width: 768px) { .barra-contacto { display: none; } } /* fuera de @layer: md:hidden no le gana a .barra-contacto */
+
+/* Catálogo plegable (script en Familias.astro): solo cuando el script ha puesto el botón, o sea, en el móvil */
+.familia-productos[hidden] { display: none; }
+.familia:has(.familia-boton) { padding: 0; gap: 0; }
+.familia-boton {
+  display: flex; align-items: center; gap: .75rem; width: 100%; min-height: 3.5rem; padding: .65rem 0;
+  font: inherit; letter-spacing: inherit; color: inherit; text-align: left; cursor: pointer;
+}
+.familia-boton::after {
+  content: ""; flex-shrink: 0; width: .6rem; height: .6rem; margin: 0 .4rem 0 auto; border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor; transform: translateY(-25%) rotate(45deg); transition: transform .3s cubic-bezier(.22, 1, .36, 1);
+}
+.familia-boton[aria-expanded="true"]::after { transform: translateY(15%) rotate(-135deg); }
+.familia:has(.familia-boton) .familia-productos { padding: 0 0 1rem; }
+
+@media (max-width: 639px) {
+  .familia-cabeza { font-size: 1.2rem; }
+  .familia-productos { font-size: 1rem; line-height: 1.65; }
+  .cuaderno { padding-top: 2.5rem; }
+
+  /* Cómo pedir: el número al lado del paso, no encima (antes, 1.194 px) */
+  .viaje-pasos { gap: 1.6rem; }
+  .viaje-paso { display: grid; grid-template-columns: 3.6rem minmax(0, 1fr); column-gap: .9rem; align-items: start; }
+  .viaje-num { font-size: 2.75rem; }
+  .viaje-texto { margin-top: .15rem; }
+  .viaje-parada { top: .8rem; }
+
+  /* Pie: horario y "La web" en dos columnas; contacto a lo ancho (antes, 947 px de pie) */
+  .pie-reparto { gap: 2rem; }
+  .pie-columnas { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 2rem 1.25rem; }
+  .pie-columnas > :first-child { grid-column: 1 / -1; }
+  .pie-horario dd { font-size: 1.15rem; }
+}
+@media (max-width: 639px) {
+  /* Empresas, "Por qué ELNUBA": la caja dibujada, más pequeña en el móvil */
+  .porque-caja { width: 10rem; margin: 1.25rem 0 1rem auto; }
+}
+@media (max-width: 359px) {
+  /* Cómo pedir a 320 px: "presupuesto" no cabía junto al número (se salía 5 px) */
+  .viaje-paso { grid-template-columns: 2.9rem minmax(0, 1fr); column-gap: .6rem; }
+  .viaje-num { font-size: 2.3rem; }
 }

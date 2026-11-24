@@ -62,7 +62,7 @@ const robots = !PUBLICADA ? 'noindex, nofollow' : indexar ? null : 'noindex, fol
     {/* Efectos: se activan antes de pintar; si el script no llega a cargar, a los 2,5 s se muestra todo igualmente */}
     <script is:inline>document.documentElement.classList.add('js');setTimeout(function(){var r=document.documentElement;if(!r.classList.contains('efectos-listos'))r.classList.remove('js');},2500);</script>
   </head>
-  <body class="pb-16 md:pb-0">
+  <body class="pb-20 md:pb-0">
     <a href="#contenido" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-white focus:px-4 focus:py-2">Saltar al contenido</a>
     <Cabecera correo={correo} />
     <main id="contenido"><slot /></main>

@@ -90,18 +90,19 @@ const preguntas = [
       <div class="grid gap-3 md:gap-4 lg:col-span-5">
         <div class="zona-oscura mapa-oscuro flex flex-col justify-between gap-6 rounded-[2rem] p-7 sm:p-8" data-al-ver>
           <p class="text-xs font-bold tracking-[.2em] uppercase">Toda Canarias</p>
-          <MapaCanarias class="mx-auto max-w-sm" />
+          <MapaCanarias class="mx-auto max-w-[15rem] sm:max-w-sm" />
           <p>
             <span class="block text-2xl leading-tight font-bold">Reparto a todas las islas</span>
             <span class="mt-1 block text-sm text-tinta/70">Desde Los Majuelos (La&nbsp;Laguna)</span>
           </p>
         </div>
-        <div class="grid gap-3 sm:grid-cols-2 md:gap-4">
-          <div class="flex flex-col justify-between gap-8 rounded-[2rem] bg-naranja p-7 text-[#13203a]">
+        {/* 24-nov-2026 (móvil, "compáctalo"): Entrega y Trato directo, uno al lado del otro también en el móvil */}
+        <div class="grid grid-cols-2 gap-3 md:gap-4">
+          <div class="flex flex-col justify-between gap-6 rounded-[2rem] bg-naranja p-5 text-[#13203a] sm:gap-8 sm:p-7">
             <p class="text-xs font-bold tracking-[.2em] uppercase">Entrega</p>
-            <p><span class="block text-2xl leading-tight font-bold">En tu oficina</span><span class="mt-1 block text-sm">O recogida en Los Majuelos</span></p>
+            <p><span class="block text-xl leading-tight font-bold sm:text-2xl">En tu oficina</span><span class="mt-1 block text-sm">O recogida en Los Majuelos</span></p>
           </div>
-          <div class="bloque flex flex-col justify-between gap-8 p-7">
+          <div class="bloque flex flex-col justify-between gap-6 p-5 sm:gap-8 sm:p-7">
             <p class="text-xs font-bold tracking-[.2em] text-naranja-oscuro uppercase">Trato directo</p>
             <p><span class="block leading-snug font-bold">Te atiende quien conoce tu pedido</span><a href={telHref} class="toque mt-2 inline-block font-bold text-naranja-oscuro tabular-nums hover:underline">{negocio.telefono}</a></p>
           </div>

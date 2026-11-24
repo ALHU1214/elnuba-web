@@ -78,20 +78,21 @@ const pasos = [
 
       {/* Los años: lo que más quiere destacar Gonzalo. "+35" (Álvaro, 11-nov-2026); el + no cuenta, solo el número.
           Entre 1024 y 1279 px el recuadro es estrecho: el número baja un poco para que quepa con el + */}
-      <div class="entra-tarde-2 col-span-2 flex flex-col justify-between gap-6 rounded-[2rem] bg-naranja p-6 text-[#13203a] sm:col-span-1 md:p-7 lg:col-span-2">
+      <div class="entra-tarde-2 col-span-1 flex flex-col justify-between gap-6 rounded-[2rem] bg-naranja p-5 text-[#13203a] sm:p-6 md:p-7 lg:col-span-2">
         <span class="text-xs font-bold tracking-[.2em] uppercase">Experiencia</span>
         <p>
-          <span class="block text-7xl leading-none font-extrabold tracking-[-.05em] whitespace-nowrap lg:text-[4.1rem] xl:text-[5.2rem]">{negocio.anios ? <><span class="sr-only">Más de {negocio.anios}</span><span aria-hidden="true" class="mas">+</span><span aria-hidden="true" data-contar={negocio.anios} class="tabular-nums">{negocio.anios}</span></> : <Pendiente texto="XX" />}</span>
+          <span class="block text-[clamp(2.75rem,15vw,3.75rem)] leading-none font-extrabold tracking-[-.05em] whitespace-nowrap sm:text-7xl lg:text-[4.1rem] xl:text-[5.2rem]">{negocio.anios ? <><span class="sr-only">Más de {negocio.anios}</span><span aria-hidden="true" class="mas">+</span><span aria-hidden="true" data-contar={negocio.anios} class="tabular-nums">{negocio.anios}</span></> : <Pendiente texto="XX" />}</span>
           <span class="mt-2 block leading-tight font-bold">años en el sector</span>
         </p>
       </div>
 
       {/* Reparto (11-nov-2026, Álvaro: "mejorar el aspecto visual"; el texto se queda): mapa de las islas con las rutas
           desde Los Majuelos. El punto de la leyenda es el mismo que marca Los Majuelos en el mapa */}
-      <div class="entra-tarde-2 bloque reparto col-span-2 flex flex-col justify-between gap-4 p-6 sm:col-span-1 md:p-7 lg:col-span-3">
+      {/* 24-nov-2026 (móvil, "compáctalo"): el +35 y el reparto, uno al lado del otro también en el móvil (antes, uno debajo del otro: 490 px) */}
+      <div class="entra-tarde-2 bloque reparto col-span-1 flex flex-col justify-between gap-4 p-5 sm:p-6 md:p-7 lg:col-span-3">
         <MapaCanarias />
         <p>
-          <span class="block text-xl leading-tight font-bold">Reparto a todas las islas Canarias</span>
+          <span class="block text-base leading-tight font-bold sm:text-xl">Reparto a todas las islas Canarias</span>
           <span class="mt-1.5 flex items-start gap-2 text-sm text-gris">
             <svg aria-hidden="true" viewBox="0 0 16 16" class="mt-[3px] size-3.5 shrink-0"><circle cx="8" cy="8" r="6.5" fill="none" stroke="#13203a" stroke-opacity=".3" stroke-width="1.2" /><circle cx="8" cy="8" r="3.6" fill="#13203a" stroke="#fff" stroke-width="1.3" /></svg>
             <span>Desde Los Majuelos (La&nbsp;Laguna)</span>
@@ -115,11 +116,11 @@ const pasos = [
     <h2 class="mt-3 text-4xl md:text-5xl">Elige tu caso</h2>
     <div class="mt-8 grid gap-3 md:mt-10 md:grid-cols-3 md:gap-4">
       {clientes.map((c) => (
-        <a href={ruta(c.href)} class="caso group foto-velo relative isolate block aspect-[4/3] overflow-hidden rounded-[2rem] sm:aspect-[16/10] md:aspect-[4/5]">
-          <Foto src={c.img} alt={c.alt} width={960} height={640} sizes="(min-width: 1280px) 400px, (min-width: 768px) 32vw, 100vw" class="caso-foto absolute inset-0 -z-10 size-full object-cover" style={c.pos ? `object-position: ${c.pos}` : undefined} />
+        <a href={ruta(c.href)} class="caso group foto-velo relative isolate block aspect-[2/1] overflow-hidden rounded-[2rem] sm:aspect-[16/10] md:aspect-[4/5]">
+          <Foto src={c.img} alt={c.alt} width={960} height={640} formatoMovil={[2, 1]} sizes="(min-width: 1280px) 400px, (min-width: 768px) 32vw, 100vw" class="caso-foto absolute inset-0 -z-10 size-full object-cover" style={c.pos ? `object-position: ${c.pos}` : undefined} />
           <div class="absolute inset-x-0 bottom-0 z-10 p-6 text-white md:p-8">
             <h3 class="text-2xl text-white md:text-[1.65rem]"><span class="caso-marca">{c.titulo}</span></h3>
-            <p class="mt-2 text-white/80">{c.texto}</p>
+            <p class="mt-2 hidden text-white/80 sm:block">{c.texto}</p>{/* 24-nov-2026: en el móvil, sin esta línea; la tarjeta mide la mitad de alto (2:1) */}
             <span class="caso-enlace">
               {c.enlace}
               <svg aria-hidden="true" viewBox="0 0 24 24" class="caso-flecha size-4 fill-none stroke-current stroke-[2.5]"><path d="M5 12h14m-6-6 6 6-6 6" /></svg>

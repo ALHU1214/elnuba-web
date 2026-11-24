@@ -39,3 +39,35 @@ const lista = familiasPara(para);
   {/* 17-nov-2026: pegado al directorio, como su última fila */}
   <BuscasAlgo />
 </div>
+
+<script>
+  // 24-nov-2026 (Álvaro: "los bloques son muy grandes para móvil, compáctalo"). En el móvil (menos de 640 px) cada familia
+  // se pliega: queda una fila con su nombre que se abre al tocarla (la primera, abierta, para que se vea qué hay dentro).
+  // El botón lo pone este script solo en el móvil; en el ordenador, sin JavaScript o al ensanchar la ventana, todo a la
+  // vista como siempre (decisión del 17-nov: "el directorio"). Google lee igual lo plegado. CSS: .familia-boton
+  const movil = matchMedia('(max-width: 639px)');
+  const familias = [...document.querySelectorAll<HTMLElement>('.familia')];
+  const ajustar = () => familias.forEach((li, i) => {
+    const cabeza = li.querySelector<HTMLElement>('.familia-cabeza')!;
+    const productos = li.querySelector<HTMLElement>('.familia-productos')!;
+    let boton = cabeza.querySelector<HTMLButtonElement>('.familia-boton');
+    if (movil.matches && !boton) {
+      boton = document.createElement('button');
+      boton.type = 'button';
+      boton.className = 'familia-boton';
+      boton.append(...cabeza.childNodes);
+      cabeza.append(boton);
+      productos.id ||= `familia-productos-${i}`;
+      boton.setAttribute('aria-controls', productos.id);
+      const abrir = (si: boolean) => { boton!.setAttribute('aria-expanded', String(si)); productos.hidden = !si; };
+      abrir(i === 0);
+      boton.addEventListener('click', () => abrir(boton!.getAttribute('aria-expanded') !== 'true'));
+    } else if (!movil.matches && boton) {
+      cabeza.append(...boton.childNodes);
+      boton.remove();
+      productos.hidden = false;
+    }
+  });
+  ajustar();
+  movil.addEventListener('change', ajustar);
+</script>

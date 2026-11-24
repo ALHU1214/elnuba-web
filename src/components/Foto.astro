@@ -9,8 +9,10 @@ import { ruta } from '../lib/ruta';
 interface Props {
   src: string; alt: string; width: number; height: number; sizes: string;
   loading?: 'lazy' | 'eager'; fetchpriority?: 'high' | 'low' | 'auto'; class?: string; style?: string;
+  formatoMovil?: [number, number]; // formato del recorte del móvil (por defecto 4:3; las tarjetas del inicio, 2:1)
 }
-const { src, alt, width, height, sizes, loading = 'lazy', fetchpriority, class: clase, style } = Astro.props;
+const { src, alt, width, height, sizes, loading = 'lazy', fetchpriority, class: clase, style, formatoMovil = [4, 3] } = Astro.props;
+const altoMovil = Math.round(800 * formatoMovil[1] / formatoMovil[0]);
 const base = src.replace(/\.webp$/, '');
 // 24-nov-2026: la variante pequeña es de 720 px (antes 480: en las tarjetas del ordenador se veían blandas)
 const juego = (ext: string) => `${ruta(`${base}-720.${ext}`)} 720w, ${ruta(`${base}.${ext}`)} 960w`;
@@ -24,8 +26,8 @@ const movil = (ext: string) => `${ruta(`${base}-m600.${ext}`)} 600w, ${ruta(`${b
 const sizesMovil = 'calc(100vw - 2rem)'; // en el móvil todas las fotos van a lo ancho, con 16 px de margen a cada lado
 ---
 <picture>
-  <source media="(max-width: 639px)" type="image/avif" srcset={movil('avif')} sizes={sizesMovil} width="800" height="600" />
-  <source media="(max-width: 639px)" type="image/webp" srcset={movil('webp')} sizes={sizesMovil} width="800" height="600" />
+  <source media="(max-width: 639px)" type="image/avif" srcset={movil('avif')} sizes={sizesMovil} width="800" height={altoMovil} />
+  <source media="(max-width: 639px)" type="image/webp" srcset={movil('webp')} sizes={sizesMovil} width="800" height={altoMovil} />
   <source type="image/avif" srcset={juego('avif')} sizes={sizes} />
   <img src={ruta(src)} srcset={juego('webp')} sizes={sizes} alt={alt} width={width} height={height}
        loading={loading} fetchpriority={fetchpriority} decoding="async" class={clase} style={style} />

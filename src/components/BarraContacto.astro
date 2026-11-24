@@ -1,18 +1,34 @@
 ---
 import Icono from './Icono.astro';
-// Barra fija abajo en el móvil: llamar o escribir en un toque
-import { telHref, correos, type TipoCorreo } from '../data/negocio';
+// Contacto rápido en el móvil: pedir presupuesto o llamar en un toque.
+// 24-nov-2026 (Álvaro: "en el móvil los botones de Escribir y Llamar no me gustan"). Antes era una franja marino de lado
+// a lado, partida en dos ("Llamar" | "Escribir"), como la barra de pestañas de una aplicación, y tapaba 65 px siempre.
+// Ahora es una pastilla blanca flotante, igual que la cabecera: "Pedir presupuesto" en el naranja de la acción y un
+// botón redondo para llamar. Sale solo cuando el botón principal de la portada ya no se ve (en la primera pantalla
+// estaban repetidos); en las páginas que no lo tienen (Contacto, legales), sale siempre. CSS: .barra-contacto
+// 16-nov-2026 (máster): es un <nav> con nombre para que los lectores de pantalla la encuentren.
+import { telHref, correos, negocio, type TipoCorreo } from '../data/negocio';
 interface Props { correo?: TipoCorreo }
 const { correo = 'general' } = Astro.props;
 ---
-{/* 16-nov-2026 (máster): es un <nav> con nombre para que los lectores de pantalla la encuentren (antes, un <div> suelto) */}
-<nav aria-label="Contacto rápido" class="fixed inset-x-0 bottom-0 z-40 grid grid-cols-2 border-t border-pizarra-2 bg-pizarra text-white md:hidden">
-  <a href={telHref} class="flex h-16 items-center justify-center gap-2 font-bold">
-    <Icono nombre="telefono" class="size-5 fill-none stroke-amarillo stroke-2" />
-    Llamar
+<nav aria-label="Contacto rápido" class="barra-contacto md:hidden">
+  <a href={correos[correo]} class="barra-contacto-correo">
+    <Icono nombre="correo" class="size-5 shrink-0 fill-none stroke-current stroke-2" />
+    Pedir presupuesto
   </a>
-  <a href={correos[correo]} class="flex h-16 items-center justify-center gap-2 border-l border-pizarra-2 font-bold">
-    <Icono nombre="correo" class="size-5 fill-none stroke-amarillo stroke-2" />
-    Escribir
+  <a href={telHref} class="barra-contacto-llamar" aria-label={`Llamar al ${negocio.telefono}`}>
+    <Icono nombre="telefono" class="size-5 fill-none stroke-current stroke-2" />
   </a>
 </nav>
+
+<script>
+  // Escondida mientras el botón principal de la portada está en pantalla (o aún por debajo, al principio de la página)
+  const barra = document.querySelector<HTMLElement>('.barra-contacto');
+  const primero = document.querySelector('main .btn-primario');
+  if (barra && primero) {
+    barra.classList.add('barra-oculta');
+    new IntersectionObserver(([e]) => {
+      barra.classList.toggle('barra-oculta', e.isIntersecting || e.boundingClientRect.top > 0);
+    }).observe(primero);
+  }
+</script>
