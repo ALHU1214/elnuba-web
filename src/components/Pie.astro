@@ -35,8 +35,9 @@ const d = negocio.direccion;
         </div>
         <div>
           <h2 class="pie-rotulo">La web</h2>
-          <ul class="mt-3 space-y-1">
-            {nav.map((n) => <li><a href={ruta(n.href)} class="inline-block py-1 hover:underline">{n.label}</a></li>)}
+          {/* 24-nov-2026 (móvil): cada enlace con 44 px de alto (antes 32), el mínimo de Apple y WCAG 2.5.5 para el dedo */}
+          <ul class="mt-1.5 md:mt-3 md:space-y-1">
+            {nav.map((n) => <li><a href={ruta(n.href)} class="inline-flex min-h-11 items-center hover:underline md:min-h-0 md:py-1">{n.label}</a></li>)}
           </ul>
         </div>
       </div>
@@ -47,7 +48,7 @@ const d = negocio.direccion;
   <div class="border-t border-white/10">
     <div class="mx-auto flex max-w-7xl flex-wrap justify-between gap-3 px-4 py-6 text-sm text-white/60 md:px-6">
       <p>© {new Date().getFullYear()} {negocio.razonSocial}</p>
-      <p class="flex flex-wrap gap-x-5 gap-y-1"><a href={ruta('/aviso-legal/')} class="-my-1 inline-block py-1 hover:underline">Aviso legal</a><a href={ruta('/privacidad/')} class="-my-1 inline-block py-1 hover:underline">Privacidad</a>{hayAnalitica && <button type="button" data-cookies-abrir class="-my-1 inline-block py-1 hover:underline">Configurar cookies</button>}</p>
+      <p class="-my-2.5 flex flex-wrap gap-x-5"><a href={ruta('/aviso-legal/')} class="inline-flex min-h-11 items-center hover:underline">Aviso legal</a><a href={ruta('/privacidad/')} class="inline-flex min-h-11 items-center hover:underline">Privacidad</a>{hayAnalitica && <button type="button" data-cookies-abrir class="inline-flex min-h-11 items-center hover:underline">Configurar cookies</button>}</p>
     </div>
   </div>
 </footer>

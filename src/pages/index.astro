@@ -59,7 +59,8 @@ const pasos = [
           <div class="mt-9 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
             <a href={correos.general} class="btn-primario">
               <Icono nombre="correo" />
-              Pedir presupuesto por correo
+              {/* 24-nov-2026: en el móvil, "Pedir presupuesto" (con "por correo" no cabía en una línea de 360 a 414 px; el sobre y la línea "o escribe a" ya dicen que es por correo) */}
+              <span>Pedir presupuesto<span class="max-sm:hidden"> por correo</span></span>
             </a>
             <a href={telHref} class="btn-secundario">
               <Icono nombre="telefono" />

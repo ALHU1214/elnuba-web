@@ -53,8 +53,7 @@ main h1 { font-weight: 800; letter-spacing: -0.03em; }
 main h2 { font-weight: 750; letter-spacing: -0.025em; }
 main h3 { font-weight: 700; letter-spacing: -0.015em; }
 /* 16-nov-2026 (máster): en los móviles de 320-359 px, una palabra larga a 36 px ("suministramos", "presupuesto?") no
-   cabía en su bloque; ahí los títulos de sección van a 32 px */
-@media (max-width: 359px) { main h2.text-4xl { font-size: 2rem; } }
+   cabía en su bloque. 24-nov-2026: ahora todos los títulos de sección del móvil van a 32 px (ver "Móvil" al final) */
 
 /* Botones: el principal es naranja en toda la web (el naranja es "la acción"); el secundario, un contorno que toma
    el color del texto que lo rodea, así sirve igual sobre blanco que sobre marino */
@@ -807,7 +806,7 @@ header[data-con-sombra] .barra { box-shadow: 0 2px 6px rgb(19 32 58 / .07), 0 18
 .cookies-opciones label { display: flex; align-items: flex-start; gap: .6rem; font-size: .9375rem; line-height: 1.4; cursor: pointer; }
 .cookies-opciones input { width: 1.15rem; height: 1.15rem; margin-top: .1rem; flex-shrink: 0; accent-color: var(--color-tinta); }
 .cookies-botones { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; margin-top: 1rem; }
-.cookies-boton { flex: 1 1 7rem; min-height: 2.75rem; padding: .55rem 1rem; border-radius: 999px; background: var(--color-tinta); color: #fff; font-size: .9375rem; font-weight: 700; transition: background-color .2s; }
+.cookies-boton { flex: 1 1 6rem; min-height: 2.75rem; padding: .55rem 1rem; border-radius: 999px; background: var(--color-tinta); color: #fff; font-size: .9375rem; font-weight: 700; transition: background-color .2s; }
 .cookies-boton:hover { background: #24314d; }
 .cookies-boton[hidden] { display: none; }
 .cookies-configurar { min-height: 2.75rem; padding: .55rem .5rem; font-size: .9375rem; font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
@@ -837,13 +836,16 @@ header[data-con-sombra] .barra { box-shadow: 0 2px 6px rgb(19 32 58 / .07), 0 18
 .pie-columnas { display: grid; gap: 2.25rem 2rem; }
 @media (min-width: 640px) { .pie-columnas { grid-template-columns: minmax(0, 1.3fr) minmax(0, .9fr) minmax(0, 1.05fr); } }
 .pie-rotulo { font-size: .75rem; font-weight: 700; letter-spacing: .24em; text-transform: uppercase; color: var(--color-amarillo); }
-.pie-telefono { display: inline-block; margin-top: .8rem; padding-block: .1rem; font-size: 1.6rem; font-weight: 800; letter-spacing: -.02em; color: #fff; font-variant-numeric: tabular-nums; white-space: nowrap; transition: color .2s; }
+.pie-telefono { display: inline-block; margin-top: .8rem; padding-block: .2rem; /* 24-nov-2026 (móvil): 44 px de alto, el mínimo de Apple y WCAG 2.5.5 */ font-size: 1.6rem; font-weight: 800; letter-spacing: -.02em; color: #fff; font-variant-numeric: tabular-nums; white-space: nowrap; transition: color .2s; }
 /* 18-nov-2026 (Álvaro): al pasar el ratón (o con el teclado), el teléfono del pie se pone naranja */
 .pie-telefono:is(:hover, :focus-visible) { color: var(--color-naranja); }
-.pie-correo { display: block; width: fit-content; max-width: 100%; margin-top: .2rem; padding-block: .25rem; font-size: .9375rem; overflow-wrap: anywhere; }
-.pie-direccion { margin-top: .7rem; font-size: .9375rem; line-height: 1.6; }
+/* 24-nov-2026 (móvil): 44 px de alto para el dedo (antes 32); el margen negativo deja el texto donde estaba */
+.pie-correo { display: block; width: fit-content; max-width: 100%; margin-top: -.2rem; padding-block: .625rem; font-size: 1rem; overflow-wrap: anywhere; }
+/* 24-nov-2026 (móvil): correo, dirección y días a 16 px (antes 15): es texto que se lee y se copia, y 16 px es el mínimo
+   para leer en el móvil (Material, cuerpo grande; web.dev) */
+.pie-direccion { margin-top: .35rem; font-size: 1rem; line-height: 1.6; }
 .pie-horario { margin-top: .9rem; display: grid; gap: .1rem; }
-.pie-horario dt { font-size: .9375rem; }
+.pie-horario dt { font-size: 1rem; }
 .pie-horario dt:not(:first-child) { margin-top: .6rem; }
 .pie-horario dd { font-size: 1.3rem; font-weight: 800; letter-spacing: -.01em; color: #fff; font-variant-numeric: tabular-nums; white-space: nowrap; }
 
@@ -922,7 +924,7 @@ header[data-con-sombra] .barra { box-shadow: 0 2px 6px rgb(19 32 58 / .07), 0 18
 .tabla-cookies th { color: var(--color-tinta); font-weight: 700; }
 .tabla-cookies code { font-size: .875rem; color: var(--color-tinta); }
 @media (max-width: 639px) {
-  .tabla-cookies { min-width: 0; }
+  .tabla-cookies { min-width: 0; font-size: 1rem; } /* 24-nov-2026: en fichas se lee como texto: 16 px */
   .tabla-cookies thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
   .tabla-cookies tr { display: block; padding: .75rem 0; border-bottom: 1px solid var(--color-linea); }
   .tabla-cookies td { display: grid; grid-template-columns: 5.5rem minmax(0, 1fr); gap: .75rem; padding: .15rem 0; border: 0; }
@@ -940,3 +942,34 @@ header[data-con-sombra] .barra { box-shadow: 0 2px 6px rgb(19 32 58 / .07), 0 18
 .copias-aviso-enlace { display: inline-flex; align-items: center; gap: .4rem; font-weight: 700; color: var(--color-naranja-oscuro); white-space: nowrap; }
 .copias-aviso:hover .copias-aviso-enlace { text-decoration: underline; text-underline-offset: 4px; }
 @media (min-width: 768px) { .copias-aviso { margin-top: 2rem; padding-inline: 1.5rem; } }
+
+/* ===== Móvil (24-nov-2026, Álvaro: "optimízala para móvil, trabajando bajo datos") =====
+   Medido con un script en 8 anchos de móvil (320 a 430 px; los más usados en España según StatCounter): tamaño de
+   cada texto, alto y ancho de cada zona de pulsación y todo lo que se sale de su sitio. Normas de referencia: WCAG 2.2,
+   Apple (Human Interface Guidelines) y Material Design 3. Antes y después: proyecto/movil-INTERNA.md */
+
+/* Zona de pulsación de 44 × 44 px como mínimo (Apple y WCAG 2.5.5) sin cambiar lo que se ve: una capa invisible
+   centrada en el enlace o el botón. Solo para piezas sueltas; en las listas se les da alto de verdad */
+.toque { position: relative; }
+.toque::after { content: ""; position: absolute; left: 50%; top: 50%; width: max(100%, 2.75rem); height: max(100%, 2.75rem); transform: translate(-50%, -50%); }
+
+@media (max-width: 639px) {
+  /* Títulos de sección a 32 px (Material 3, "headline large"). Antes 36-42 px: algunos eran más grandes que el título
+     de la página (37-39 px) y ocupaban 3 o 4 líneas */
+  main h2:is(.text-4xl, .final-titulo, .viaje-titulo, .lista-titulo) { font-size: 2rem; line-height: 1.1; }
+  /* Contacto: "Av. El Paso" también a 32 px (antes 38, más que el título de la página); el "43" sigue enorme (83 px) */
+  .direccion-grande { font-size: 2rem; }
+  /* Botones: nunca más anchos que su bloque. A 360-414 px, "Pedir presupuesto por correo" se salía por la derecha
+     del bloque final. Arreglo: en el móvil dice "Pedir presupuesto" (span max-sm:hidden en cada página). Esto es solo
+     la red de seguridad: si un texto no cabe, baja de línea en vez de salirse */
+  .btn-primario, .btn-secundario { max-width: 100%; white-space: normal; text-align: center; text-wrap: balance; }
+}
+
+/* Cabecera del móvil y la tableta: se esconde al bajar y vuelve en cuanto se sube un poco (script en Cabecera.astro).
+   Fijas, ella y la barra de "Llamar / Escribir" tapaban 139 px: el 21 % de lo que se ve en un iPhone (390 × 664) y
+   el 29 % en un móvil pequeño. La barra de abajo, que es la que llama y escribe, se queda siempre.
+   Animación de 350 ms (NN/g aconseja 300-400 ms para que no distraiga) */
+@media (max-width: 1023px) {
+  .cabecera-movil { transition: transform .35s cubic-bezier(.22, 1, .36, 1); }
+  .cabecera-movil.escondida:not(:focus-within) { transform: translateY(-115%); }
+}

@@ -34,7 +34,7 @@ const migaJsonld = {
     <div class:list={['zona-oscura relative overflow-hidden rounded-[2rem] p-7 sm:p-10 lg:p-12', dentro ? 'grid gap-8 sm:gap-10 lg:grid-cols-12 lg:items-center lg:gap-0' : 'flex flex-col justify-center', conLado && 'lg:col-span-7']}>
       <div class:list={['entra', dentro && 'min-w-0 lg:col-span-7 lg:pr-12']}>
         <nav aria-label="Estás aquí" class="text-sm text-tinta/70">
-          <a href={ruta('/')} class="hover:text-tinta hover:underline">Inicio</a>
+          <a href={ruta('/')} class="toque hover:text-tinta hover:underline">Inicio</a>{/* toque: 44 px para el dedo (24-nov-2026) */}
           <span aria-hidden="true" class="mx-2">/</span>
           <span aria-current="page" class="text-tinta">{miga}</span>
         </nav>
@@ -46,7 +46,8 @@ const migaJsonld = {
             <div class="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">{/* wrap: a 1024-1279 px no caben los dos (13-nov) */}
               <a href={correos[correo]} class="btn-primario">
                 <Icono nombre="correo" />
-                Pedir presupuesto por correo
+                {/* 24-nov-2026: en el móvil, "Pedir presupuesto" (con "por correo" no cabía en una línea de 360 a 414 px; el sobre y la línea "o escribe a" ya dicen que es por correo) */}
+                <span>Pedir presupuesto<span class="max-sm:hidden"> por correo</span></span>
               </a>
               <a href={telHref} class="btn-secundario">
                 <Icono nombre="telefono" />

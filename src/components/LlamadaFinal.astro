@@ -29,9 +29,10 @@ const flecha = 'M7 17 17 7 M9 7h8v8';
         <p class="antetitulo text-xs font-bold tracking-[.2em] uppercase">Contacto</p>
         <h2 class="final-titulo mt-5">{titulo}</h2>
         <p class="mt-5 text-lg leading-relaxed text-tinta/75">{texto}</p>
-        <a href={correos[correo]} class="btn-primario mt-8">
+        <a href={correos[correo]} class="btn-primario mt-8 w-full sm:w-auto">{/* 24-nov-2026: a lo ancho en el móvil, como los demás botones (antes se salía del bloque a 360-393 px) */}
           <Icono nombre="correo" />
-          Pedir presupuesto por correo
+          {/* 24-nov-2026: en el móvil, "Pedir presupuesto" (con "por correo" no cabía en una línea de 360 a 414 px; el sobre y la línea "o escribe a" ya dicen que es por correo) */}
+          <span>Pedir presupuesto<span class="max-sm:hidden"> por correo</span></span>
         </a>
         <CopiarCorreo class="mt-4" />
       </div>

@@ -22,7 +22,7 @@ const iconos = [
   <div class="tienda-arriba">
     <div class="tienda-datos">
       <p class="antetitulo text-xs font-bold tracking-[.2em] text-naranja-oscuro uppercase">{t.lugar}</p>
-      <h3 class="mt-4 text-[1.75rem] leading-tight">{t.nombre}</h3>
+      <h3 class="mt-4 text-2xl leading-tight sm:text-[1.75rem]">{t.nombre}</h3>
       <p class="mt-1 text-gris">{t.nota}</p>
       <p class="mt-5 text-lg leading-relaxed">{t.direccion.map((l) => <>{l}<br /></>)}</p>
       <p class="mt-4"><a href={`tel:${t.telefonoE164}`} class="text-xl font-extrabold text-naranja-oscuro tabular-nums hover:underline">{t.telefono}</a></p>

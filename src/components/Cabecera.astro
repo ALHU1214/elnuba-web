@@ -9,12 +9,13 @@ interface Props { correo?: TipoCorreo }
 const { correo = 'general' } = Astro.props;
 const actual = Astro.url.pathname;
 ---
-<header class="sticky top-0 z-40 pt-2.5 md:pt-3">
+{/* cabecera-movil (24-nov-2026): en el móvil y la tableta se esconde al bajar y vuelve al subir (ver el script y global.css) */}
+<header class="cabecera-movil sticky top-0 z-40 pt-2.5 md:pt-3">
   {/* Mismo ancho y márgenes que el contenido, para que la barra alinee con los bloques de debajo */}
   <div class="mx-auto max-w-7xl px-4 md:px-6">
   {/* Blanca opaca (11-nov-2026): con el fondo punteado, al 95 % se transparentaban los puntos y el texto de debajo */}
   <div class="barra flex h-16 items-center justify-between gap-4 rounded-full bg-white pr-2 pl-5 md:h-[4.5rem] md:pl-6">
-    <a href={ruta('/')} class="shrink-0" aria-label="ELNUBA, inicio">
+    <a href={ruta('/')} class="inline-flex min-h-11 shrink-0 items-center" aria-label="ELNUBA, inicio">{/* min-h-11: 44 px para el dedo (24-nov-2026) */}
       {/* 13-nov-2026: logo a su tamaño (96 px de ancho en el móvil, 118 en el ordenador); antes bajaba uno de 1280 px y 117 KB */}
       <img src={ruta('/logo-elnuba-240.webp')} srcset={`${ruta('/logo-elnuba-240.webp')} 240w, ${ruta('/logo-elnuba-480.webp')} 480w`} sizes="(min-width: 768px) 118px, 96px" alt="ELNUBA Distribuciones de Papelería" width="240" height="90" fetchpriority="high" class="h-9 w-auto md:h-11" />
     </a>
@@ -84,4 +85,20 @@ const actual = Astro.url.pathname;
   // Se cierra con Escape y al pulsar fuera
   addEventListener('keydown', (e) => { if (e.key === 'Escape' && !menu.hidden) { poner(false); boton.focus(); } });
   addEventListener('click', (e) => { if (!menu.hidden && !(e.target as Element).closest('header')) poner(false); });
+
+  // 24-nov-2026 (móvil): por debajo de 1024 px la cabecera se esconde al bajar y vuelve en cuanto se sube 8 px.
+  // No se esconde en los primeros 120 px ni con el menú abierto. El CSS (.cabecera-movil) solo actúa en el móvil y la tableta
+  const cabecera = document.querySelector<HTMLElement>('.cabecera-movil')!;
+  let ultimo = scrollY, pendiente = false;
+  addEventListener('scroll', () => {
+    if (pendiente) return;
+    pendiente = true;
+    requestAnimationFrame(() => {
+      pendiente = false;
+      const y = scrollY, d = y - ultimo;
+      if (Math.abs(d) < 8) return;
+      cabecera.classList.toggle('escondida', d > 0 && y > 120 && menu.hidden === true);
+      ultimo = y;
+    });
+  }, { passive: true });
 </script>

@@ -102,7 +102,7 @@ const faqJsonld = {
   /* Temas: botones redondeados sobre una pista piedra; el elegido, blanco con su icono de color */
   .gr-temas { display: flex; gap: .25rem; padding: .3rem; border-radius: 999px; background: #e7e1d6; overflow-x: auto; scrollbar-width: none; }
   .gr-tema {
-    display: inline-flex; flex: 1 0 auto; align-items: center; justify-content: center; gap: .5rem; padding: .65rem 1rem; border-radius: 999px;
+    display: inline-flex; flex: 1 0 auto; align-items: center; justify-content: center; gap: .5rem; min-height: 2.75rem; padding: .65rem 1rem; border-radius: 999px; /* min-height: 44 px para el dedo (24-nov-2026; antes 40) */
     color: var(--color-gris); font-size: .875rem; font-weight: 700; white-space: nowrap; transition: background-color .2s, color .2s, box-shadow .2s;
   }
   .gr-tema svg { width: 18px; height: 18px; flex-shrink: 0; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
@@ -144,6 +144,12 @@ const faqJsonld = {
   .gr-carta { display: flex; flex-direction: column; gap: 1rem; width: 100%; height: 100%; text-align: left; cursor: pointer; }
   .gr-cara { display: flex; flex-direction: column; justify-content: space-between; gap: 1.5rem; min-height: 11.5rem; padding: 1.5rem; border-radius: 1.5rem; }
   @media (min-width: 1024px) { .gr-cara { min-height: 14rem; padding: 1.6rem; } }
+  /* 24-nov-2026 (móvil): tarjetas más bajas (cada una medía unos 210 px y seis ocupaban casi dos pantallas): menos
+     relleno y menos hueco entre la etiqueta, la pregunta y "Ver respuesta". La respuesta, a 16 px como el resto del texto */
+  @media (max-width: 639px) {
+    .gr-cara { min-height: 9rem; gap: 1rem; padding: 1.25rem 1.25rem 1.1rem; }
+    .gr-dorso .gr-respuesta { font-size: 1rem; } /* más concreta: la regla general de .gr-respuesta va después */
+  }
   .gr-frente { background: var(--fondo); color: var(--texto); }
   .gr-dorso { background: #fff; color: var(--color-tinta); box-shadow: inset 0 0 0 2px var(--borde, var(--fondo)), 0 18px 34px -24px rgb(19 32 58 / .45); }
   .gr-etiqueta { font-size: .75rem; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: var(--suave); }
