@@ -5,6 +5,7 @@ import Cabecera from '../components/Cabecera.astro';
 import Pie from '../components/Pie.astro';
 import BarraContacto from '../components/BarraContacto.astro';
 import Efectos from '../components/Efectos.astro';
+import ElegirCorreo from '../components/ElegirCorreo.astro';
 import Consentimiento from '../components/Consentimiento.astro';
 import { negocio, PUBLICADA, hayAnalitica, type TipoCorreo } from '../data/negocio';
 import { grafo, type Servicio } from '../data/seo';
@@ -70,5 +71,6 @@ const robots = !PUBLICADA ? 'noindex, nofollow' : indexar ? null : 'noindex, fol
     {/* 17-nov-2026: aviso de cookies, solo si hay analítica puesta en negocio.ts (si no, no hay cookies que avisar) */}
     {hayAnalitica && <Consentimiento />}
     <Efectos />
+    <ElegirCorreo />
   </body>
 </html>

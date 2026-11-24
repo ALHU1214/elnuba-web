@@ -1,0 +1,138 @@
+---
+// Elegir con qué correo escribir (24-nov-2026, Álvaro: "que se abra el correo que más usas, Gmail, Outlook u otro").
+// Una web no puede saber qué correo usa cada persona. Un enlace mailto: abre el programa de correo que tenga el
+// dispositivo: en el móvil es su app de correo y funciona bien, así que ahí no se toca nada. En el ordenador, quien usa
+// Gmail u Outlook en el navegador se queda sin nada (o le sale un programa que no usa). Por eso, en el ordenador, al
+// pulsar cualquier enlace de correo sale este menú: Gmail, Outlook, Yahoo, el programa del ordenador o copiar la
+// dirección. Se abre ya con el asunto y el texto de la plantilla. Lo elegido se recuerda en ese navegador y la próxima
+// vez sale primero. Sin JavaScript, el enlace mailto: funciona como siempre.
+---
+<div id="elegir-correo" class="elegir-correo" role="dialog" aria-modal="false" aria-labelledby="elegir-correo-titulo" hidden>
+  <p id="elegir-correo-titulo" class="elegir-correo-titulo">¿Con qué correo quieres escribirnos?</p>
+  <ul class="elegir-correo-lista"></ul>
+  <span class="sr-only" aria-live="polite"></span>
+</div>
+
+<script>
+  const panel = document.getElementById('elegir-correo') as HTMLDivElement | null;
+  const lista = panel?.querySelector('ul') as HTMLUListElement | null;
+  const aviso = panel?.querySelector('[aria-live]') as HTMLElement | null;
+  // Ordenador = ratón o panel táctil. En móviles y tabletas el mailto: abre su app de correo y no hace falta el menú.
+  const esOrdenador = () => matchMedia('(hover: hover) and (pointer: fine)').matches;
+  const CLAVE = 'elnuba-correo';
+  let origen: HTMLElement | null = null;
+
+  type Opcion = { id: string; nombre: string; url: (a: string, s: string, b: string) => string };
+  const e = encodeURIComponent;
+  const opciones: Opcion[] = [
+    { id: 'gmail', nombre: 'Gmail', url: (a, s, b) => `https://mail.google.com/mail/?view=cm&fs=1&to=${e(a)}&su=${e(s)}&body=${e(b)}` },
+    { id: 'outlook', nombre: 'Outlook', url: (a, s, b) => `https://outlook.office.com/mail/deeplink/compose?to=${e(a)}&subject=${e(s)}&body=${e(b)}` },
+    { id: 'yahoo', nombre: 'Yahoo Mail', url: (a, s, b) => `https://compose.mail.yahoo.com/?to=${e(a)}&subject=${e(s)}&body=${e(b)}` },
+    { id: 'programa', nombre: 'Programa de correo del ordenador', url: () => '' },
+  ];
+
+  const leer = () => { try { return localStorage.getItem(CLAVE); } catch { return null; } };
+  const guardar = (id: string) => { try { localStorage.setItem(CLAVE, id); } catch { /* navegación privada */ } };
+
+  function cerrar(devolverFoco = true) {
+    if (!panel || panel.hidden) return;
+    panel.hidden = true;
+    if (devolverFoco) origen?.focus();
+    origen = null;
+  }
+
+  function abrir(enlace: HTMLAnchorElement) {
+    if (!panel || !lista) return;
+    const mailto = new URL(enlace.href);
+    const para = decodeURIComponent(mailto.pathname);
+    const asunto = mailto.searchParams.get('subject') || '';
+    const cuerpo = mailto.searchParams.get('body') || '';
+    const ultimo = leer();
+    const orden = [...opciones].sort((x, y) => Number(y.id === ultimo) - Number(x.id === ultimo));
+
+    lista.replaceChildren();
+    for (const o of orden) {
+      const li = document.createElement('li');
+      const a = document.createElement('a');
+      a.className = 'elegir-correo-opcion';
+      a.textContent = o.nombre;
+      if (o.id === ultimo) a.insertAdjacentHTML('beforeend', ' <span class="elegir-correo-nota">· el último que usaste</span>');
+      if (o.id === 'programa') {
+        a.href = enlace.href;
+      } else {
+        a.href = o.url(para, asunto, cuerpo);
+        a.target = '_blank';
+        a.rel = 'noopener';
+      }
+      a.addEventListener('click', () => { guardar(o.id); cerrar(false); });
+      li.append(a);
+      lista.append(li);
+    }
+    const li = document.createElement('li');
+    const copiar = document.createElement('button');
+    copiar.type = 'button';
+    copiar.className = 'elegir-correo-opcion elegir-correo-copiar';
+    copiar.textContent = `Copiar la dirección (${para})`;
+    copiar.addEventListener('click', async () => {
+      try { await navigator.clipboard.writeText(para); } catch {
+        const campo = Object.assign(document.createElement('textarea'), { value: para });
+        document.body.append(campo); campo.select(); document.execCommand('copy'); campo.remove();
+      }
+      copiar.textContent = '¡Copiada!';
+      if (aviso) aviso.textContent = 'Dirección de correo copiada';
+      setTimeout(() => cerrar(), 1200);
+    });
+    li.append(copiar);
+    lista.append(li);
+
+    // Debajo del enlace pulsado (o encima, si no cabe), sin salirse de la pantalla
+    panel.hidden = false;
+    const r = enlace.getBoundingClientRect();
+    const ancho = panel.offsetWidth, alto = panel.offsetHeight, m = 12;
+    const izq = Math.min(Math.max(m, r.left), innerWidth - ancho - m);
+    const arriba = r.bottom + 8 + alto > innerHeight - m ? Math.max(m, r.top - 8 - alto) : r.bottom + 8;
+    panel.style.left = `${izq}px`;
+    panel.style.top = `${arriba}px`;
+    origen = enlace;
+    (lista.querySelector('a, button') as HTMLElement | null)?.focus();
+  }
+
+  if (panel) {
+    document.addEventListener('click', (ev) => {
+      const enlace = (ev.target as Element).closest?.('a[href^="mailto:"]') as HTMLAnchorElement | null;
+      if (enlace && !panel.contains(enlace)) {
+        if (!esOrdenador() || ev.ctrlKey || ev.metaKey || ev.shiftKey) return;
+        ev.preventDefault();
+        if (origen === enlace) { cerrar(); return; }
+        abrir(enlace);
+        return;
+      }
+      if (!panel.hidden && !panel.contains(ev.target as Node)) cerrar(false);
+    });
+    document.addEventListener('keydown', (ev) => { if (ev.key === 'Escape') cerrar(); });
+    // Se cierra al bajar o subir por la página, pero no por un roce de la rueda o del panel táctil
+    let scrollAlAbrir = 0;
+    new MutationObserver(() => { if (!panel.hidden) scrollAlAbrir = scrollY; }).observe(panel, { attributes: true, attributeFilter: ['hidden'] });
+    addEventListener('scroll', () => { if (Math.abs(scrollY - scrollAlAbrir) > 60) cerrar(false); }, { passive: true });
+    addEventListener('resize', () => cerrar(false));
+  }
+</script>
+
+<style is:global>
+  /* Menú blanco pequeño, como el aviso de cookies: no tapa la página ni la bloquea */
+  .elegir-correo {
+    position: fixed; z-index: 60; width: min(21rem, calc(100vw - 1.5rem));
+    padding: 1rem .5rem .5rem; border-radius: 1.25rem; background: #fff; color: var(--color-tinta);
+    box-shadow: 0 2px 6px rgb(19 32 58 / .1), 0 22px 44px -18px rgb(19 32 58 / .45);
+  }
+  .elegir-correo[hidden] { display: none; }
+  .elegir-correo-titulo { padding: 0 .75rem .5rem; font-size: .875rem; font-weight: 700; }
+  .elegir-correo-lista { display: grid; }
+  .elegir-correo-opcion {
+    display: block; width: 100%; padding: .6rem .75rem; border-radius: .75rem; text-align: left;
+    font-size: .95rem; font-weight: 600; color: var(--color-tinta); text-decoration: none; overflow-wrap: anywhere;
+  }
+  .elegir-correo-opcion:hover, .elegir-correo-opcion:focus-visible { background: var(--color-melocoton); }
+  .elegir-correo-nota { font-weight: 500; font-size: .8rem; color: var(--color-naranja-oscuro); }
+  .elegir-correo-copiar { margin-top: .25rem; border-top: 1px solid var(--color-linea); border-radius: 0 0 .75rem .75rem; font-weight: 500; color: var(--color-gris); }
+</style>

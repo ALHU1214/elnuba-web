@@ -70,8 +70,11 @@ export const listaIslas = `${islas.slice(0, -1).join(', ')} y ${islas.at(-1)}`;
 export const telHref = `tel:${negocio.telefonoE164}`;
 // Correos de presupuesto con el asunto y un guion ya escritos (9-nov-2026, CRO): quien escribe solo rellena.
 // Van en la voz del cliente y de "ustedes", como se habla en Canarias.
+// 24-nov-2026 (Álvaro): el asunto acaba en "(desde la web)" para que ELNUBA sepa qué clientes llegan por la web.
+// En el ordenador, al pulsar sale el menú para elegir Gmail, Outlook, Yahoo o el programa de correo (ElegirCorreo.astro).
+export const marcaWeb = ' (desde la web)';
 const correo = (asunto: string, cuerpo: string) =>
-  `mailto:${negocio.email}?subject=${encodeURIComponent(asunto)}&body=${encodeURIComponent(cuerpo.replace(/\n/g, '\r\n'))}`;
+  `mailto:${negocio.email}?subject=${encodeURIComponent(asunto + marcaWeb)}&body=${encodeURIComponent(cuerpo.replace(/\n/g, '\r\n'))}`;
 export const correos = {
   general: correo('Presupuesto de material',
     'Hola:\n\nQuería pedir presupuesto para este material:\n- \n- \n- \n\nCentro o empresa: \nIsla y municipio de entrega: \nTeléfono de contacto: \n\nGracias.'),
@@ -85,7 +88,7 @@ export const correos = {
 export type TipoCorreo = keyof typeof correos;
 export const mailHref = correos.general;
 // Sin plantilla: para los textos legales (aviso legal, privacidad), donde no se pide presupuesto
-export const mailSimple = `mailto:${negocio.email}`;
+export const mailSimple = `mailto:${negocio.email}?subject=${encodeURIComponent('Consulta' + marcaWeb)}`;
 
 // Lo que pregunta un comprador antes de pedir (9-nov-2026, CRO). [PENDIENTE] de Gonzalo (preguntas 20-24).
 // Mientras sea null no sale nada; en cuanto se rellene, aparece solo en la portada y en las preguntas frecuentes.
