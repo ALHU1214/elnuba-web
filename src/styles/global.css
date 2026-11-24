@@ -904,14 +904,15 @@ header[data-con-sombra] .barra { box-shadow: 0 2px 6px rgb(19 32 58 / .07), 0 18
 /* naranja de los números grandes: 3,6:1 sobre blanco, suficiente para letra de este tamaño */
 .tienda-guion { color: var(--color-naranja-vivo); }
 @media (min-width: 640px) { .tienda-tramo { grid-template-columns: 11rem minmax(0, 1fr); align-items: baseline; gap: 1.5rem; } }
-.tienda-extras { display: grid; border-top: 1px solid var(--color-linea); }
-.tienda-extras li { display: flex; align-items: center; gap: .9rem; padding: 1.1rem 1.75rem; font-weight: 600; line-height: 1.35; }
-.tienda-extras li + li { border-top: 1px solid var(--color-linea); }
+.tienda-extras { display: grid; gap: 1px; border-top: 1px solid var(--color-linea); background: var(--color-linea); }
+/* 24-nov-2026: cuatro puntos (se añadió Fotocopias). Las rayas son el hueco de 1 px entre casillas blancas: dos columnas
+   en tableta y ordenador pequeño, cuatro en pantalla grande; así ninguno se queda solo en una fila */
+.tienda-extras li { display: flex; align-items: center; gap: .9rem; padding: 1.1rem 1.75rem; font-weight: 600; line-height: 1.35; background: #fff; }
 @media (min-width: 768px) {
-  .tienda-extras { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .tienda-extras { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .tienda-extras li { padding: 1.5rem 2rem; }
-  .tienda-extras li + li { border-top: 0; border-left: 1px solid var(--color-linea); }
 }
+@media (min-width: 1280px) { .tienda-extras { grid-template-columns: repeat(4, minmax(0, 1fr)); } .tienda-extras li { padding: 1.5rem 1.6rem; } }
 .tienda-icono { width: 1.6rem; height: 1.6rem; flex-shrink: 0; fill: none; stroke: var(--color-naranja-oscuro); stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
 
 
@@ -927,3 +928,13 @@ header[data-con-sombra] .barra { box-shadow: 0 2px 6px rgb(19 32 58 / .07), 0 18
   .tabla-cookies td { display: grid; grid-template-columns: 5.5rem minmax(0, 1fr); gap: .75rem; padding: .15rem 0; border: 0; }
   .tabla-cookies td::before { content: attr(data-etiqueta); font-weight: 700; color: var(--color-tinta); }
 }
+
+/* Inicio, debajo de "Elige tu caso" (24-nov-2026): una línea que lleva a Fotocopias, encuadernación y plastificado.
+   Sin caja: una raya fina arriba y abajo, como las filas del índice */
+.copias-aviso {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .5rem 1.5rem;
+  margin-top: 1.5rem; padding: 1.15rem .25rem; border-block: 1px solid rgb(19 32 58 / .15); font-size: 1.0625rem; line-height: 1.5;
+}
+.copias-aviso-enlace { display: inline-flex; align-items: center; gap: .4rem; font-weight: 700; color: var(--color-naranja-oscuro); white-space: nowrap; }
+.copias-aviso:hover .copias-aviso-enlace { text-decoration: underline; text-underline-offset: 4px; }
+@media (min-width: 768px) { .copias-aviso { margin-top: 2rem; padding-inline: 1.5rem; } }

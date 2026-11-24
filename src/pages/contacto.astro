@@ -6,6 +6,7 @@
 // 16-nov-2026 (Álvaro): la Librería Mararía (Candelaria) no sale en ninguna parte de la web: no es ELNUBA y confundía.
 // Antes: título con foto, dos tarjetas con iconos en círculos y las dos tiendas iguales (la dirección salía dos veces).
 import Base from '../layouts/Base.astro';
+import { ruta } from '../lib/ruta';
 import Encabezado from '../components/Encabezado.astro';
 import CopiarCorreo from '../components/CopiarCorreo.astro';
 import MapaGoogle from '../components/MapaGoogle.astro';
@@ -84,7 +85,7 @@ const [usuarioCorreo, dominioCorreo] = negocio.email.split('@');
           <span class="sr-only"> (abre Google Maps en otra pestaña)</span>
         </a>
         <ul class="mt-8 space-y-2 border-t border-linea pt-6 text-sm text-gris">
-          {majuelos.extras.filter((e) => e !== 'Recogida de pedidos').map((e) => <li class="flex gap-2.5"><span aria-hidden="true" class="mt-[.45rem] size-1.5 shrink-0 rounded-full bg-naranja"></span>{e}</li>)}
+          {majuelos.extras.filter((e) => e !== 'Recogida de pedidos').map((e) => <li class="flex gap-2.5"><span aria-hidden="true" class="mt-[.45rem] size-1.5 shrink-0 rounded-full bg-naranja"></span>{e.startsWith('Fotocopias') ? <a href={ruta('/fotocopias-encuadernacion-plastificado/')} class="underline decoration-naranja underline-offset-4 hover:text-tinta">{e}</a> : e}</li>)}
         </ul>
       </div>
       <div class="relative min-h-[18rem] lg:col-span-7">

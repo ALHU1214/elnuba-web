@@ -17,7 +17,7 @@ export const GET: APIRoute = ({ site }) => {
     '',
     `> ${descripcionNegocio}`,
     '',
-    `${negocio.nombre} (${negocio.razonSocial}) trabaja con colegios y centros educativos, empresas, despachos y organismos públicos${anios ? `, con ${anios}` : ''}. Vende al por mayor y al detalle.`,
+    `${negocio.nombre} (${negocio.razonSocial}) trabaja con colegios y centros educativos, empresas, despachos y organismos públicos${anios ? `, con ${anios}` : ''}. Vende al por mayor y al detalle. En su tienda de Los Majuelos también hace fotocopias, encuadernación y plastificado.`,
     '',
     '## Contacto',
     '',

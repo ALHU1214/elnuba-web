@@ -43,6 +43,8 @@ export const preguntasInicio: Pregunta[] = [
   // Tiendas
   { tema: 'tiendas', p: '¿Dónde están?', r: `Nuestro almacén y tienda están en ${d.calle}, ${d.zona}, ${d.cp} ${d.localidad} (Tenerife).` },
   { tema: 'tiendas', p: '¿Qué horario tienen?', r: `En Los Majuelos (oficinas, almacén y tienda): ${fraseHorario(horarioTramos)}.` },
+  // 24-nov-2026 (Álvaro)
+  { tema: 'tiendas', p: '¿Hacen fotocopias, encuadernaciones o plastificados?', r: 'Sí, en nuestra tienda de Los Majuelos (La Laguna): fotocopias, encuadernación y plastificado de apuntes, trabajos y documentos.' },
   { tema: 'tiendas', p: '¿Se puede pagar con tarjeta en la tienda?', r: 'Sí. En la tienda de Los Majuelos puedes pagar con tarjeta de crédito, de débito y con el móvil.' },
   { tema: 'tiendas', p: '¿La tienda es accesible?', r: 'Sí. En la tienda de Los Majuelos, la entrada y los aseos son accesibles para personas con movilidad reducida. No tiene aparcamiento propio, pero se puede aparcar en la calle.' },
 ];

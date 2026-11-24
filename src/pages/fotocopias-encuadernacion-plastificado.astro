@@ -1,0 +1,80 @@
+---
+// Fotocopias, encuadernación y plastificado (24-nov-2026, Álvaro: "quiero que la gente encuentre también a ELNUBA
+// cuando busca fotocopias; estudiantes que busquen hacer fotocopias, encuadernar o plastificar").
+// Página propia para que Google la asocie a esas búsquedas: título, dirección y descripción con las tres palabras y La
+// Laguna. Solo lo confirmado: que hacen los tres servicios en la tienda de Los Majuelos. Lo que falta (color, tamaños,
+// tipos de encuadernación, si se imprime desde un USB o el correo, precios) está en las preguntas a Gonzalo; no se pone
+// hasta que lo confirme.
+// Piezas de siempre: la cabecera marino (sin foto hasta que Álvaro haga las de la tienda), el índice de revista de
+// Nosotros y Empresas, la ficha de la tienda con el horario, las preguntas que giran y el bloque final.
+import Base from '../layouts/Base.astro';
+import Encabezado from '../components/Encabezado.astro';
+import Tiendas from '../components/Tiendas.astro';
+import Preguntas from '../components/Preguntas.astro';
+import LlamadaFinal from '../components/LlamadaFinal.astro';
+import { negocio, correos, horarioTramos, fraseHorario } from '../data/negocio';
+import { servicios } from '../data/seo';
+
+const d = negocio.direccion;
+const flecha = 'M5 12h14 M13 6l6 6-6 6';
+const lista = [
+  { nombre: 'Fotocopias', texto: 'De tus apuntes, trabajos y documentos.' },
+  { nombre: 'Encuadernación', texto: 'Para que tus trabajos y apuntes queden presentables y no se pierda ninguna hoja.' },
+  { nombre: 'Plastificado', texto: 'Para proteger los documentos que más usas y que duren más.' },
+];
+
+const preguntas = [
+  { p: '¿Dónde puedo hacer fotocopias en La Laguna?', r: `En nuestra tienda de Los Majuelos: ${d.calle}, ${d.zona}, ${d.cp} ${d.localidad}.` },
+  { p: '¿Encuadernan trabajos y apuntes?', r: 'Sí. Encuadernamos trabajos, apuntes y documentos en la tienda de Los Majuelos.' },
+  { p: '¿Plastifican documentos?', r: 'Sí, también plastificamos documentos en la tienda.' },
+  ...(negocio.horario ? [{ p: '¿Qué horario tiene la tienda?', r: `${fraseHorario(horarioTramos).charAt(0).toUpperCase()}${fraseHorario(horarioTramos).slice(1)}.` }] : []),
+  { p: '¿Puedo pagar con tarjeta?', r: 'Sí, con tarjeta de crédito, de débito y con el móvil.' },
+  { p: '¿Puedo preguntar antes de ir?', r: `Claro. Llámanos al ${negocio.telefono} o escríbenos a ${negocio.email}.` },
+];
+---
+<Base
+  titulo="Fotocopias, encuadernación y plastificado en La Laguna · ELNUBA"
+  descripcion="Fotocopias, encuadernación y plastificado de apuntes, trabajos y documentos en nuestra tienda de Los Majuelos (La Laguna, Tenerife). Para estudiantes y para quien lo necesite."
+  servicio={servicios.copias}
+  correo="copias">
+
+  <Encabezado
+    miga="Fotocopias"
+    antetitulo="Fotocopias · Encuadernación · Plastificado"
+    titulo="Fotocopias, encuadernación y plastificado en La Laguna"
+    entradilla="Para estudiantes, profesores y cualquiera que lo necesite. Ven a nuestra tienda de Los Majuelos."
+    correo="copias"
+    marcas={false} />
+
+  {/* QUÉ HACEMOS: el índice de revista, como en Nosotros y Empresas. Cada fila lleva al correo de consulta */}
+  <section class="mx-auto max-w-7xl px-4 py-10 md:px-6 md:py-20">
+    <p class="antetitulo text-xs font-bold tracking-[.2em] text-naranja-oscuro uppercase">En nuestra tienda</p>
+    <h2 class="mt-3 max-w-3xl text-4xl md:text-5xl">Lo que hacemos en la tienda</h2>
+    <ol class="indice mt-8 md:mt-12" data-revelar-hijos>
+      {lista.map((x, n) => (
+        <li>
+          <a href={correos.copias} class="indice-fila">
+            <span class="indice-num" aria-hidden="true">{String(n + 1).padStart(2, '0')}</span>
+            <span class="indice-nombre">{x.nombre}</span>
+            <span class="indice-texto">{x.texto}</span>
+            <span class="indice-enlace">
+              Preguntar
+              <svg aria-hidden="true" viewBox="0 0 24 24" class="indice-flecha size-5 fill-none stroke-current stroke-2"><path d={flecha} /></svg>
+            </span>
+          </a>
+        </li>
+      ))}
+    </ol>
+  </section>
+
+  {/* DÓNDE: la ficha de la tienda (dirección, teléfono, horario y lo que ofrece) */}
+  <section class="mx-auto max-w-7xl px-4 pb-10 md:px-6 md:pb-20">
+    <h2 class="text-4xl font-medium tracking-tight md:text-5xl">Dónde: nuestra tienda de Los Majuelos</h2>
+    <p class="mt-5 max-w-2xl text-lg leading-relaxed text-gris">Dentro de nuestro almacén de La Laguna, en Av. El Paso 43.</p>
+    <div class="mt-10"><Tiendas /></div>
+  </section>
+
+  <Preguntas preguntas={preguntas} titulo="Preguntas sobre fotocopias y encuadernación" correo="copias" etiqueta="Fotocopias" />
+
+  <LlamadaFinal titulo="¿Tienes dudas antes de venir?" texto="Llámanos o escríbenos y te lo explicamos." correo="copias" />
+</Base>

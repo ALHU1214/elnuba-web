@@ -57,7 +57,7 @@ export const negocio = {
 // 16-nov-2026 (Álvaro): "personas con movilidad reducida" en vez de "personas usuarias de silla de ruedas", y "aseos".
 // Los Majuelos: la tienda está dentro del almacén, así que lleva el mismo horario (16-nov-2026).
 export const tiendas = [
-  { id: 'los-majuelos', nombre: 'Tienda de Los Majuelos', lugar: 'La Laguna', direccion: ['Av. El Paso 43, bajo', 'Polígono Industrial Los Majuelos', '38108 San Cristóbal de La Laguna'], telefono: '922 62 63 69', telefonoE164: '+34922626369', horario: horarioTexto as string[] | null, nota: 'Dentro de nuestro almacén.', mapa: 'ELNUBA Distribuciones de Papelería, Av. El Paso 43, La Laguna', extras: ['Entrada y aseos accesibles para personas con movilidad reducida', 'Pago con tarjeta de crédito, débito y con el móvil', 'Recogida de pedidos'] },
+  { id: 'los-majuelos', nombre: 'Tienda de Los Majuelos', lugar: 'La Laguna', direccion: ['Av. El Paso 43, bajo', 'Polígono Industrial Los Majuelos', '38108 San Cristóbal de La Laguna'], telefono: '922 62 63 69', telefonoE164: '+34922626369', horario: horarioTexto as string[] | null, nota: 'Dentro de nuestro almacén.', mapa: 'ELNUBA Distribuciones de Papelería, Av. El Paso 43, La Laguna', extras: ['Entrada y aseos accesibles para personas con movilidad reducida', 'Pago con tarjeta de crédito, débito y con el móvil', 'Recogida de pedidos', 'Fotocopias, encuadernación y plastificado'] },
 ];
 
 
@@ -82,6 +82,9 @@ export const correos = {
     'Hola:\n\nLes envío la lista de material de nuestro centro para que nos preparen el presupuesto (la adjunto o la copio aquí):\n\n\nNombre del centro: \nIsla y municipio: \nTeléfono de contacto: \n\nGracias.'),
   empresa: correo('Presupuesto de material de oficina',
     'Hola:\n\nNecesitamos presupuesto para este material:\n- \n- \n- \n\nEmpresa u organismo: \nDirección de entrega: \nTeléfono de contacto: \n\nGracias.'),
+  // 24-nov-2026 (Álvaro): fotocopias, encuadernación y plastificado en la tienda de Los Majuelos
+  copias: correo('Consulta sobre fotocopias, encuadernación o plastificado',
+    'Hola:\n\nQuería preguntar por (fotocopias, encuadernación o plastificado): \n\nCuántas páginas o copias: \nPara cuándo lo necesito: \nTeléfono de contacto: \n\nGracias.'),
   articulo: correo('Consulta por un artículo',
     'Hola:\n\n¿Tienen este artículo?\n- Artículo y marca: \n- Cantidad: \n\nTeléfono de contacto: \n\nGracias.'),
 };
@@ -103,6 +106,8 @@ export const condiciones = {
 export const nav = [
   { href: '/colegios/', label: 'Colegios' },
   { href: '/empresas-y-organismos/', label: 'Empresas y organismos' },
+  // 24-nov-2026 (Álvaro): para que los encuentre quien busca fotocopias, encuadernar o plastificar (estudiantes)
+  { href: '/fotocopias-encuadernacion-plastificado/', label: 'Fotocopias' },
   { href: '/nosotros/', label: 'Nosotros' },
   { href: '/contacto/', label: 'Contacto' },
 ];
