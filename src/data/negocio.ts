@@ -106,8 +106,6 @@ export const condiciones = {
 export const nav = [
   { href: '/colegios/', label: 'Colegios' },
   { href: '/empresas-y-organismos/', label: 'Empresas y organismos' },
-  // 24-nov-2026 (Álvaro): para que los encuentre quien busca fotocopias, encuadernar o plastificar (estudiantes)
-  { href: '/fotocopias-encuadernacion-plastificado/', label: 'Fotocopias' },
   { href: '/nosotros/', label: 'Nosotros' },
   { href: '/contacto/', label: 'Contacto' },
 ];

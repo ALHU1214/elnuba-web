@@ -20,11 +20,11 @@ const actual = Astro.url.pathname;
     </a>
 
     <nav aria-label="Principal" class="hidden lg:block">
-      <ul class="flex items-center gap-0.5 text-[14px] font-semibold xl:gap-1 xl:text-[15px]">
+      <ul class="flex items-center gap-1 text-[15px] font-semibold">
         {nav.map((n) => (
           <li>
             <a href={ruta(n.href)} aria-current={actual.startsWith(ruta(n.href)) ? 'page' : undefined}
-               class="block rounded-full px-2.5 py-2.5 whitespace-nowrap xl:px-4 text-tinta/75 transition-colors hover:bg-papel hover:text-tinta aria-[current=page]:bg-melocoton aria-[current=page]:text-tinta">{n.label}</a>
+               class="block rounded-full px-4 py-2.5 whitespace-nowrap text-tinta/75 transition-colors hover:bg-papel hover:text-tinta aria-[current=page]:bg-melocoton aria-[current=page]:text-tinta">{n.label}</a>
           </li>
         ))}
       </ul>
@@ -32,21 +32,19 @@ const actual = Astro.url.pathname;
 
     {/* 11-nov-2026 (Álvaro: "más llamativos"): llamar en pastilla marino y "Pedir presupuesto" con sobre y brillo.
         "Pedir presupuesto" sale ya desde 768 px (antes, solo con el menú a la vista). Entre 1024 y 1179 px queda solo el
-        círculo del teléfono (el número se sigue leyendo con lector de pantalla). Estilos: .btn-llamar y .btn-cabecera
-        24-nov-2026: con «Fotocopias» en el menú (5 enlaces), eso pasa hasta 1279 px y los enlaces van algo más juntos y
-        a 14 px hasta 1280; si no, entre 1024 y 1279 px los botones se salían de la barra */}
+        círculo del teléfono (el número se sigue leyendo con lector de pantalla). Estilos: .btn-llamar y .btn-cabecera */}
     <div class="flex items-center gap-2">
       <a href={telHref} class="btn-llamar hidden sm:inline-flex">
         <span class="btn-llamar-icono">
           <Icono nombre="telefono" class="size-[18px] fill-none stroke-[#13203a] stroke-2 md:size-5" />
         </span>
-        <span class="leading-tight lg:max-[1279px]:sr-only">
+        <span class="leading-tight lg:max-[1179px]:sr-only">
           <span class="block text-[11px] font-bold tracking-[.14em] text-[#ff9a4d] uppercase">Llámanos </span>
           <span class="block text-[15px] font-bold whitespace-nowrap">{negocio.telefono}</span>
         </span>
       </a>
       <a href={correos[correo]} class="btn-primario btn-cabecera hidden md:inline-flex">
-        <Icono nombre="correo" class="size-5 fill-none stroke-2 lg:max-[1279px]:hidden" />
+        <Icono nombre="correo" class="size-5 fill-none stroke-2 lg:max-[1179px]:hidden" />
         Pedir presupuesto
       </a>
       <button id="menu-boton" type="button" aria-expanded="false" aria-controls="menu-movil"
