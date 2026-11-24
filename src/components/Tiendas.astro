@@ -6,7 +6,6 @@
 // duda y sea fácil de encontrar"). Abajo, a lo ancho, lo que ofrece la tienda con su icono, separado por rayas.
 // Los datos salen de negocio.ts (filasHorario y tiendas). CSS: .tienda… en global.css.
 import { tiendas, filasHorario } from '../data/negocio';
-import { ruta } from '../lib/ruta';
 
 const [t] = tiendas;
 // Iconos de línea sueltos (sin círculo), en el orden de t.extras: entrada accesible, pago con tarjeta, recogida
@@ -14,7 +13,7 @@ const iconos = [
   'M5 21V4h9l1 2h4v15 M9 12h.01 M3 21h18',
   'M3 6h18v12H3z M3 10h18 M7 15h4',
   'M3 8l9-5 9 5-9 5z M3 8v8l9 5 9-5V8 M12 13v8',
-  // 24-nov-2026: fotocopias (impresora), con enlace a su página
+  // 24-nov-2026: fotocopias (impresora)
   'M7 9V3h10v6 M7 17H4V9h16v8h-3 M7 13h10v8H7z',
 ];
 ---
@@ -49,7 +48,7 @@ const iconos = [
       {t.extras.map((e, i) => (
         <li>
           <svg aria-hidden="true" viewBox="0 0 24 24" class="tienda-icono"><path d={iconos[i] ?? iconos[2]} /></svg>
-          {e.startsWith('Fotocopias') ? <a href={ruta('/fotocopias-encuadernacion-plastificado/')} class="underline decoration-naranja underline-offset-4 hover:text-naranja-oscuro">{e}</a> : e}
+          {e}
         </li>
       ))}
     </ul>

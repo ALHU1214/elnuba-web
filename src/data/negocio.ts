@@ -82,9 +82,6 @@ export const correos = {
     'Hola:\n\nLes envío la lista de material de nuestro centro para que nos preparen el presupuesto (la adjunto o la copio aquí):\n\n\nNombre del centro: \nIsla y municipio: \nTeléfono de contacto: \n\nGracias.'),
   empresa: correo('Presupuesto de material de oficina',
     'Hola:\n\nNecesitamos presupuesto para este material:\n- \n- \n- \n\nEmpresa u organismo: \nDirección de entrega: \nTeléfono de contacto: \n\nGracias.'),
-  // 24-nov-2026 (Álvaro): fotocopias, encuadernación y plastificado en la tienda de Los Majuelos
-  copias: correo('Consulta sobre fotocopias, encuadernación o plastificado',
-    'Hola:\n\nQuería preguntar por (fotocopias, encuadernación o plastificado): \n\nCuántas páginas o copias: \nPara cuándo lo necesito: \nTeléfono de contacto: \n\nGracias.'),
   articulo: correo('Consulta por un artículo',
     'Hola:\n\n¿Tienen este artículo?\n- Artículo y marca: \n- Cantidad: \n\nTeléfono de contacto: \n\nGracias.'),
 };

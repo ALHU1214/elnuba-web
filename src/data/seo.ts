@@ -10,7 +10,6 @@ export const paginas = [
   { ruta: '/', nombre: 'Inicio', resumen: 'Qué distribuye ELNUBA, para quién, cómo se pide y preguntas frecuentes.' },
   { ruta: '/colegios/', nombre: 'Colegios', resumen: 'Material escolar, libros de texto y material de dibujo y pintura para colegios y centros educativos.' },
   { ruta: '/empresas-y-organismos/', nombre: 'Empresas y organismos', resumen: 'Material de oficina, archivo, tóner y cartuchos para empresas, despachos y organismos públicos.' },
-  { ruta: '/fotocopias-encuadernacion-plastificado/', nombre: 'Fotocopias, encuadernación y plastificado', resumen: 'Fotocopias, encuadernación y plastificado en la tienda de Los Majuelos (La Laguna), para estudiantes, profesores y cualquiera que lo necesite.' },
   { ruta: '/nosotros/', nombre: 'Nosotros', resumen: 'Quiénes somos: más de 35 años distribuyendo papelería desde Los Majuelos (La Laguna), para quién trabajamos, qué vendemos y nuestra tienda.' },
   { ruta: '/contacto/', nombre: 'Contacto', resumen: 'Teléfono, correo, dirección y cómo llegar.' },
 ];
@@ -23,7 +22,6 @@ const mapa = (q: string) => `https://www.google.com/maps/search/?api=1&query=${e
 // Servicio principal de cada página de cliente (va en su propia página y la ficha de la empresa apunta a él)
 export const servicios = {
   colegios: { nombre: 'Suministro de material escolar a colegios y centros educativos', descripcion: 'Material escolar, libros de texto y material de dibujo y pintura para colegios públicos y privados. El centro manda su lista de material y ELNUBA le prepara el presupuesto.', publico: 'Colegios y centros educativos' },
-  copias: { nombre: 'Fotocopias, encuadernación y plastificado', descripcion: 'Fotocopias, encuadernación y plastificado de apuntes, trabajos y documentos en la tienda de Los Majuelos (La Laguna, Tenerife).', publico: 'Estudiantes, profesores y público en general' },
   empresas: { nombre: 'Suministro de material de oficina a empresas y organismos públicos', descripcion: 'Material de oficina, archivo, tóner y cartuchos para empresas, despachos y organismos públicos, con entrega en la oficina.', publico: 'Empresas, despachos y organismos públicos' },
 };
 export type Servicio = (typeof servicios)[keyof typeof servicios];
@@ -77,7 +75,7 @@ export function grafo(o: { inicio: string; canonica?: string; titulo: string; de
     makesOffer: [
       { '@type': 'Offer', itemOffered: { '@type': 'Service', '@id': `${o.url('/colegios/')}#servicio`, name: servicios.colegios.nombre, url: o.url('/colegios/') } },
       { '@type': 'Offer', itemOffered: { '@type': 'Service', '@id': `${o.url('/empresas-y-organismos/')}#servicio`, name: servicios.empresas.nombre, url: o.url('/empresas-y-organismos/') } },
-      { '@type': 'Offer', itemOffered: { '@type': 'Service', '@id': `${o.url('/fotocopias-encuadernacion-plastificado/')}#servicio`, name: servicios.copias.nombre, url: o.url('/fotocopias-encuadernacion-plastificado/') } },
+      { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Fotocopias, encuadernación y plastificado en la tienda de Los Majuelos' } },
       { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Entrega a domicilio en tu colegio u oficina' } },
       { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Reparto a todas las islas Canarias' } },
       { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Recogida de pedidos en el almacén de Los Majuelos' } },
