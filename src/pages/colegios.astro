@@ -7,6 +7,7 @@ import Familias from '../components/Familias.astro';
 import Preguntas from '../components/Preguntas.astro';
 import LlamadaFinal from '../components/LlamadaFinal.astro';
 import Pendiente from '../components/Pendiente.astro';
+import Foto from '../components/Foto.astro';
 import Lapices from '../components/Lapices.astro';
 import CopiarCorreo from '../components/CopiarCorreo.astro';
 import { negocio, listaIslas, correos } from '../data/negocio';
@@ -74,7 +75,7 @@ const preguntas = [
       <figure class="relative aspect-[3/2] overflow-hidden rounded-[2rem] lg:col-span-5 lg:aspect-auto lg:min-h-[25rem]">
         {/* 17-nov-2026: antes, una niña dibujando. Se cambió porque se le veía la cara: la licencia CC0 permite usar la
             foto, pero no trae el permiso de la persona que sale, y con menores la ley es especialmente estricta */}
-        <img src={ruta('/img/lapices-fila.webp')} alt="Lápices de colores en fila, ordenados como un arcoíris, sobre una mesa de madera" width="960" height="632" loading="lazy" decoding="async" class="absolute inset-0 size-full object-cover" />
+        <Foto src="/img/lapices-fila.webp" alt="Lápices de colores en fila, ordenados como un arcoíris, sobre una mesa de madera" width={960} height={632} sizes="(min-width: 1280px) 510px, (min-width: 1024px) 40vw, 100vw" class="absolute inset-0 size-full object-cover" />
       </figure>
       <div class="lg:col-span-7">
         <ol class="lista-pasos" data-al-ver>

@@ -3,6 +3,7 @@ import Icono from '../components/Icono.astro';
 import { ruta } from '../lib/ruta';
 import Base from '../layouts/Base.astro';
 import Pendiente from '../components/Pendiente.astro';
+import Foto from '../components/Foto.astro';
 import Preguntas from '../components/Preguntas.astro';
 import LlamadaFinal from '../components/LlamadaFinal.astro';
 import Servicios from '../components/Servicios.astro';
@@ -71,7 +72,7 @@ const pasos = [
       </div>
 
       <figure class="entra-tarde relative col-span-2 aspect-[16/10] overflow-hidden rounded-[2rem] lg:col-span-5 lg:aspect-auto lg:min-h-[16rem]">
-        <img src={ruta('/img/lapices-abanico.webp')} alt="Lápices de colores colocados en círculo sobre fondo blanco" width="960" height="720" loading="eager" fetchpriority="high" decoding="async" class="absolute inset-0 size-full object-cover" />
+        <Foto src="/img/lapices-abanico.webp" alt="Lápices de colores colocados en círculo sobre fondo blanco" width={960} height={720} sizes="(min-width: 1280px) 510px, (min-width: 1024px) 40vw, 100vw" loading="eager" fetchpriority="high" class="absolute inset-0 size-full object-cover" />
       </figure>
 
       {/* Los años: lo que más quiere destacar Gonzalo. "+35" (Álvaro, 11-nov-2026); el + no cuenta, solo el número.
@@ -114,7 +115,7 @@ const pasos = [
     <div class="mt-8 grid gap-3 md:mt-10 md:grid-cols-3 md:gap-4">
       {clientes.map((c) => (
         <a href={ruta(c.href)} class="caso group foto-velo relative isolate block aspect-[4/3] overflow-hidden rounded-[2rem] sm:aspect-[16/10] md:aspect-[4/5]">
-          <img src={ruta(c.img)} alt={c.alt} width="960" height="640" loading="lazy" decoding="async" class="caso-foto absolute inset-0 -z-10 size-full object-cover" style={c.pos ? `object-position: ${c.pos}` : undefined} />
+          <Foto src={c.img} alt={c.alt} width={960} height={640} sizes="(min-width: 1280px) 400px, (min-width: 768px) 32vw, 100vw" class="caso-foto absolute inset-0 -z-10 size-full object-cover" style={c.pos ? `object-position: ${c.pos}` : undefined} />
           <div class="absolute inset-x-0 bottom-0 z-10 p-6 text-white md:p-8">
             <h3 class="text-2xl text-white md:text-[1.65rem]"><span class="caso-marca">{c.titulo}</span></h3>
             <p class="mt-2 text-white/80">{c.texto}</p>

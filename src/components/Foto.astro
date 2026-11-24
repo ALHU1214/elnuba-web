@@ -1,0 +1,21 @@
+---
+// Foto optimizada (24-nov-2026, Álvaro: "optimiza todas las imágenes"). Cada foto de public/img tiene 4 archivos:
+// <nombre>.avif y <nombre>.webp (960 px de ancho) y <nombre>-480.avif y <nombre>-480.webp. El navegador elige solo el
+// formato (AVIF pesa casi la mitad; WebP para los navegadores que no lo leen) y el tamaño según el hueco que ocupa la
+// foto en su pantalla (sizes). Las variantes se generan con el script optimizar_fotos.py (ver proyecto/fotos-origen.md).
+// Se pasa la ruta de la WebP grande, como antes: foto="/img/ceras.webp".
+import { ruta } from '../lib/ruta';
+
+interface Props {
+  src: string; alt: string; width: number; height: number; sizes: string;
+  loading?: 'lazy' | 'eager'; fetchpriority?: 'high' | 'low' | 'auto'; class?: string; style?: string;
+}
+const { src, alt, width, height, sizes, loading = 'lazy', fetchpriority, class: clase, style } = Astro.props;
+const base = src.replace(/\.webp$/, '');
+const juego = (ext: string) => `${ruta(`${base}-480.${ext}`)} 480w, ${ruta(`${base}.${ext}`)} 960w`;
+---
+<picture>
+  <source type="image/avif" srcset={juego('avif')} sizes={sizes} />
+  <img src={ruta(src)} srcset={juego('webp')} sizes={sizes} alt={alt} width={width} height={height}
+       loading={loading} fetchpriority={fetchpriority} decoding="async" class={clase} style={style} />
+</picture>

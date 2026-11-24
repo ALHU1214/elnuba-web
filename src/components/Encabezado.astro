@@ -6,6 +6,7 @@ import { ruta } from '../lib/ruta';
 import { telHref, negocio, correos, type TipoCorreo } from '../data/negocio';
 import CopiarCorreo from './CopiarCorreo.astro';
 import Marcas from './Marcas.astro';
+import Foto from './Foto.astro';
 
 // fecha (AAAA-MM-DD): si la entradilla es una fecha (legales), va dentro de <time> para que buscadores e IA la lean bien
 interface Props { antetitulo: string; titulo: string; entradilla: string; miga: string; botones?: boolean; foto?: string; fotoAlt?: string; correo?: TipoCorreo; marcas?: boolean; fecha?: string; }
@@ -61,7 +62,7 @@ const migaJsonld = {
     {lateral && <div class="entra-tarde lg:col-span-5"><slot name="lateral" /></div>}
     {foto && (
       <figure class="entra-tarde relative aspect-[16/10] overflow-hidden rounded-[2rem] lg:col-span-5 lg:aspect-auto lg:min-h-[22rem]">
-        <img src={ruta(foto)} alt={fotoAlt} width="960" height="720" loading="eager" decoding="async" class="absolute inset-0 size-full object-cover" />
+        <Foto src={foto} alt={fotoAlt} width={960} height={720} sizes="(min-width: 1280px) 510px, (min-width: 1024px) 40vw, 100vw" loading="eager" class="absolute inset-0 size-full object-cover" />
       </figure>
     )}
   </div>
