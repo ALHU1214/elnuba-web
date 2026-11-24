@@ -784,12 +784,10 @@ header[data-con-sombra] .barra { box-shadow: 0 2px 6px rgb(19 32 58 / .07), 0 18
    carpetas naranja y marino y un recuadro partido en dos (no gustaron; clases .carpeta… y .sectores… quitadas) */
 .indice-lista { display: flex; flex-wrap: wrap; font-size: 1.0625rem; font-weight: 600; line-height: 1.75; color: var(--color-tinta); }
 .indice-lista span:not(:last-child)::after { content: "·"; margin: 0 .65rem; color: var(--color-naranja-oscuro); font-weight: 800; }
-.indice-pendiente { padding: 0 .25rem 1.4rem; }
 /* en el móvil (una columna), la lista antes que "Pedir presupuesto", que cierra la fila */
 @media (max-width: 1023px) { .indice-lista { order: 4; } .indice-fila > .indice-enlace { order: 5; margin-top: .5rem; } }
 @media (min-width: 1024px) {
   .indice-lista { grid-column: 2 / -1; margin-top: .35rem; }
-  .indice-pendiente { padding: 0 1.5rem 1.6rem calc(1.5rem + 3.5rem + 2rem); margin-top: -.6rem; }
 }
 /* Aviso de cookies (Consentimiento.astro, 17-nov-2026). Solo sale si hay analítica en negocio.ts. Recuadro blanco
    abajo, que no tapa la web ni la bloquea: abajo a la izquierda en el ordenador y encima de la barra de "Llamar /

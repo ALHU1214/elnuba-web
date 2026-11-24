@@ -5,7 +5,6 @@ import Encabezado from '../components/Encabezado.astro';
 import Familias from '../components/Familias.astro';
 import Preguntas from '../components/Preguntas.astro';
 import LlamadaFinal from '../components/LlamadaFinal.astro';
-import Pendiente from '../components/Pendiente.astro';
 import { negocio, listaIslas, correos, telHref } from '../data/negocio';
 import MapaCanarias from '../components/MapaCanarias.astro';
 import CajaPedido from '../components/CajaPedido.astro';
@@ -21,14 +20,16 @@ import { servicios } from '../data/seo';
 //    y marino (17-nov) y un recuadro blanco partido en dos (18-nov, mañana); no gustaron. CSS: .indice… en global.css.
 // Antes (16-nov, mañana): frases grandes con subrayador y un bloque marino con dos columnas de texto (no gustó).
 // Solo datos confirmados (CLAUDE.md del cliente).
+// 24-nov-2026: Gonzalo confirma que hacen factura electrónica a organismos públicos y a cualquier cliente que la
+// necesite (pregunta 13). Sustituye al [PENDIENTE] que iba debajo de la fila de organismos.
 const sectores = [
   {
     id: 'empresas', sector: 'Sector privado', num: '01', icono: 'M3 8h18v12H3z M8 8V5h8v3 M3 13h18 M11 13v2h2v-2', titulo: 'Empresas y despachos', texto: 'Para el día a día de tu oficina.',
-    lista: ['Papel, archivo y escritura', 'Tóner y cartuchos', 'Libros jurídicos', 'Entrega en tu oficina'],
+    lista: ['Papel, archivo y escritura', 'Tóner y cartuchos', 'Libros jurídicos', 'Entrega en tu oficina', 'Factura electrónica'],
   },
   {
     id: 'organismos', sector: 'Sector público', num: '02', icono: 'M3 21h18 M5 21v-9 M9.5 21v-9 M14.5 21v-9 M19 21v-9 M2.5 10 12 4l9.5 6z', titulo: 'Organismos públicos', texto: 'Material de oficina para la administración pública de Canarias.',
-    lista: ['Papel, archivo y escritura', 'Tóner y cartuchos', 'Entrega en tus oficinas'],
+    lista: ['Papel, archivo y escritura', 'Tóner y cartuchos', 'Entrega en tus oficinas', 'Factura electrónica'],
   },
 ];
 const flecha = 'M5 12h14 M13 6l6 6-6 6';
@@ -37,6 +38,8 @@ const flecha = 'M5 12h14 M13 6l6 6-6 6';
 const preguntas = [
   { p: '¿Cómo hago un pedido?', r: `Llámanos al ${negocio.telefono} o escríbenos a ${negocio.email} con lo que necesitas y te preparamos el presupuesto.` },
   { p: '¿Trabajan con la administración pública?', r: 'Sí. Suministramos material de oficina a organismos públicos de Canarias.' },
+  // 24-nov-2026: confirmado por Gonzalo (pregunta 13)
+  { p: '¿Hacen factura electrónica?', r: 'Sí. A organismos públicos y a cualquier empresa o cliente que la necesite.' },
   { p: '¿Me llevan el pedido a la oficina?', r: 'Sí, te lo llevamos a tu oficina. Si lo prefieres, también puedes recogerlo en nuestro almacén de Los Majuelos (La Laguna).' },
   { p: '¿Reparten a todas las islas?', r: `Sí, a todas las islas Canarias: ${listaIslas}.` },
   // 15-nov-2026: antes preguntaba por mobiliario, que no venden (Álvaro)
@@ -125,7 +128,6 @@ const preguntas = [
             </span>
             <span class="indice-lista">{x.lista.map((l) => <span>{l}</span>)}</span>
           </a>
-          {x.id === 'organismos' && <p class="indice-pendiente"><Pendiente texto="¿facturación electrónica a la administración? (pregunta 13)" /></p>}
         </li>
       ))}
     </ol>
