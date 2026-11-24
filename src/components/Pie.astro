@@ -6,6 +6,9 @@ import Pendiente from './Pendiente.astro';
 // Jerarquía de revista: a la izquierda, el logo y la frase de ELNUBA en grande; a la derecha, tres columnas
 // (contacto con el teléfono en grande, horario y la web). La franja del lápiz de arriba se dibuja al llegar al pie.
 // Los textos son los de siempre. CSS: .pie… en global.css.
+// 24-nov-2026 (Álvaro: «soy más partidario de un footer minimalista»): fuera la frase de ELNUBA junto al logo. Para Google
+// el texto repetido en todas las páginas apenas cuenta, y la descripción ya está en los datos de la empresa y en llms.txt.
+// Se quedan contacto, dirección y horario (iguales que en la ficha de Google, ayuda en el mapa) y los enlaces legales (LSSI).
 const d = negocio.direccion;
 ---
 <footer class="bg-pizarra text-white/80">
@@ -14,7 +17,6 @@ const d = negocio.direccion;
     <div class="pie-reparto">
       <div>
         <img src={ruta('/logo-elnuba-240.webp')} srcset={`${ruta('/logo-elnuba-240.webp')} 240w, ${ruta('/logo-elnuba-480.webp')} 480w`} sizes="150px" alt="ELNUBA Distribuciones de Papelería" width="240" height="90" loading="lazy" decoding="async" class="h-14 w-auto" />
-        <p class="pie-lema">Distribución de papelería, material de oficina y librería para colegios, empresas y organismos públicos de Canarias.</p>
       </div>
       <div class="pie-columnas">
         <div>
