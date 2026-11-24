@@ -72,7 +72,7 @@ const preguntas = [
   <section class="mx-auto max-w-7xl px-4 py-10 md:px-6 md:py-20">
     <h2 class="lista-titulo max-w-4xl">Nos mandas la lista y <span class="subrayador" data-al-ver>nos encargamos</span></h2>
     <div class="mt-10 grid gap-8 md:mt-14 lg:grid-cols-12 lg:gap-14">
-      <figure class="relative aspect-[3/2] overflow-hidden rounded-[2rem] lg:col-span-5 lg:aspect-auto lg:min-h-[25rem]">
+      <figure class="relative aspect-[4/3] overflow-hidden rounded-[2rem] sm:aspect-[3/2] lg:col-span-5 lg:aspect-auto lg:min-h-[25rem]">{/* 4:3 en el móvil (24-nov-2026), con su propio recorte: Foto.astro */}
         {/* 17-nov-2026: antes, una niña dibujando. Se cambió porque se le veía la cara: la licencia CC0 permite usar la
             foto, pero no trae el permiso de la persona que sale, y con menores la ley es especialmente estricta */}
         <Foto src="/img/lapices-fila.webp" alt="Lápices de colores en fila, ordenados como un arcoíris, sobre una mesa de madera" width={960} height={632} sizes="(min-width: 1280px) 510px, (min-width: 1024px) 40vw, 100vw" class="absolute inset-0 size-full object-cover" />

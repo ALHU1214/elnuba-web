@@ -14,8 +14,18 @@ const { src, alt, width, height, sizes, loading = 'lazy', fetchpriority, class: 
 const base = src.replace(/\.webp$/, '');
 // 24-nov-2026: la variante pequeña es de 720 px (antes 480: en las tarjetas del ordenador se veían blandas)
 const juego = (ext: string) => `${ruta(`${base}-720.${ext}`)} 720w, ${ruta(`${base}.${ext}`)} 960w`;
+// 24-nov-2026 (Álvaro: "las fotos en el aspecto que pida el móvil" y "renderizadas para que no pesen"): por debajo de
+// 640 px baja una versión propia del móvil, recortada a 4:3 (el formato del hueco en el móvil), a 600 u 800 px de ancho.
+// Antes bajaba la de 960 px del ordenador y el navegador tiraba los bordes: el 6-17 % de la foto se descargaba sin
+// verse. 800 px es 2 veces el hueco más ancho del móvil: por encima de 2x no se nota y pesa más (Twitter, 2019).
+// Los huecos de las fotos son 4:3 en el móvil (aspect-[4/3]); si se pone una foto en un hueco con otro formato en el
+// móvil, hay que generarle su recorte (optimizar_fotos.py, MOVIL)
+const movil = (ext: string) => `${ruta(`${base}-m600.${ext}`)} 600w, ${ruta(`${base}-m800.${ext}`)} 800w`;
+const sizesMovil = 'calc(100vw - 2rem)'; // en el móvil todas las fotos van a lo ancho, con 16 px de margen a cada lado
 ---
 <picture>
+  <source media="(max-width: 639px)" type="image/avif" srcset={movil('avif')} sizes={sizesMovil} width="800" height="600" />
+  <source media="(max-width: 639px)" type="image/webp" srcset={movil('webp')} sizes={sizesMovil} width="800" height="600" />
   <source type="image/avif" srcset={juego('avif')} sizes={sizes} />
   <img src={ruta(src)} srcset={juego('webp')} sizes={sizes} alt={alt} width={width} height={height}
        loading={loading} fetchpriority={fetchpriority} decoding="async" class={clase} style={style} />
