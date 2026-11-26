@@ -20,8 +20,8 @@ const fechaTexto = new Intl.DateTimeFormat('es-ES', { day: 'numeric', month: 'lo
     <ul>
       <li><strong>Titular:</strong> {negocio.razonSocial}</li>
       <li><strong>CIF:</strong> {negocio.cif}</li>
-      {/* 16-nov-2026 (máster): la LSSI (art. 10.1.b) pide a las sociedades los datos de su inscripción en el Registro Mercantil. Falta pedírselos a Gonzalo */}
-      <li><strong>Datos registrales:</strong> <Pendiente texto="inscripción en el Registro Mercantil: tomo, folio y hoja" /></li>
+      {/* LSSI art. 10.1.b. Datos sacados del BORME oficial (BORME-A-2013-32-38, anuncio 77996, 15-feb-2013), comprobados el 26-nov-2026 */}
+      <li><strong>Datos registrales:</strong> inscrita en el Registro Mercantil de Santa Cruz de Tenerife, tomo 3263, folio 1, sección 8.ª, hoja TF-51313, inscripción 1.ª</li>
       <li><strong>Domicilio:</strong> {d.calle}, {d.zona}, {d.cp} {d.localidad}, {d.provincia} (España)</li>
       <li><strong>Teléfono:</strong> <a href={telHref}>{negocio.telefono}</a></li>
       <li><strong>Correo electrónico:</strong> <a href={mailSimple}>{negocio.email}</a></li>
